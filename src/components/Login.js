@@ -42,6 +42,8 @@ const Login = (props) => {
                     <input type="password" name="password" placeholder='Password' onChange={(e) => handleChange(e)} />
                     <button onClick={handleSubmit}><span>Login</span></button>
                     <p>Don't have an account? <a href="">Sign Up</a></p>
+                    <hr />
+                    <p>Register as a College/University ?<a href="">Click here</a></p>
                 </Cred>
                 <Horizontal>
                     <hr />

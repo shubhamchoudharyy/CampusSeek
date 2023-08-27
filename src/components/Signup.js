@@ -49,7 +49,9 @@ const Signup = (props) => {
         </Head>
     
     <Cred>
-    <input type="eamil" name="email" id="" placeholder='Email Address' onChange={(e)=>handleChange(e)} />
+    <input type="text" name="name" id="" placeholder='Name' onChange={(e)=>handleChange(e)} />
+
+    <input type="email" name="email" id="" placeholder='Email Address' onChange={(e)=>handleChange(e)} />
     
     <input type="password" name="password" id="" placeholder='Password' onChange={(e)=>handleChange(e)}/>
   
