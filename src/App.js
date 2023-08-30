@@ -5,9 +5,10 @@ import Signup from './components/Signup';
 import Header from './components/Header';
 import Home from './components/Home';
 import CollegeSearch from './components/CollegeSearch';
-import AddCourse from './components/AddCourse';
 import MyColleges from './components/MyColleges';
 import Colleges from './components/Colleges';
+import CollegeProfile from './components/College/CollegeProfile';
+import UserProfile from './components/Users/UserProfile';
 function App() {
   return (
     <div className="App">
@@ -19,7 +20,9 @@ function App() {
           <Route path='/mycollege' element={<div><Header/><MyColleges/></div>}/>
           <Route path='/colleges' element={<div><Header/><Colleges/></div>}/>
           <Route path='/search' element={<div><Header/><CollegeSearch/></div>}/>
-          <Route path='/course' element={<AddCourse/>}/>
+          <Route path='/profile-clg' element={<div><Header/><CollegeProfile/></div>}/>
+          <Route path='/profile-user' element={<div><Header/><UserProfile/></div>}/>
+
         </Routes>
       </BrowserRouter>
     </div>

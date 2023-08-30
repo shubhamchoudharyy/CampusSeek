@@ -72,6 +72,9 @@ const Header = (props) => {
                             </span>
                         </a>
 
+                        <Profile onClick={handleLogout}>
+                            <a>My Profile</a>
+                        </Profile>
                         <SignOut onClick={handleLogout}>
                             <a>Sign Out</a>
                         </SignOut>
@@ -236,7 +239,7 @@ const NavList=styled.li`
     } 
 `;
 
-const SignOut=styled.div`
+const Profile=styled.div`
     position:absolute;
     top:45px;
     background: white;
@@ -249,6 +252,23 @@ const SignOut=styled.div`
     display: none;
     @media(max-width:768px){
         top:-20px;
+    }
+
+`;
+
+const SignOut=styled.div`
+    position:absolute;
+    top:80px;
+    background: white;
+    border-radius: 0 0 5px 5px;
+    width:100px;
+    height:40px;
+    font-size: 16px;
+    transition-duration: 167ms;
+    text-align: center;
+    display: none;
+    @media(max-width:768px){
+        top:-50px;
     }
 `;
 
@@ -270,6 +290,11 @@ const User=styled(NavList)`
     }
 
     &:hover{
+        ${Profile}{
+            align-items:center;
+            display:flex;
+            justify-content: center;
+        }
         ${SignOut}{
             align-items:center;
             display:flex;
