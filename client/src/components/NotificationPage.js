@@ -78,16 +78,15 @@ const NotificationPage = () => {
               Mark All Read
             </h4>
           </div> */}
-          {user?.notification.map((notificationMsg) => (
-            <Block
-              
-              key={notificationMsg._id}
-              onClick={() => navigate(notificationMsg.onClickPath)}
-              
-            >
-              <Card><span>{notificationMsg.message}</span></Card>
-            </Block>
-          ))}
+          {user?.notification.slice().reverse().map((notificationMsg) => (
+          <Block
+            key={notificationMsg._id}
+            onClick={() => navigate(notificationMsg.onClickPath)}
+          >
+            <Card><span>{notificationMsg.message}</span></Card>
+          </Block>
+        ))}
+
         {/* </Tabs.TabPane> */}
         {/* <Tabs.TabPane tab={<span >Read</span>} key={1}>
           <div className='d-flex justify-content-end'>

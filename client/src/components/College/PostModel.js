@@ -229,7 +229,7 @@ const PostModel = (props) => {
                 <Header>
                   <h2>Create a Post</h2>
                   <button onClick={(e) => reset(e)}>
-                    <img src="https://th.bing.com/th/id/R.71db1d1c3745dab1002c547db0b6b69f?rik=XkC6sVfP2ZTCOg&riu=http%3a%2f%2fcdn.onlinewebfonts.com%2fsvg%2fimg_391885.png&ehk=vf0OAda93WujxQv91wKrXxIN0w0eejVocrMDMOI4%2bXE%3d&risl=&pid=ImgRaw&r=0" alt="" />
+                    <img src='/images/close.png' alt="" />
                   </button>
                 </Header>
               
@@ -296,16 +296,16 @@ const PostModel = (props) => {
                 <AttachAssets>
                   <AssetButton onClick={() => switchAssetArea('image')}>
 
-                    <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-512.png" alt="Photo" />
+                    <img src="/images/photo-icon.webp" alt="Photo" />
                   </AssetButton>
                  
                   <AssetButton onClick={() => switchAssetArea('video')}>
 
-                    <img src="https://e7.pngegg.com/pngimages/103/322/png-clipart-black-video-logo-video-icon-video-icon-angle-white-thumbnail.png" alt="Video" />
+                    <img src="/images/video-icon.png" alt="Video" />
                   </AssetButton>
                   <AssetButton onClick={() => switchAssetArea('media')}>
 
-                    <img src="https://static.thenounproject.com/png/770619-200.png" alt="Video" />
+                    <img src="/images/video-url.png" alt="Video" />
                   </AssetButton>
                 </AttachAssets>
                 <ShareComment>

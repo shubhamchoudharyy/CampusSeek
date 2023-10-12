@@ -47,7 +47,7 @@ const Mainclg = () => {
   useEffect(() => {
     getPost();
     // Fetch posts periodically every 30 seconds
-    const intervalId = setInterval(getPost, 30000);
+    const intervalId = setInterval(getPost, 5000);
 
     // Cleanup the interval when the component unmounts
     return () => clearInterval(intervalId);

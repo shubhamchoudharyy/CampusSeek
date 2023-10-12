@@ -16,6 +16,7 @@ const UserSearch = (props) => {
   const [activeComponent, setActiveComponent] = useState("Posts"); // Initialize with "Posts"
   const [post,setPost]=useState(null);
   const navigate=useNavigate();
+  const [review, setReview] = useState('');
   const [showPosts, setShowPosts] = useState(true);
   const [showAbout, setShowAbout] = useState(false);
   const [showCourses, setShowCourses] = useState(false);
@@ -174,6 +175,10 @@ const UserSearch = (props) => {
   const handleRatingChange = (newRating) => {
     setRating(newRating);
   };
+
+  const handleReviewChange = (event) => {
+    setReview(event.target.value);
+  };
   const handleSubmitRating = async () => {
     setIsSubmitting(true);
   
@@ -188,6 +193,7 @@ const UserSearch = (props) => {
         // Send the rating to the backend API
         const response = await axios.post(`${baseURL}/college/rate/${id}`, {
           rating: rating,
+          review: review,
           userId: user._id,
         });
   
@@ -196,31 +202,33 @@ const UserSearch = (props) => {
           message.success('Rating submitted successfully!');
           
           // Set isSubmitting to false here
-          setIsSubmitting(false);
+          // setIsSubmitting(false);
         } else {
           // Handle errors, e.g., show an error message
           message.error('Rating submission failed.');
           
           // Set isSubmitting to false here as well if there's an error
-          setIsSubmitting(false);
+          // setIsSubmitting(false);
         }
       }
     } catch (error) {
       console.error('Error submitting rating:', error);
       // Handle network or other errors
-      alert('An error occurred while submitting the rating.');
+      message.error('An error occurred while submitting the rating.');
       
       // Make sure to set isSubmitting to false in the error case
-      setIsSubmitting(false);
+      // setIsSubmitting(false);
     }
   };
  
 
   let rated = 0; // Initialize the rated variable
+  let reviewed="";
 
   user.rating.forEach((item) => {
     if (item.collegeId === id) {
       rated = item.rate; // Set the rated variable when a match is found
+      reviewed=item.review;
     }
   });
  
@@ -240,17 +248,17 @@ const UserSearch = (props) => {
           <a>
             <Photo>
               {values.photoUrl ?
-                <img src={values.photoUrl} /> :
+                <img src={values?.photoUrl} /> :
                 <img src='/images/photo.svg' />}
             </Photo>
-            <Link>{values.name}</Link>
+            <Link>{values?.name}</Link>
           </a>
           <a>
-            <AddPhotoText>{values.district.toUpperCase()},{values.state.toUpperCase()},{values.country.toUpperCase()}</AddPhotoText>
+            <AddPhotoText>{values?.district.toUpperCase()},{values?.state.toUpperCase()},{values?.country.toUpperCase()}</AddPhotoText>
           </a>
         </UserInfo>
         <Description>
-          <span>{values.description}</span>
+          <span>{values?.description}</span>
         </Description>
 
         <Button>
@@ -262,8 +270,8 @@ const UserSearch = (props) => {
                  <span>Follow</span>
                </button>
                }
-          {values.website &&
-            <a href={values.website} target="_blank">
+          {values?.website &&
+            <a href={values?.website} target="_blank"  rel='noopener'>
               <button className='web'><span>Visit Website</span></button>
             </a>}
 
@@ -332,19 +340,19 @@ const UserSearch = (props) => {
                     <Info>
                     <div>
                     <span className='grey'>Location</span>
-                    <span>{values.location}</span>
-                    <span>{values.district},{values.state},{values.country}</span>
+                    <span>{values?.location}</span>
+                    <span>{values?.district},{values?.state},{values?.country}</span>
                     </div>
                     <div>
                     <span className='grey'>Email</span>
                     <span>
-                    <a href={`mailto:${values.email}`}>{values.email}</a>
+                    <a href={`mailto:${values?.email}`}>{values?.email}</a>
                     </span>
                     </div>
 
                     <div>
                     <span className='grey'>Contact</span>
-                    <span>{values.phone}</span>
+                    <span>{values?.phone}</span>
                     </div>
                     </Info>
             </SharedActors>
@@ -361,10 +369,10 @@ const UserSearch = (props) => {
                     
                     <div className='already' key={index}>
                     {/* <span>{index}</span> */}
-                   <span>{course.course}</span>
-                   <span>{course.short}</span>
+                   <span>{course?.course}</span>
+                   <span>{course?.short}</span>
                    
-                   <a href={course.file} target="_blank">
+                   <a href={course?.file} target="_blank">
                         <button>
                         <span>View</span>
                         </button>
@@ -381,33 +389,86 @@ const UserSearch = (props) => {
     }
 
 {showRatings && (
-  <Content>
-    <RatingContainer>
-      <RatingLabel>Rating: <span>{parseFloat(values.rating.$numberDecimal).toFixed(1)}</span></RatingLabel>
-      <Stars>
-        {[1, 2, 3, 4, 5].map((starValue) => (
-          <Star
-            key={starValue}
-            onClick={() => handleStarClick(starValue)}
-            checked={starValue <= rating}
-          >
-            ★
-          </Star>
-        ))}
-      </Stars>
-      <RatingValue>Overall Rated {rating} stars.</RatingValue>
+        <Content>
+          <RatingContainer>
+            <RatingLabel>
+             overall Rating: <span>{parseFloat(values?.rating.$numberDecimal).toFixed(1)}</span>
+            </RatingLabel>
+            <Stars>
+              {[1, 2, 3, 4, 5].map((starValue) => (
+                <Star
+                  key={starValue}
+                  onClick={() => handleStarClick(starValue)}
+                  checked={starValue <= rating}
+                >
+                  ★
+                </Star>
+              ))}
+            </Stars>
+            {rating > 0 && !isSubmitting && (<>
+              <RatingValue> Rated {rating} stars.</RatingValue>
+             
+              </>
+            )}
+            
+            
+            {user?.rating.some((item) => item.collegeId === id) ? (
+              <>
+              <div>You have already rated {rated} stars to this college.</div>
+              <div>
+              <textarea
+                rows="4"
+                cols="50"
+                value={reviewed}
+                disabled
+                
+              />
+            </div>
+            </>
+            ) : (
+              !isSubmitting ? (
+                <>
+                <div>
+              <textarea
+                rows="4"
+                cols="50"
+                placeholder="Write your review here"
+                value={review}
+                onChange={handleReviewChange}
+              />
+            </div>
+                <SubmitButton onClick={handleSubmitRating}>Submit Rating and Review</SubmitButton>
 
-      {user.rating.some((item) => item.collegeId === id) ? (
-        <div>You have already rated {rated} stars to this college.</div>
-      ) : !isSubmitting ? (
-        <SubmitButton onClick={handleSubmitRating}>Submit Rating</SubmitButton>
-      ) : (
-        <SubmitButton disabled>Submitting...</SubmitButton>
+                </>
+              ) : (
+                <SubmitButton disabled>Submitted</SubmitButton>
+              )
+            )}
+          </RatingContainer>
+          {values.ratings &&
+          values.ratings
+            .slice() // Create a shallow copy of the array to avoid mutating the original
+            .reverse() // Reverse the order of the copied array
+            .map((item, index) => (
+              <Reviews key={index}>
+                <div className="outer">
+                  <div className="inner">
+                    <div>Anonymous</div>
+                    <div> {item?.rate}★</div>
+                  </div>
+                  <div>
+                    <textarea rows="4" cols="50" disabled value={item.review} />
+                  </div>
+                </div>
+              </Reviews>
+            ))
+        }
+
+          
+        </Content>
       )}
-    </RatingContainer>
-  </Content>
 
-)}
+
       </Layout>
     </Container>
   );
@@ -432,6 +493,9 @@ const Content=styled.div`
     max-width: 1128px;
     margin-left:auto;
     margin-right: auto;
+    height: fit-content;
+    box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+    
 `;
 const Course=styled(CommonCard)``;
 const Article=styled(CommonCard)`
@@ -930,6 +994,22 @@ const Star = styled.span`
 const RatingValue = styled.div`
   font-size: 16px;
   margin-top: 10px;
+`;
+const Reviews=styled.div`
+  height: fit-content;
+  width: 100%;
+ 
+  .outer{
+    margin: 3px;
+    padding: 5px;
+  }
+  
+
+  .inner{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
 `;
 
 export default UserSearch

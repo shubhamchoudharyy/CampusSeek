@@ -330,7 +330,7 @@ const getPostController = async (req, res) => {
 const getPostsController = async (req, res) => {
   try {
     const userId = req.params.userId;
-    console.log(userId);
+    // console.log(userId);
     // const user = await userModel.findOne({ _id: userId });
 
     // // console.log('User Data:', user);
@@ -341,7 +341,7 @@ const getPostsController = async (req, res) => {
     // Find posts where userId matches user.follow.collegeId or user._id
     const posts = await postModel.find({userId:userId }).sort({ createdAt: -1 });
 
-    console.log('Posts:', posts);
+    // console.log('Posts:', posts);
 
     if (!posts) {
       return res.status(400).json({ success: false, message: 'No posts' });
@@ -384,6 +384,7 @@ const rateController=async(req,res)=>{
     const collegeId = req.params.userId;
     const userId = req.body.userId;
     const rate = req.body.rating;
+    const review=req.body.review;
 
     const college = await collegeModel.findOne({ userId: collegeId });
     const user = await userModel.findOne({ _id: userId });
@@ -398,15 +399,18 @@ const rateController=async(req,res)=>{
     const newRating = {
       collegeId: collegeId,
       rate: rate,
+      review:review,
     };
-
+    
     // Add the new rating to the user's ratings
     user.rating.push(newRating);
 
     // Add the new rating to the college's ratings
     const newRate={
       userId:userId,
-      rate:rate
+      rate:rate,
+      review:review,
+      name:user.name
     };
     college.ratings.push(newRate);
 

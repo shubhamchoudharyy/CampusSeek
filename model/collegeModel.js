@@ -54,6 +54,12 @@ const CollegeSchema=new mongoose.Schema({
             },
             rate:{
                 type:Number,
+            },
+            review:{
+                type:String
+            },
+            name:{
+                type:String
             }
         }
     ],

@@ -38,8 +38,10 @@ const Signup = () => {
     }
   return (
     <Container>
+    
+   
     <Form layout='vertical' onFinish={onfinishHandler}>
-        <Photo><img src='/images/logo.png'/></Photo>
+    <Photo><img src='/images/logo.png' alt='img'/></Photo>
     <h1>Welcome to Campus Seek</h1>
     <Head>
         <p >Sign Up to Get Started</p>
@@ -92,7 +94,7 @@ const Signup = () => {
 
 const Container=styled.div`
      width: 100vw;
-    height: 100vh;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;

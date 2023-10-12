@@ -52,6 +52,9 @@ const userSchema=new mongoose.Schema({
             rate:{
                 type:Number,
                 default:null,
+            },
+            review:{
+                type:String,
             }
         }
     ],
