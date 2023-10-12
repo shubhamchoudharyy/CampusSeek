@@ -8,7 +8,7 @@ const { getDownloadURL, getStorage } = require('firebase/storage');
 const firebase=require('../firebase')
 
 // Initialize Firebase Admin SDK with your service account credentials
-const serviceAccount = require('../major-de7cb-firebase-adminsdk-m7g1l-4b39a97576.json'); // Replace with the path to your service account key file
+const serviceAccount = require('../major-de7cb-firebase-adminsdk-m7g1l-a08618d106.json'); // Replace with the path to your service account key file
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
