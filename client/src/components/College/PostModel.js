@@ -28,7 +28,7 @@ const PostModel = (props) => {
     const [videoLoading, setVideoLoading] = useState(false);
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [videoSelected, setVideoSelected] = useState(false);
-    console.log(user);
+    // console.log(user);
 
     const handleFileUpload = async (file) => {
         try {

@@ -210,6 +210,34 @@ const CollegeSearch = (props) => {
       // setIsSubmitting(false);
     } 
   };
+
+  const handleDeletePost=async(postId,post)=>{
+    console.log('Delete is called')
+    console.log('college',postId);
+    console.log('user',user._id);
+    console.log('post',post);
+
+    
+    
+    try{
+      
+        console.log('in try')
+        const res=await axios.post(`${baseURL}/college/deletepost`,{
+          postId:post
+        });
+        if(res.data.success){
+          message.success('Post Deleted Successfully');
+        }else{
+          message.error('Error While Deleting Post');
+        }
+      
+
+    }catch(e){
+      message.error('Error While deleting the post',);
+      console.log(e)
+    }
+  
+  }
       let rated = 0; // Initialize the rated variable
       let reviewed="";
 
@@ -244,14 +272,16 @@ const CollegeSearch = (props) => {
             </Description>
     
             <Button>
-            {isFollowing[values?.userId] ?  
-                    <button className='unfollow' onClick={() => handleFollowClick(values)}>
-                      <span>Unfollow</span>
-                    </button>:
-                     <button className='follow' onClick={() => handleFollowClick(values)}>
-                     <span>Follow</span>
-                   </button>
-                   }
+            {!user?.isAdmin && (
+            isFollowing[values?.userId] ?  
+              <button className='unfollow' onClick={() => handleFollowClick(values)}>
+                <span>Unfollow</span>
+              </button> :
+              <button className='follow' onClick={() => handleFollowClick(values)}>
+                <span>Follow</span>
+              </button>
+          )}
+
               {values.website &&
                 <a href={values.website} target="_blank"  rel='noopener'>
                   <button className='web'><span>Visit Website</span></button>
@@ -296,7 +326,23 @@ const CollegeSearch = (props) => {
                             <span>{article.date}</span>
                           </div>
                         </a>
-                        <button>...</button>
+                        {user._id===article.userId ?
+                    <User>
+                    <button>...</button>
+                    
+                    <Delete >
+                      <a onClick={()=>handleDeletePost(article.userId,article._id)}>Delete</a>
+                    </Delete>
+                    </User> : 
+                    user?.isAdmin? 
+                    <User>
+                    <button>...</button>
+                    
+                    <Delete >
+                      <a onClick={()=>handleDeletePost(article.userId,article._id)}>Delete</a>
+                    </Delete>
+                    </User>:
+                    <button>....</button>} 
                       </SharedActors>
                       <Descriptions>{article.description}</Descriptions>
                       <SharedImg>
@@ -937,6 +983,51 @@ const Reviews=styled.div`
     justify-content: space-around;
     align-items: center;
   }
+`;
+
+
+const Delete=styled.div`
+z-index: 9999;
+position:absolute;
+top:10px;
+background: white;
+border-radius: 0 0 5px 5px;
+width:50px;
+height:40px;
+font-size: 16px;
+transition-duration: 167ms;
+text-align: center;
+display: none;
+@media(max-width:768px){
+    top:-5px;
+}
+`;
+
+const User=styled(NavList)`
+a>svg{
+    width:24px;
+    border-radius:20%
+}
+
+a>img{
+    width:24px;
+    height:24px;
+    border-radius:50%;
+}
+
+span{
+    display: flex;;
+    align-items:center;
+}
+
+&:hover{
+    
+    ${Delete}{
+        align-items:center;
+        display:flex;
+        justify-content: center;
+    }
+}
 `;
 
 export default CollegeSearch

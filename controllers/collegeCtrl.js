@@ -433,7 +433,29 @@ const rateController=async(req,res)=>{
     return res.status(500).json({ success: false, message: 'Internal server error.' });
   }
 }
+const getDeletePostController = async (req, res) => {
+  console.log(req.body)
+  try {
+    const posts = req.body.postId;
+    console.log(posts)
+
+    const post = await postModel.findOne({ _id: posts });
+
+    if (!post) {
+      return res.status(400).json({ success: false, message: 'No posts' });
+    }
+
+    // Await the deletion of the post
+    await post.deleteOne();
+
+    return res.status(200).json({ success: true, message: 'Post deleted successfully' });
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+};
 
 
 module.exports={getCollegeInfoController,postController,getPendingInfoController,getInfoController
-  ,addCoursesController,uploadFile,getPostsController,rateController,videoController,descriptionController,removeCourseController,updateController,getPostController}
+  ,addCoursesController,getDeletePostController,
+  uploadFile,getPostsController,rateController,videoController,descriptionController,removeCourseController,updateController,getPostController}

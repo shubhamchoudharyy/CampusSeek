@@ -53,6 +53,33 @@ const Mainclg = () => {
     return () => clearInterval(intervalId);
   }, [user._id]);
 
+  const handleDeletePost=async(postId,post)=>{
+    console.log('Delete is called')
+    console.log('college',postId);
+    console.log('user',user._id);
+    console.log('post',post);
+
+    
+    if(postId===user._id){
+    try{
+      
+        console.log('in try')
+        const res=await axios.post(`${baseURL}/college/deletepost`,{
+          postId:post
+        });
+        if(res.data.success){
+          message.success('Post Deleted Successfully');
+        }else{
+          message.error('Error While Deleting Post');
+        }
+      
+
+    }catch(e){
+      message.error('Error While deleting the post',);
+      console.log(e)
+    }
+  }
+  }
   if (!post) {
     return <Spin style={{ marginTop: '12px' }} />
   }
@@ -108,7 +135,15 @@ const Mainclg = () => {
                         <span>{article.date}</span>
                       </div>
                     </a>
+                    {user._id===article.userId ?
+                    <User>
                     <button>...</button>
+                    
+                    <Delete >
+                      <a onClick={()=>handleDeletePost(article.userId,article._id)}>Delete</a>
+                    </Delete>
+                    </User> :
+                    <button>....</button>} 
                   </SharedActors>
                   <Descriptions>{article.description}</Descriptions>
                   <SharedImg>
@@ -345,18 +380,92 @@ const Content=styled.div`
   }
 `;
 
-// const mapStateToProps=(state)=>{
-//   return{
-//     loading:state.articleState.loading,
-//     user:state.userState.user,
-//     articles:state.articleState.articles,
-//   };
-// };
 
-// const mapDispatchToProps=(dispatch)=>{
-//   return{
-//     getArticles:()=>dispatch(getArticleAPI()),
-//   }
-// }
-// export default connect(mapStateToProps,mapDispatchToProps)(Main)
+const Delete=styled.div`
+z-index: 9999;
+position:absolute;
+top:10px;
+background: white;
+border-radius: 0 0 5px 5px;
+width:70px;
+height:40px;
+font-size: 16px;
+transition-duration: 167ms;
+text-align: center;
+display: none;
+@media(max-width:768px){
+    top:-5px;
+}
+`;
+
+
+const NavList=styled.li`
+    display:flex;
+    align-items:center;
+    
+
+    a{
+        align-items:center;
+        background:transparent;
+        display:flex;
+        flex-direction: column;
+        font-size:12px;
+        font-weight:400;
+        justify-content:center;
+        line-height:1.5;
+        min-height:42px;
+        min-width:88px;
+        position:relative;
+        text-decoration: none;
+
+        span{
+            color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items:center;
+            justify-content:space-around;
+        }
+
+        @media (max-width:768px){
+            min-width:120px;
+            
+        }
+        
+        }
+        &:hover,
+        &:active{
+            a{
+                span{
+                    color:rgba(0,0,0,0.9)
+                }
+            }
+
+    } 
+`;
+
+const User=styled(NavList)`
+a>svg{
+    width:24px;
+    border-radius:20%
+}
+
+a>img{
+    width:24px;
+    height:24px;
+    border-radius:50%;
+}
+
+span{
+    display: flex;;
+    align-items:center;
+}
+
+&:hover{
+    
+    ${Delete}{
+        align-items:center;
+        display:flex;
+        justify-content: center;
+    }
+}
+`;
 export default Mainclg;
