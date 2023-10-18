@@ -223,7 +223,7 @@ const CollegeSearch = (props) => {
       
         console.log('in try')
         const res=await axios.post(`${baseURL}/college/deletepost`,{
-          postId:post
+          postId:post,collegeId:postId
         });
         if(res.data.success){
           message.success('Post Deleted Successfully');

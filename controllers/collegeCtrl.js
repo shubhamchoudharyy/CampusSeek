@@ -437,14 +437,25 @@ const getDeletePostController = async (req, res) => {
   console.log(req.body)
   try {
     const posts = req.body.postId;
-    console.log(posts)
+    const collegeId=req.body.collegeId;
+    const user=await userModel.findOne({_id:collegeId});
+    console.log(user);
+    
+    
 
     const post = await postModel.findOne({ _id: posts });
 
     if (!post) {
       return res.status(400).json({ success: false, message: 'No posts' });
     }
-
+    const notification=user.notification;
+    notification.push({
+      type:'Post-deleted',
+      message:'Your Post has been deleted',
+      onclickPath:'/notification'
+    })
+    // console.log(user);
+    await user.save();
     // Await the deletion of the post
     await post.deleteOne();
 
