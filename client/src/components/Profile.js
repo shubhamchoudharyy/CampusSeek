@@ -7,6 +7,7 @@ import { showLoading,hideLoading } from '../redux/features/alertSlice';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { host } from '../assets/APIRoute';
 
 const Profile = () => {
   const { user } = useSelector((state) => state.user);
@@ -27,8 +28,13 @@ const Profile = () => {
       navigate('/login');
     }
   }, [user, navigate]);
+  useEffect(()=>{
+    if(user?.phone===0){
+      navigate('/complete-login')
+    }
+  },[user,navigate])
 
-  const baseURL = "http://localhost:5000/api/v1";
+
 
   
 
@@ -38,7 +44,7 @@ const Profile = () => {
     const getUserInfo = async () => {
         try {
           const res = await axios.post(
-            `${baseURL}/user/info/${params.id}`,
+            `${host}/user/info/${params.id}`,
           
             // {
             //   headers: {
@@ -60,18 +66,49 @@ const Profile = () => {
     return <Spin style={{marginTop:'12px'}}/>
   }
 
+  const handleVerify = async () => {
+    try {
+      const res = await axios.post(`${host}/admin/verify/${params.id}`);
+      if (res.data.success) {
+        message.success("Changed");
+        // Update the local state with the new values returned from the API
+        setValues((prevValues) => ({ ...prevValues, verified: !prevValues.verified }));
+      } else {
+        message.error("Some error occurred");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  const handlePremium = async () => {
+    try {
+      const res = await axios.post(`${host}/admin/premium/${params.id}`);
+      if (res.data.success) {
+        message.success("Changed");
+        // Update the local state with the new values returned from the API
+        setValues((prevValues) => ({ ...prevValues, premium: !prevValues.premium }));
+      } else {
+        message.error("Some Error occurred");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+
   return (
     <Container>
       <Layout>
         <UserInfo>
           <CardBackground />
           <a>
-            <Photo>
+            <Photo style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
               {values.photoUrl?
               <img src={values.photoUrl}/> :
               <img src='/images/photo.svg'/>}
             </Photo>
-            <Links>{values.name}</Links>
+            <Links style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>{values.name}</Links>
           </a>
           <a>
             <AddPhotoText>
@@ -114,12 +151,26 @@ const Profile = () => {
                         id=""
                     />
                     <br />
-                    </Form.Item>
+                    </Form.Item >
+                    
                 </About>
                 </Form>
           </fieldset>
          
         </Cred>
+        <Verify>
+          <div>
+            <p>Verified</p>
+            <p>{values.verified ? <span>True</span> : <span>False</span>}</p>
+            {values.verified? <button onClick={handleVerify}><span>False</span></button> : <button onClick={handleVerify}><span>True</span></button>}
+          </div>
+          <div>
+            <p>Premium</p>
+            <p>{values.premium? <span>True</span>:<span>False</span>}</p>
+            {values.premium? <button onClick={handlePremium}><span>False</span></button> : <button onClick={handlePremium}><span>True</span></button>}
+          </div>
+
+        </Verify>
       </Layout>
     </Container>
   );
@@ -285,6 +336,32 @@ const About = styled.form`
     color:black;
     font-size: 1rem;
   }
+`;
+
+const Verify=styled.div`
+  display: flex;
+  flex-direction: column;
+  div{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    button{
+    cursor:pointer;
+        width:80px;
+        height:20px;
+        background-color:#0a66c2;
+        border:0;
+        border-radius: 20px;
+        span{
+            color:white;
+            font-weight:600;
+        }
+    }
+    button:hover{
+        background-color: #0a55c3;
+    }
+  }
+
 `;
 
 export default Profile;

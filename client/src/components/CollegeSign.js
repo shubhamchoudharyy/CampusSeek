@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components';
-import {connect} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import { useNavigate } from 'react-router';
 
 
@@ -10,13 +10,20 @@ import Rightside from './Users/Rightside';
 
 
 
-const CollegeSign = (props) => {
-    // const navigate=useNavigate();
-    // useEffect(()=>{
-    //     if(!props.user){
-    //         return navigate('/');
-    //     }
-    // },[props.user,props.history]);
+const CollegeSign = () => {
+    const navigate=useNavigate();
+    const {user}=useSelector((state)=>state.user);
+    useEffect(() => {
+        if (!localStorage.getItem('token')) {
+          // Redirect to the login page if there's no token or user data
+          navigate('/login');
+        }
+      }, [user, navigate]);
+      useEffect(()=>{
+        if(user?.phone===0){
+          navigate('/complete-login')
+        }
+      },[user,navigate])
   return (
     <Container>
         

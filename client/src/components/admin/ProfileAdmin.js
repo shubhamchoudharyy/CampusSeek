@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { showLoading, hideLoading } from '../../redux/features/alertSlice';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components'
+import { host } from '../../assets/APIRoute';
 const ProfileAdmin = () => {
     const { user } = useSelector((state) => state.user);
     const [initialValues, setInitialValues] = useState(null);
@@ -29,11 +30,16 @@ const ProfileAdmin = () => {
           navigate('/login');
         }
       }, [user, navigate]);
-    const baseURL = "http://localhost:5000/api/v1"; // Example base URL
+      useEffect(()=>{
+        if(user?.phone===0){
+          navigate('/complete-login')
+        }
+      },[user,navigate])
+
     const getUserInfo = async () => {
         try {
           const res = await axios.post(
-            `${baseURL}/user/getUserInfo`,
+            `${host}/user/getUserInfo`,
             { userId: params.id },
             {
               headers: {
@@ -72,7 +78,7 @@ const ProfileAdmin = () => {
             const formData = new FormData();
             formData.append('fieldname', selectedImage);
       
-            const res = await axios.post(`${baseURL}/user/Url`, formData, {
+            const res = await axios.post(`${host}/user/Url`, formData, {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
                 'Content-Type': 'multipart/form-data',
@@ -107,7 +113,7 @@ const ProfileAdmin = () => {
       const updateProfilePhoto = async (photoUrl) => {
         try {
           const res = await axios.post(
-            `${baseURL}/user/photo`,
+            `${host}/user/photo`,
             { userId: params.id, photo: photoUrl },
             {
               headers: {
@@ -131,7 +137,7 @@ const ProfileAdmin = () => {
     <UserInfo>
       <CardBackground/>
           <a>
-          <Photo>
+          <Photo style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
               <img src={newPhotoUrl || user?.photoUrl} alt='user' />
               {imageSelected && showUploadAndPostButton && (
                 <ButtonsContainer>
@@ -144,15 +150,15 @@ const ProfileAdmin = () => {
               )}
               {uploading && <Spin style={{ marginTop: '12px' }} />}
             </Photo>
-              <Link>{user?user.name :'user' }</Link>
+              <Link style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>{user?user.name :'user' }</Link>
           </a>
           <a>
-          <AddPhotoText>
+          <AddPhotoText style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
               <label htmlFor="photoUpload">Edit Photo</label>
               <input
                 type="file"
                 name="photoUrl"
-                accept="/image/gif,image/jpeg, /image/png"
+                accept="/image/*"
                 id="photoUpload"
                 style={{ display: 'none' }}
                 onChange={handleChange}

@@ -8,11 +8,14 @@ import ReactPlayer from 'react-player';
 import axios from 'axios'
 import {Spin,message} from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { useCopyToClipboard } from 'usehooks-ts';
+import { host } from '../../assets/APIRoute';
 const Main = () => {
   const [showModel, setShowModel] = useState('close');
   const {user}=useSelector((state)=>state.user)
   const [post,setPost]=useState(null)
   const navigate=useNavigate()
+  const [copy,setCopy]=useCopyToClipboard();
 
   useEffect(() => {
     if (!localStorage.getItem('token') ) {
@@ -20,9 +23,14 @@ const Main = () => {
       navigate('/login');
     }
   }, [user, navigate]);
+  // useEffect(()=>{
+  //   if(user?.phone===0){
+  //     navigate('/complete-login')
+  //   }
+  // },[user,navigate])
   const getPost = async () => {
     try {
-      const res = await axios.post(`${baseURL}/college/getpost`, { userId: user._id }, {
+      const res = await axios.post(`${host}/college/getpost`, { userId: user._id }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -34,16 +42,16 @@ const Main = () => {
       message.error('Something Went Wrong');
     }
   }
-  const baseURL = "http://localhost:5000/api/v1";
+  
  
   useEffect(() => {
     getPost();
     // Fetch posts periodically every 30 seconds
-    const intervalId = setInterval(getPost, 30000);
+    const intervalId = setInterval(getPost, 5000);
 
     // Cleanup the interval when the component unmounts
     return () => clearInterval(intervalId);
-  }, [user._id]);
+  }, [user?._id]);
  
 
   return (
@@ -55,27 +63,35 @@ const Main = () => {
           
           <Content>
             {/* {props.loading && <img src="./images/spin-loader.svg" alt="Loading" />} */}
-            {post.length > 0 &&
+            {post?.length > 0 &&
               post.map((article, key) => (
-                <Article key={article._id} >
+                <Article key={article?._id} >
                   <SharedActors>
-                    <a onClick={()=>navigate(`/user-search/${article.userId}`)}>
-                      <img src={article.photoUrl} alt="Actor" />
+                    <a onClick={()=>navigate(`/user-search/${article?.userId}`)}>
+                      <img src={article?.photoUrl} alt="Actor" />
                       <div>
-                        <span>{article.name}</span>
-                        <span>{article.email}</span>
-                        <span>{article.date}</span>
+                        <span>{article?.name}</span>
+                        <span>{article?.email}</span>
+                        <span>{article?.date}</span>
                       </div>
                     </a>
+                    <User>
                     <button>...</button>
+                    <Share>
+                      <a onClick={()=>{
+                        setCopy(`http://localhost:3000/post/${article?._id}`)
+                        message.success("Copied")
+                      }}>Copy URL</a>
+                    </Share>
+                    </User>
                   </SharedActors>
-                  <Descriptions>{article.description}</Descriptions>
+                  <Descriptions>{article?.description}</Descriptions>
                   <SharedImg>
                     <a>
-                      {!article.image && article.video ? (
-                        <ReactPlayer width={'100%'} url={article.video} controls/>
+                      {!article?.image && article?.video ? (
+                        <ReactPlayer width={'100%'} url={article?.video} controls/>
                       ) : (
-                        article.image && <img src={article.image} alt="Shared" />
+                        article?.image && <img src={article?.image} alt="Shared" />
                       )}
                       {/* <img src='/images/shivji.jpg' alt="Shared" /> */}
                     </a>
@@ -178,6 +194,7 @@ const Article=styled(CommonCard)`
 
 const SharedActors=styled.div`
   padding:40px;
+  cursor: pointer;
   flex-wrap:no-wrap;
   padding:12px 16px 0;   
   margin-bottom: 8px;
@@ -235,6 +252,8 @@ overflow:hidden;
 color:rgba(0,0,0,0.9);
 font-size:16px;
 text-align:left;
+ white-space: pre-wrap;
+ font-size: 0.8rem;
 
 `;
 
@@ -302,20 +321,54 @@ const Content=styled.div`
 
   }
 `;
+const Share=styled.div`
+z-index: 9999;
+background-color: red;
+position:absolute;
+cursor:pointer;
+top:0px;
+background: white;
+border-radius: 0 0 5px 5px;
+width:70px;
+height:40px;
+font-size: 0.7rem;
+transition-duration: 167ms;
+text-align: center;
+display: none;
+@media(max-width:768px){
+  top:-5px;
+}
+`;
 
-// const mapStateToProps=(state)=>{
-//   return{
-//     loading:state.articleState.loading,
-//     user:state.userState.user,
-//     articles:state.articleState.articles,
-//   };
-// };
 
-// const mapDispatchToProps=(dispatch)=>{
-//   return{
-//     getArticles:()=>dispatch(getArticleAPI()),
-//   }
-// }
-// export default connect(mapStateToProps,mapDispatchToProps)(Main)
+
+const User=styled.div`
+a>svg{
+        width:24px;
+        border-radius:20%
+    }
+
+    a>img{
+        width:24px;
+        height:24px;
+        border-radius:50%;
+    }
+
+    span{
+        display: flex;;
+        align-items:center;
+    }
+
+    &:hover{
+        ${Share}{
+            align-items:center;
+            display:flex;
+            justify-content: center;
+        }
+        
+    }
+`;
+
+
 
 export default Main;

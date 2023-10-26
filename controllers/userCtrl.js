@@ -6,6 +6,8 @@ const collegeModel = require('../model/collegeModel');
 const admin = require('firebase-admin'); // Import Firebase Admin SDK
 const { getDownloadURL, getStorage } = require('firebase/storage');
 const firebase=require('../firebase')
+const GoogleAuthProvider=require('firebase/auth')
+const nodemailer=require('nodemailer')
 
 // Initialize Firebase Admin SDK with your service account credentials
 const serviceAccount = require('../major-de7cb-firebase-adminsdk-m7g1l-a08618d106.json'); // Replace with the path to your service account key file
@@ -19,6 +21,46 @@ admin.initializeApp({
 
 const { ref, uploadBytesResumable } = require('firebase/storage');
 const postModel = require('../model/postsModel');
+
+const loginControllerGoogle=async(req,res)=>{
+  try{
+    // console.log(req.body);
+    const name=req.body.displayName;
+    const Email=req.body.email;
+    const photo=req.body.photoURL;
+
+    const User=await userModel.findOne({email:Email});
+    if(User){
+      const token = jwt.sign({ id: User._id }, process.env.JWT_SECRET, {
+        expiresIn: "1d",
+      });
+      // console.log(token)
+      
+      return res.status(200).json({ message: "Login Success", success: true,data:User, token });
+      return;
+    }
+
+    const newUser=new userModel({name:name, email:Email,photoUrl:photo,verified:true})
+    await newUser.save();
+
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+    // console.log(token)
+    return res.status(200).json({ message: "Login Success", success: true,data:newUser, token });
+    return;
+
+
+
+  }catch (error) {
+      console.log(error);
+      return res.status(500).send({
+        success: false,
+        message: `Register Controller ${error.message}`,
+      });
+      return;
+    }
+}
 
 const registerController = async (req, res) => {
     try {
@@ -35,10 +77,11 @@ const registerController = async (req, res) => {
       req.body.password = hashedPassword;
       const newUser = new userModel(req.body);
       await newUser.save();
-      res.status(201).send({ message: "Register Sucessfully", success: true });
+      return res.status(200).json({ message: "Mail Sent Successfully", success: true });
+    
     } catch (error) {
       console.log(error);
-      res.status(500).send({
+      return res.status(500).send({
         success: false,
         message: `Register Controller ${error.message}`,
       });
@@ -64,27 +107,159 @@ const registerController = async (req, res) => {
         expiresIn: "1d",
       });
       
-      res.status(200).json({ message: "Login Success", success: true, token,user });
+      return res.status(200).json({ message: "Login Success", success: true, token,user });
       
       
     } catch (error) {
       console.log(error);
-      res.status(500).send({ message: `Error in Login CTRL ${error.message}` });
+      return res.status(500).send({ message: `Error in Login CTRL ${error.message}` });
     }
   };
 
 
+  const forgotPasswordController=async(req,res)=>{
+    try{
+      const email=req.body.email;
+      const user=await userModel.findOne({email:email});
+      if(!user){
+        return res.status(400).send({message:"No user found",success:false});
+      }
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'shubhamsur09@gmail.com',
+          pass: 'cnpgkkumhduwgqub'
+        }
+      });
+      
+      var mailOptions = {
+        from: 'shubhamsur09@gmail.com',
+        to: user.email,
+        subject: 'ResetPassword Link',
+        text: `http://localhost:3000/reset-password/${user._id}`
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          return res.status(400).send({message:"Some Error Occured",success:false});
+        } else {
+          return res.status(200).json({ message: "Mail Sent Successfully", success: true });
+        }
+      });
+
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({
+        success: false,
+        error: error.message,
+        message: 'Error in fetching details',
+      });
+    }
+  }
+
+  const resetPasswordController=async(req,res)=>{
+    console.log(req.body)
+    try{
+      
+      const password=req.body.password;
+      
+      
+      const user=await userModel.findOne({_id:req.body.userId});
+      console.log(user);
+      if(!user){
+        return  res.status(400).send({message:'Some Error Occured',success:false});
+      }
+     
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      user.password = hashedPassword;
+      await user.save();
+
+      return res.status(200).send({message:'Password Updated',success:true})
+    }catch (error) {
+      console.log(error);
+      return res.status(500).send({
+        success: false,
+        error: error.message,
+        message: 'Error in fetching details',
+      });
+    }
+  }
+
+  const getverifiedController=async(req,res)=>{
+    try{
+      const user=await userModel.findOne({_id:req.params.userId});
+      if(!user){
+        return res.status(400).send({message:'User not found',success:false});
+      }
+
+       var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'shubhamsur09@gmail.com',
+          pass: 'cnpgkkumhduwgqub'
+        }
+      });
+      
+      var mailOptions = {
+        from: 'shubhamsur09@gmail.com',
+        to: user.email,
+        subject: 'Verify Link',
+        text: `http://localhost:3000/verify/${user._id}`
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          return res.status(400).send({message:"Some Error Occured",success:false});
+        } else {
+         return res.status(200).json({ message: "Mail Sent Successfully", success: true });
+        }
+      });
+
+    }catch (error) {
+      console.log(error);
+      return res.status(500).send({
+        success: false,
+        error: error.message,
+        message: 'Error in fetching details',
+      });
+    }
+  }
+  const verifyController=async(req,res)=>{
+    console.log(req.body)
+    try{
+      const userId=req.body.userId
+      const user=await userModel.findOne({_id:userId});
+      console.log(user)
+      if(!user){
+        return res.status(400).send({message:'Some Error Occured',success:false});
+        return;
+      }
+      user.verified=true;
+      await user.save();
+      return res.status(200).send({message:'User verified',success:true})
+      return;
+    }catch (error) {
+      console.log(error);
+      return res.status(500).send({
+        success: false,
+        error: error.message,
+        message: 'Error in fetching details',
+      });
+      return;
+    }
+  }
   const getUserInfoController = async (req, res) => {
     try {
       const user = await userModel.findById(req.body.userId);
-      res.status(200).send({
+      return res.status(200).send({
         success: true,
         message: 'User data fetch success',
         data: user,
       });
     } catch (error) {
       console.log(error);
-      res.status(500).send({
+      return res.status(500).send({
         success: false,
         error: error.message,
         message: 'Error in fetching details',
@@ -92,18 +267,57 @@ const registerController = async (req, res) => {
     }
   };
 
+  const setPhoneController=async(req,res)=>{
+    try{
+      
+      const phone=req.body.phone;
+      const password=req.body.password;
+      const userId=req.body.userId;
+      const user=await userModel.findOne({_id:userId});
+      // console.log(user)
+
+      if(!user){
+        return res.status(404).json({
+          success: false,
+          message: 'Some Error Occured',
+        });
+      }
+      user.phone = phone;
+      
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      user.password=hashedPassword;
+      await user.save();
+      // console.log(user)
+
+      return res.status(200).send({
+        success: true,
+        message: 'User data fetch success',
+        data: user,
+      });
+
+
+    }catch (error) {
+      console.log(error);
+      return res.status(500).send({
+        success: false,
+        error: error.message,
+        message: 'Error in fetching details',
+      });
+    }
+  }
 
   const getInfoController = async (req, res) => {
     try {
       const user = await userModel.findOne({_id:req.params.userId});
-      res.status(200).send({
+      return res.status(200).send({
         success: true,
         message: 'User data fetch success',
         data: user,
       });
     } catch (error) {
       console.log(error);
-      res.status(500).send({
+      return res.status(500).send({
         success: false,
         error: error.message,
         message: 'Error in fetching details',
@@ -112,8 +326,9 @@ const registerController = async (req, res) => {
   };
 
   const authController = async (req, res) => {
+    
     try {
-      const user = await userModel.findOne({ _id: req.body.userId }, { password: 0 });
+      const user = await userModel.findOne({ _id: req.body.userId });
       if (!user) {
         return res.status(404).json({
           success: false,
@@ -121,13 +336,13 @@ const registerController = async (req, res) => {
         });
       }
   
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         data: user,
       });
     } catch (error) {
       console.error(error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Authentication error',
         error: error.message, // Include the error message for debugging (not recommended in production)
@@ -152,13 +367,13 @@ const registerController = async (req, res) => {
         })
         // await userModel.findByIdAndUpdate(adminUser._id)
         await userModel.findByIdAndUpdate(adminUser._id,{notification})
-        res.status(201).send({
+        return res.status(201).send({
             success:true,
             message:'College Account Applied Successfully',
         })
     }catch(error){
         console.log(error)
-        res.status(500).send({success:false,error,message:'Error while applying College'})
+        return res.status(500).send({success:false,error,message:'Error while applying College'})
     }
 
 
@@ -182,7 +397,7 @@ const getAllNotificationController = async (req, res) => {
     
     const updateUser = await user.save();
 
-    res.status(200).send({
+    return res.status(200).send({
       success: true,
       message: 'All notifications marked as read',
       data: updateUser,
@@ -190,7 +405,7 @@ const getAllNotificationController = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send({
+    return res.status(500).send({
       message: 'Error in notification',
       success: false,
       error,
@@ -206,14 +421,14 @@ const deleteAllNotificationController=async(req,res)=>{
       user.seennotification=[]
       const updateUser=await user.save()
       updateUser.password=undefined
-      res.status(200).send({
+      return res.status(200).send({
           success:true,
           message:'Notifications Deleted Successfully',
           data:updateUser,
       })
   }catch(error){
       console.log(error)
-      res.status(500).send({success:false,message:'unable to delete all notifications',error})
+      return res.status(500).send({success:false,message:'unable to delete all notifications',error})
   }
 
 }
@@ -233,14 +448,14 @@ const getAllCollegesController = async (req, res) => {
       }
     }
 
-    res.status(200).send({
+    return res.status(200).send({
       success: true,
       message: 'College data',
       data: collegeData,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send({
+    return res.status(500).send({
       success: false,
       message: 'Error while fetching college data',
       error,
@@ -256,14 +471,14 @@ const UserController = async (req, res) => {
     // Create an array to store college data associated with users
     
 
-    res.status(200).send({
+    return res.status(200).send({
       success: true,
       message: 'College data',
       data: users,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send({
+    return res.status(500).send({
       success: false,
       message: 'Error while fetching college data',
       error,
@@ -295,11 +510,28 @@ const followCollegeController = async (req, res) => {
       // If not following, add the college to the user's follow array
       currentUser.follow.push(collegeInfo);
       await currentUser.save();
+      const college=await userModel.findOne({_id:req.body.collegeId});
+      if(!college){
+        return res.status(400).send({message:'SomeThing went wrong',success:false});
+      }
+      const userInfo={
+        userId:currentUser._id,
+        name:currentUser.name,
+        email:currentUser.email,
+        photoUrl:currentUser.photoUrl,
+        phone:currentUser.phone,
+      }
 
-      res.status(200).send({
+      college.followers.push(userInfo);
+      await college.save();
+
+
+
+      return res.status(200).send({
         success: true,
         message: 'College followed successfully.',
       });
+
     } else {
       // If already following, remove the college from the user's follow array
       currentUser.follow = currentUser.follow.filter(
@@ -307,14 +539,14 @@ const followCollegeController = async (req, res) => {
       );
       await currentUser.save();
 
-      res.status(200).send({
+      return res.status(200).send({
         success: true,
         message: 'College unfollowed successfully.',
       });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send({
+    return res.status(500).send({
       success: false,
       message: 'Error while following/unfollowing college.',
     });
@@ -380,40 +612,60 @@ const getFollowerController=async(req,res)=>{
     // Save the user document with the updated follow array
     await user.save();
 
-    res.status(200).json({ success: true, message: 'User followed the college', collegeInfo });
+    return res.status(200).json({ success: true, message: 'User followed the college', collegeInfo });
   } catch (error) {
     console.error('Error following college:', error);
-    res.status(500).json({ success: false, message: 'Something went wrong while following the college' });
+    return res.status(500).json({ success: false, message: 'Something went wrong while following the college' });
   }
 };
 const unfollowCollege = async (req, res) => {
   try {
     console.log('Attempting to unfollow college...');
     const userId = req.params.userId;
-    const { collegeId } = req.body;
+    const collegeId = req.body.collegeId;
 
     // Find the user by userId
     const user = await userModel.findById(userId);
+    const college = await userModel.findById(collegeId); // Use findById instead of find
+    // console.log(user)
+    // console.log(college)
+
+    if (!user || !college) {
+      return res.status(400).json({ success: false, message: 'User or college not found' });
+      console.log("user not found")
+    }
 
     // Check if the user follows the college
     const collegeIndex = user.follow.findIndex((college) => college.collegeId.toString() === collegeId);
 
     if (collegeIndex === -1) {
       return res.status(400).json({ success: false, message: 'User does not follow this college' });
+      console.log()
     }
 
     // Remove the college from the user's follow array
     user.follow.splice(collegeIndex, 1);
 
-    // Save the user document with the updated follow array
+    // Check if the college has the user in its followers
+    const userIndex = college.followers.findIndex((follower) => follower.userId.toString() === userId);
+
+    if (userIndex === -1) {
+      return res.status(400).json({ success: false, message: 'User not found in college followers' });
+    }
+
+    // Remove the user from the college's followers array
+    college.followers.splice(userIndex, 1);
+
+    await college.save();
     await user.save();
 
-    res.status(200).json({ success: true, message: 'User unfollowed the college' });
+    return res.status(200).json({ success: true, message: 'User unfollowed the college' });
   } catch (error) {
     console.error('Error unfollowing college:', error);
-    res.status(500).json({ success: false, message: 'Something went wrong while unfollowing the college' });
+    return res.status(500).json({ success: false, message: 'Something went wrong while unfollowing the college' });
   }
 };
+
 
 const storage = getStorage(firebase);
 const uploadPhotoUrl = async (req, res) => {
@@ -466,7 +718,7 @@ const uploadPhotoUrl = async (req, res) => {
    
   } catch (error) {
     console.error('Error during file upload:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Something went wrong during file upload',
       error: error.message,
@@ -522,8 +774,8 @@ const uploadVideoUrl = async (req, res) => {
 
    
   } catch (error) {
-    console.error('Error during file upload:', error);
-    res.status(500).json({
+    // console.error('Error during file upload:', error);
+    return res.status(500).json({
       success: false,
       message: 'Something went wrong during file upload',
       error: error.message,
@@ -562,12 +814,12 @@ const photoController = async (req, res) => {
     }
     
     await user.save();
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Photo URL updated successfully',
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Something went wrong',
     });
@@ -579,19 +831,49 @@ try{
   const userId=req.params.userId;
   const college=await collegeModel.findOne({userId:userId})
   if(!college){
-      res.status(400).send({success:false,message:'User not found'});
+      return  res.status(400).send({success:false,message:'User not found'});
   }
 
-  res.status(200).send({success:true,message:'User data fetch success',data:college})
+  return res.status(200).send({success:true,message:'User data fetch success',data:college})
 }
 catch(error){
   console.error(error);
-  res.status(500).send({success:false,message:'Something went wrong'})
+  return res.status(500).send({success:false,message:'Something went wrong'})
 }
 }
-module.exports={loginController,registerController,getUserInfoController,authController,getAllCollegesController,
-    applyCollegeController,getFollowController,UserController,getAllNotificationController,
-    getFollowerController,uploadPhotoUrl,photoController,getInfoController,uploadVideoUrl
+
+const getAllFollowersController=async(req,res)=>{
+  try{
+    const userId=req.params.userId;
+    const user=await userModel.findOne({_id:userId});
+    if(!user){
+      return res.status.send({message:'Not found',success:false});
+    }
+    let followers=[];
+    for (const follower of user.followers) {
+      // Assuming the follower data structure includes userId and other properties
+      followers.push({
+        userId: follower.userId,
+        name:follower.name,
+        email:follower.email,
+        photoUrl:follower.photoUrl,
+        phone:follower.phone,
+      });
+        
+    }
+
+    return res.status(200).send({message:'Fetched',success:true,data:followers});
+
+
+  }catch(error){
+    console.error(error);
+    res.status(500).send({success:false,message:'Something went wrong'})
+  }
+}
+
+module.exports={loginController,registerController,getUserInfoController,authController,getAllCollegesController,getverifiedController,
+    applyCollegeController,getFollowController,UserController,getAllNotificationController,loginControllerGoogle,resetPasswordController,verifyController,
+    getFollowerController,uploadPhotoUrl,photoController,getInfoController,uploadVideoUrl,setPhoneController,forgotPasswordController,getAllFollowersController
     ,unfollowCollege,getCollegeInfoController,deleteAllNotificationController,followCollegeController};
 
   

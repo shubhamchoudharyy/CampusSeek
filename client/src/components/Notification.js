@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components';
-import LeftSide from './Users/Leftside';
 import RightSide from './Users/Rightside';
-import {connect, useSelector} from 'react-redux';
+import { useSelector} from 'react-redux';
 import { useNavigate } from 'react-router';
-import Collegelist from './Collegelist'
+
 import NotificationPage from './NotificationPage';
 
 
@@ -18,6 +17,12 @@ const Notification = (props) => {
           navigate('/login');
         }
       }, [user, navigate]);
+
+      useEffect(()=>{
+        if(user?.phone===0){
+          navigate('/complete-login')
+        }
+      },[user,navigate])
   return (
     <Container>
         

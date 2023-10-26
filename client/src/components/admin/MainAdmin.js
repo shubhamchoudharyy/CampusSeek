@@ -7,12 +7,15 @@ import {Spin,message} from 'antd'
 import axios from 'axios'
 import ReactPlayer from 'react-player';
 import { useNavigate } from 'react-router-dom';
+import { useCopyToClipboard } from 'usehooks-ts';
+import { host } from '../../assets/APIRoute';
 const MainAdmin = (props) => {
 
 
   const {user}=useSelector((state)=>state.user)
   const [post,setPost]=useState(null);
-  const baseURL = "http://localhost:5000/api/v1";
+  
+  const [copy,setCopy]=useCopyToClipboard()
   const navigate=useNavigate();
   useEffect(() => {
     if (!localStorage.getItem('token') ) {
@@ -20,10 +23,15 @@ const MainAdmin = (props) => {
       navigate('/login');
     }
   }, [user, navigate]);
+  // useEffect(()=>{
+  //   if(user?.phone===0){
+  //     navigate('/complete-login')
+  //   }
+  // },[user,navigate])
 
   const getPost = async () => {
     try {
-      const res = await axios.post(`${baseURL}/admin/getpost`, { userId: user._id }, {
+      const res = await axios.post(`${host}/admin/getpost`, { userId: user?._id }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -39,28 +47,24 @@ const MainAdmin = (props) => {
   useEffect(() => {
     getPost();
     // Fetch posts periodically every 30 seconds
-    const intervalId = setInterval(getPost, 30000);
+    const intervalId = setInterval(getPost, 5000);
 
     // Cleanup the interval when the component unmounts
     return () => clearInterval(intervalId);
-  }, [user._id]);
-  console.log(post)
+  }, [user?._id]);
+  
 
   if (!post) {
     return <Spin style={{ marginTop: '12px' }} />
   }
  
   const handleDeletePost=async(postId,post)=>{
-    console.log('Delete is called')
-    console.log('college',postId);
-    console.log('user',user._id);
-    console.log('post',post);
-
+    
     
     try{
       
         console.log('in try')
-        const res=await axios.post(`${baseURL}/college/deletepost`,{
+        const res=await axios.post(`${host}/college/deletepost`,{
           postId:post,collegeId:postId
         });
         if(res.data.success){
@@ -91,41 +95,62 @@ const MainAdmin = (props) => {
             {/* {props.loading && <img src="./images/spin-loader.svg" alt="Loading" />} */}
             {post &&
               post.map((article) => (
-                <Article key={article._id}>
+                <Article key={article?._id}>
                   <SharedActors >
-                    <a onClick={()=>navigate(`/user-search/${article.userId}`)}>
-                      <img src={article.photoUrl} alt="Actor" />
+                    <a onClick={()=>navigate(`/user-search/${article?.userId}`)}>
+                      <img src={article?.photoUrl} alt="Actor" />
                       <div>
-                        <span>{article.name}</span>
-                        <span>{article.email}</span>
-                        <span>{article.date}</span>
+                        <span>{article?.name}</span>
+                        <span>{article?.email}</span>
+                        <span>{article?.date}</span>
                       </div>
                     </a>
-                    {user._id===article.userId ?
+                    {user?._id===article?.userId ?
                     <User>
                     <button>...</button>
+
+                    <Share>
+                      <a onClick={()=>{
+                        setCopy(`http://localhost:3000/post/${article?._id}`)
+                        message.success("Copied")
+                      }}>Copy URL</a>
+                    </Share>
                     
                     <Delete >
-                      <a onClick={()=>handleDeletePost(article.userId,article._id)}>Delete</a>
+                      <a onClick={()=>handleDeletePost(article?.userId,article?._id)}>Delete</a>
                     </Delete>
                     </User> :  
                     user?.isAdmin ?
                     <User>
                     <button>...</button>
+                    <Share>
+                      <a onClick={()=>{
+                        setCopy(`http://localhost:3000/post/${article?._id}`)
+                        message.success("Copied")
+                      }}>Copy URL</a>
+                    </Share>
                     
                     <Delete >
-                      <a onClick={()=>handleDeletePost(article.userId,article._id)}>Delete</a>
+                      <a onClick={()=>handleDeletePost(article?.userId,article?._id)}>Delete</a>
                     </Delete>
                     </User>:
-                    <button>....</button>} 
+                    <User>
+                    <button>....</button>
+                    <Share>
+                      <a onClick={()=>{
+                        setCopy(`http://localhost:3000/post/${article?._id}`)
+                        message.success("Copied")
+                      }}>Copy URL</a>
+                    </Share>
+                    </User>} 
                   </SharedActors>
-                  <Descriptions>{article.description}</Descriptions>
+                  <Descriptions>{article?.description}</Descriptions>
                   <SharedImg>
                     <a>
-                      {!article.image && article.video ? (
-                        <ReactPlayer width={'100%'} url={article.video} controls/>
+                      {!article?.image && article?.video ? (
+                        <ReactPlayer width={'100%'} url={article?.video} controls/>
                       ) : (
-                        article.image && <img src={article.image} alt="Shared" />
+                        article?.image && <img src={article?.image} alt="Shared" />
                       )}
                       {/* <img src='/images/shivji.jpg' alt="Shared" /> */}
                     </a>
@@ -226,6 +251,7 @@ const Article=styled(CommonCard)`
 `;
 
 const SharedActors=styled.div`
+cursor: pointer;
   padding:40px;
   flex-wrap:no-wrap;
   padding:12px 16px 0;   
@@ -284,6 +310,8 @@ overflow:hidden;
 color:rgba(0,0,0,0.9);
 font-size:16px;
 text-align:left;
+ white-space: pre-wrap;
+ font-size: 0.8rem;
 
 `;
 
@@ -396,16 +424,16 @@ const NavList=styled.li`
 `;
 
 
-
 const Delete=styled.div`
 z-index: 9999;
 position:absolute;
-top:10px;
+cursor:pointer;
+top:30px;
 background: white;
 border-radius: 0 0 5px 5px;
-width:50px;
+width:70px;
 height:40px;
-font-size: 16px;
+font-size: 0.7rem;
 transition-duration: 167ms;
 text-align: center;
 display: none;
@@ -413,6 +441,26 @@ display: none;
     top:-5px;
 }
 `;
+
+const Share=styled.div`
+  z-index: 9999;
+  background-color: red;
+position:absolute;
+cursor:pointer;
+top:0px;
+background: white;
+border-radius: 0 0 5px 5px;
+width:70px;
+height:40px;
+font-size :0.7rem;
+transition-duration: 167ms;
+text-align: center;
+display: none;
+@media(max-width:768px){
+    top:-5px;
+}
+`;
+
 
 const User=styled(NavList)`
 a>svg{
@@ -433,6 +481,11 @@ span{
 
 &:hover{
     
+    ${Share}{
+        align-items:center;
+        display:flex;
+        justify-content: center;
+    }
     ${Delete}{
         align-items:center;
         display:flex;

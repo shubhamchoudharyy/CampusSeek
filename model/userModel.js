@@ -16,15 +16,27 @@ const userSchema=new mongoose.Schema({
     },
     password:{
         type:String,
-        required:true,
+        // required:true,
+        default:null,
         min:8,
     },
     phone:{
         type:Number,
+        default:0,
     },
     photoUrl:{
         type:String,
         default:null,
+    },
+
+    verified:{
+        type:Boolean,
+        default:false,
+    },
+
+    premium:{
+        type:Boolean,
+        default:false,
     },
     
     isAdmin:{
@@ -57,6 +69,28 @@ const userSchema=new mongoose.Schema({
                 type:String,
             }
         }
+    ],
+    followers:[
+        {
+            userId:{
+                type:String,
+            },
+            name:{
+                type:String,
+    
+            },
+            email:{
+                type:String,
+            },
+            photoUrl:{
+                type:String,
+            },
+            phone:{
+                type:Number,
+    
+            }
+        }
+
     ],
     follow:[
         {

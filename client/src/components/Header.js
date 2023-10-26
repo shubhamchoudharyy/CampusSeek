@@ -15,7 +15,7 @@ const Header = () => {
     const isCollege=user? user.isCollege:false;
     const location=useLocation();
 //   console.log(user.isAdmin);
-console.log(isAdmin)
+// console.log(isAdmin)
 const navigate=useNavigate();
 
 useEffect(() => {
@@ -24,6 +24,11 @@ useEffect(() => {
       navigate('/login');
     }
   }, [user, navigate]);
+  useEffect(()=>{
+    if(user?.phone===0){
+      navigate('/complete-login')
+    }
+  },[user,navigate])
     const handleClick=async()=>{
         localStorage.clear();
         navigate("/login");
@@ -83,7 +88,7 @@ useEffect(() => {
             onClick={() => handleNavClick('My Colleges')}
           >
             <a onClick={() => navigate(`/mycollege/${user?._id}`)}>
-              <img src="/images/nav-network.svg" alt="" />
+              <img src="/images/myclg.png" alt="" />
               <span>My Colleges</span>
             </a>
           </NavList>
@@ -95,7 +100,7 @@ useEffect(() => {
           onClick={() => handleNavClick('Colleges')}
         >
           <a onClick={()=>navigate(`/college-list/${user._id}`)}>
-            <img src="/images/nav-jobs.svg" alt="" />
+            <img src="/images/building.png" alt="" />
             <span>Colleges</span>
           </a>
         </NavList>:
@@ -104,17 +109,26 @@ useEffect(() => {
         onClick={() => handleNavClick('Colleges')}
       >
         <a onClick={() => navigate(`/colleges/${user?._id}`)}>
-          <img src="/images/nav-jobs.svg" alt="" />
+          <img src="/images/building.png" alt="" />
           <span>Colleges</span>
         </a>
       </NavList>
     }
-                    {/* <NavList >
-                        <a>
-                            <img src="/images/nav-messaging.svg" alt=""  />
-                            <span>Messages</span>
-                        </a>
-                    </NavList> */}
+    {user?.isCollege && <NavList className={isNavActive(`/followers/${user?._id}`)} // Check if the current URL is '/colleges'
+         onClick={() => handleNavClick('Followers')}
+        >
+        <a onClick={()=>navigate(`/followers/${user?._id}`)}>
+        <img src="/images/people.png" alt=""  />
+        <span>Followers</span>
+        </a>
+    </NavList>}
+    {user?.isCollege && <NavList className={isNavActive(`/views/${user._id}`)} // Check if the current URL is '/colleges'
+        onClick={() => handleNavClick('Views')} >
+        <a onClick={()=>navigate(`/views/${user?._id}`)}>
+        <img src="/images/eye.png" alt=""  />
+        <span>Views</span>
+        </a>
+    </NavList>}
                     <NavList
                      className={isNavActive('/notification')} // Check if the current URL is '/colleges'
                      onClick={() => handleNavClick('Notification')}
@@ -149,14 +163,7 @@ useEffect(() => {
                             <a>Sign Out</a>
                         </SignOut>
                     </User>
-                    {/* <Work>
-                        <a>
-                            <img src="/images/nav-work.svg" alt="" />
-                            <span>Work
-                                <img src="/images/down-icon.svg" alt="" />
-                            </span>
-                        </a>
-                    </Work> */}
+                    
                    
                 </NavListWrap>
             </Nav>
@@ -247,7 +254,8 @@ const Nav=styled.div`
         bottom:0;
         background: white;
         width:100%;
-        z-index:1;
+        z-index:999;
+        /* background-color: red; */
         
     }
 `;
@@ -256,6 +264,7 @@ const NavListWrap=styled.ul`
     display:flex;
     flex-wrap:nowrap;
     list-style-type:none;
+    /* background-color: green; */
 
     .active{
         span:after{
@@ -271,6 +280,13 @@ const NavListWrap=styled.ul`
 
 
         }
+    }
+    @media (max-width:768px) {
+        width: 90%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: nowrap;
     }
 `;
 
@@ -288,26 +304,29 @@ const NavList=styled.li`
         font-size:12px;
         font-weight:400;
         justify-content:center;
-        line-height:1.5;
+        line-height:1;
         min-height:42px;
-        min-width:88px;
+        min-width:15px;
         position:relative;
         text-decoration: none;
         cursor: pointer;
+        /* background-color: blue; */
+        img{
+            height: 20px;
+            width: 20px;
+        }
 
         span{
             color: rgba(0,0,0,0.5);
             /* color:white; */
+            /* background-color: aqua; */
 
             display: flex;
             align-items:center;
             justify-content:space-around;
         }
 
-        @media (max-width:768px){
-            min-width:120px;
-            
-        }
+       
         
         }
         &:hover,
@@ -319,6 +338,7 @@ const NavList=styled.li`
             }
 
     } 
+   
 `;
 
 const Profile=styled.div`
@@ -389,17 +409,6 @@ const Work=styled(User)`
 border-left:1px solid rgba(0,0,0,0.8);
 `;
 
-// const mapStateToProps=(state)=>{
-//     return {
-//         user:state.userState.user,
-//     };
-// }
 
-// const mapDispatchToProps=(dispatch)=>{
-//     return {
-//         signOut:()=>dispatch(signOutAPI())
-//     }
-// }
-// export default connect(mapStateToProps,mapDispatchToProps)(Header);
 
 export default Header

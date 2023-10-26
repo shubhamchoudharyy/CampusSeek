@@ -184,4 +184,37 @@ const deleteAccountStatusController = async (req, res) => {
   };
    
 
-module.exports={getAllCollegesController,getPostController,getAllUsersController,changeAccountStatusController,deleteAccountController,deleteAccountStatusController}
+  const getVerification=async(req,res)=>{
+    try{
+      const userId=req.params.userId;
+      console.log(userId)
+      const user=await userModel.findOne({_id:userId});
+      if(!user){
+        return res.status(400).send({message:'User not found',success:false})
+      }
+      user.verified ? user.verified=false : user.verified=true;
+      await user.save();
+      return res.status(200).send({message:'Success',success:true});
+    }catch (error) {
+      console.error('Error:', error);
+      return res.status(500).json({ success: false, message: 'Internal server error.' });
+    }
+  }
+  const getPremium=async(req,res)=>{
+    try{
+      const userId=req.params.userId;
+      const user=await userModel.findOne({_id:userId});
+      if(!user){
+        return res.status(400).send({message:'User not found',success:false})
+      }
+      user.premium ? user.premium=false : user.premium=true;
+      await user.save();
+      return res.status(200).send({message:'Success',success:true});
+    }catch (error) {
+      console.error('Error:', error);
+      return res.status(500).json({ success: false, message: 'Internal server error.' });
+    }
+  }
+
+module.exports={getAllCollegesController,getPostController,getAllUsersController,getVerification,getPremium,
+  changeAccountStatusController,deleteAccountController,deleteAccountStatusController}

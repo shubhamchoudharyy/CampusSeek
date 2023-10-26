@@ -4,11 +4,13 @@ import axios from 'axios';
 import { Table, message } from 'antd';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { host } from '../../assets/APIRoute';
 
 const CollegeList = () => {
   const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
+  const [search,setSearch]=useState("");
   const params=useParams();
   useEffect(() => {
     if (!localStorage.getItem('token')) {
@@ -16,12 +18,17 @@ const CollegeList = () => {
       navigate('/login');
     }
   }, [user, navigate]);
+  useEffect(()=>{
+    if(user?.phone===0){
+      navigate('/complete-login')
+    }
+  },[user,navigate])
 
-  const baseURL = "http://localhost:5000/api/v1";
+  
 
   const getUsers = async () => {
     try {
-      const res = await axios.get(`${baseURL}/admin/getAllUsers`, {
+      const res = await axios.get(`${host}/admin/getAllUsers`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -40,7 +47,7 @@ const CollegeList = () => {
     console.log(collegeId);
     try {
       const res = await axios.post(
-        `${baseURL}/admin/deleteAccountStatus/${userId}`,
+        `${host}/admin/deleteAccountStatus/${userId}`,
          // Send userId and requestingUserId correctly
         {
           headers: {
@@ -59,8 +66,14 @@ const CollegeList = () => {
       message.error('Something Went Wrong');
     }
   };
-  
-  
+
+  const filteredUsers = search
+  ? users.filter((user) =>
+      user.name.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase()) ||
+      (typeof user.phone === 'string' && user.phone.toLowerCase().includes(search.toLowerCase()))
+    )
+  : users;
   
 
   useEffect(() => {
@@ -106,9 +119,21 @@ const CollegeList = () => {
 
   return (
     <Container>
+      <Search>
+                <div>
+                    <input type="text" placeholder='Search' value={search} 
+                    onChange={(e)=>setSearch(e.target.value)} name="" id="" />
+                </div>
+                <SearchIcon>
+                    
+                    <img src="/images/search-icon.svg" alt="" />
+                </SearchIcon>
+            </Search>
+      
+         
       <Layout>
         {/* <h2 className="text-center " style={{ color: 'white', width: '170vh' }} >Users List</h2> */}
-        <Table columns={columns} dataSource={users} />
+        <Table columns={columns} dataSource={filteredUsers} />
       </Layout>
     </Container>
   );
@@ -134,5 +159,46 @@ const Button = styled.div`
         }
     }
 `;
+
+const Search=styled.div`
+    opacity:1;
+    flex-grow: 1;
+    position:relative;
+    &>div{
+        max-width: 200px;
+        input{
+            border:none;
+            box-shadow:none;
+            background-color:#eef3f8;
+            border-radius: 2px;
+            color:rgba(0,0,0,0.9);
+            width:218px;
+            padding:0 8px 0 40px;
+            line-height: 1.75;
+            font-weight: 400;
+            font-size:14px;
+            height:34px;
+            border-color:#dce6f1;
+            vertical-align:text-top;
+            
+        }
+    }
+
+`;
+
+const SearchIcon=styled.div`
+    width:40px;
+    position:absolute;
+    z-index:1;
+    top:10px;
+    left:2px;
+    border-radius:0 2px 0 2px;
+    margin:0;
+    pointer-events: none;
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    
+    `;
 
 export default CollegeList;

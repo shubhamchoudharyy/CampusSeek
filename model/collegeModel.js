@@ -101,6 +101,25 @@ const CollegeSchema=new mongoose.Schema({
         }
     }
 
+    ],
+    view:[
+        {
+            userId:{
+                type:String,
+            },
+            name:{
+                type:String,
+            },
+            phone:{
+                type:Number,
+            },
+            email:{
+                type:String,
+            },
+            photoUrl:{
+                type:String,
+            },
+        }
     ]
 
 },{timestamps:true})

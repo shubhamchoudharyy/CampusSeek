@@ -4,6 +4,7 @@ import axios from 'axios';
 import { message } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { host } from '../assets/APIRoute';
 
 const Collegelist = () => {
   const [users, setUsers] = useState([]);
@@ -18,12 +19,17 @@ const Collegelist = () => {
       navigate('/login');
     }
   }, [user, navigate]);
+  useEffect(()=>{
+    if(user?.phone===0){
+      navigate('/complete-login')
+    }
+  },[user,navigate])
 
-  const baseURL = "http://localhost:5000/api/v1";
+ 
 
   const getColleges = async () => {
     try {
-      const res = await axios.get(`${baseURL}/user/getAllColleges`, {
+      const res = await axios.get(`${host}/user/getAllColleges`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -38,7 +44,7 @@ const Collegelist = () => {
 
   const getUsers = async () => {
     try {
-      const res = await axios.get(`${baseURL}/user/getUsers`, {
+      const res = await axios.get(`${host}/user/getUsers`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -75,7 +81,7 @@ const Collegelist = () => {
       };
 
       const res = await axios.post(
-        `${baseURL}/user/followCollege/${params.id}`,
+        `${host}/user/followCollege/${params.id}`,
         collegeInfo,
         {
           headers: {
@@ -200,9 +206,9 @@ const Content = styled.div`
 const Card = styled.div`
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
-  width: fit-content;
-  padding: 20px;
+  flex-wrap: nowrap;
+  width: 120px;
+  padding: 10px;
   border-radius: 5px;
   margin: 5px;
   margin-left: 15px;

@@ -1,4 +1,4 @@
-import React ,{useState}from 'react'
+import React ,{useState,useEffect}from 'react'
 import { app } from '../firebase';
 import styled from 'styled-components';
 import { getAuth, createUserWithEmailAndPassword,signInWithPopup, GoogleAuthProvider } from "firebase/auth";
@@ -7,15 +7,26 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideLoading, showLoading } from '../redux/features/alertSlice';
 import {Form,message} from 'antd'
+import { host } from '../assets/APIRoute';
 
 const CollegeSignup2 = () => {
     const {user}=useSelector((state)=>state.user);
     const dispatch=useDispatch()
     const navigate=useNavigate()
-    const baseURL = "http://localhost:5000/api/v1"; // Example base URL
+    
 
 
-console.log(user);
+    useEffect(() => {
+      if (!localStorage.getItem('token')) {
+        // Redirect to the login page if there's no token or user data
+        navigate('/login');
+      }
+    }, [user, navigate]);
+    useEffect(()=>{
+      if(user?.phone===0){
+        navigate('/complete-login')
+      }
+    },[user,navigate])
     const handleFinish = async (values) => {
         try {
           dispatch(showLoading());
@@ -23,7 +34,7 @@ console.log(user);
           // Check if user is available before accessing _id
           if (user) {
             const res = await axios.post(
-              `${baseURL}/user/apply-college`,
+              `${host}/user/apply-college`,
               {
                 ...values,
                 userId: user._id,

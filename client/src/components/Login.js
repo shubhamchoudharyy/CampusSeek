@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { app } from '../firebase';
-
+import { app, provider } from '../firebase';
+import { host } from '../assets/APIRoute';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import {Link, useNavigate} from 'react-router-dom'
@@ -15,13 +15,13 @@ const Login = (props) => {
     const navigate=useNavigate()
     const {user}=useSelector((state)=>state.user)
 
-    const baseURL = "http://localhost:5000/api/v1"; // Example base URL
+ 
     const onfinishHandler=async(values)=>{
-        console.log(values);
+        
         try{
           console.log(values)
           dispatch(showLoading())
-          const res=await axios.post(`${baseURL}/user/login`,values)
+          const res=await axios.post(`${host}/user/login`,values)
         //   window.location.reload()
           dispatch(hideLoading())
           if(res.data.success){
@@ -40,10 +40,51 @@ const Login = (props) => {
           message.error('Something went Wrong')
         }
     }
-    
-const handleClick=(values)=>{
-    console.log(values);
+
+
+const auth = getAuth();
+
+const GoogleSignIn=async(values)=>{
+    try{
+        dispatch(showLoading())
+        const res=await axios.post(`${host}/user/google-login`,values)
+        dispatch(hideLoading())
+        if(res.data.success){
+            localStorage.setItem('token',res.data.token)
+            if(res.data.data.phone!==0){
+                message.success('Login Succesfully')
+                navigate('/');
+            } else{
+                navigate('/complete-login')
+            }          
+            
+            
+            
+          }else{
+            message.error(res.data.message)
+          }
+        }catch(error){
+            dispatch(hideLoading())
+            console.log(error)
+            message.error('Something went Wrong')
+          }
 }
+
+const handleGoogle=async(e)=>{
+    e.preventDefault();
+    signInWithPopup(auth,provider)
+    .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const payload = result.user;
+        console.log(payload)
+        GoogleSignIn(payload);
+
+      })
+      .catch((error) => alert(error.message));
+}
+
    
 
     return (
@@ -63,20 +104,20 @@ const handleClick=(values)=>{
                     </Form.Item>
                     <button ><span>Login</span></button>
                     <p>Don't have an account? <Link to='/signup'>Sign Up</Link></p>
-                    <hr />
-                    {/* <p>Register as a College/University ?<Link to='/college-signup'>Click here</Link></p>
+                    
+                    <p>Forgot Password ?<Link to='/forgot-password'>Click here</Link></p>
                 
                 <Horizontal>
-                    <hr />
+                    <hr/>
                     <span>or</span>
-                    <hr />
+                    <hr/>
                 </Horizontal>
                 <Button>
-                <button className='btn' onClick={(e)=>{e.preventDefault(); handleClick()}}>
+                <button className='btn' onClick={(e)=>handleGoogle(e)}>
                     <img src="/images/google.svg" alt="Google Logo" />
                     <span>Sign In With Google</span>
                 </button>
-                </Button> */}
+                </Button>
                 </Cred>
             </Form>
         </Container>
@@ -108,6 +149,10 @@ const Head=styled.div`
 
 `;
 const Photo = styled.div`
+width:100%;
+display: flex;
+justify-content: center;
+align-items: center;
   img {
     box-shadow: none;
     /* background-image: url("/images/photo.svg"); */
@@ -122,6 +167,7 @@ const Photo = styled.div`
     border: 2px solid white;
     margin: -38px auto 12px;
     border-radius: 50%;
+    
   }
 `;
 
@@ -162,10 +208,12 @@ const Horizontal=styled.div`
     justify-content: center;
     flex-direction: row;
     flex-wrap: wrap;
+    width: 100%;
 
     hr{
         width: 40%;
         display: inline;
+        /* border: 1px solid; */
         height: 0;
     }
     span{
@@ -185,13 +233,14 @@ const Button=styled.div`
         border: 1px solid black;
         justify-content: space-around;
         margin-top: 40px;
-        margin-left: 50px;
+        margin-left: auto;
     }
     button:hover{
         background-color: rgba(0,0,0,0.07);
     }
     button span{
         font-size: 1rem;
+        font-weight: 400;
         padding-top:10px;
     }
     button img{

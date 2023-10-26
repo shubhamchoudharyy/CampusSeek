@@ -8,23 +8,31 @@ import ReactPlayer from 'react-player';
 import { combineReducers } from 'redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import {useCopyToClipboard} from 'usehooks-ts'
 import { Spin,message } from 'antd';
+import { host } from '../../assets/APIRoute';
 const Mainclg = () => {
   const [showModel, setShowModel] = useState('close');
   const [post,setPost]=useState(null);
-  const baseURL = "http://localhost:5000/api/v1";
+  
   const navigate=useNavigate();
   const dispatch=useDispatch();
   const {user}=useSelector((state)=>state.user)
+  const [copy,setCopy]=useCopyToClipboard()
   useEffect(() => {
     if (!localStorage.getItem('token') ) {
       // Redirect to the login page if there's no token or user data
       navigate('/login');
     }
   }, [user, navigate]);
+  // useEffect(()=>{
+  //   if(user?.phone===0){
+  //     navigate('/complete-login')
+  //   }
+  // },[user,navigate])
  const getPost = async () => {
     try {
-      const res = await axios.post(`${baseURL}/college/getpost`, { userId: user._id }, {
+      const res = await axios.post(`${host}/college/getpost`, { userId: user._id }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -64,7 +72,7 @@ const Mainclg = () => {
     try{
       
         console.log('in try')
-        const res=await axios.post(`${baseURL}/college/deletepost`,{
+        const res=await axios.post(`${host}/college/deletepost`,{
           postId:post,collegeId:postId
         });
         if(res.data.success){
@@ -91,13 +99,13 @@ const Mainclg = () => {
         <Container>
           <ShareBox>
             <div>
-              {user && user.photoUrl ? (
-                <img src={user.photoUrl} alt="User" />
+              {user && user?.photoUrl ? (
+                <img src={user?.photoUrl} alt="User" />
               ) : (
                 <img src="/images/user.svg" alt="User" />
               )}
               {/* <img src="/images/user.svg" alt="User" /> */}
-              <button onClick={handleClick} >
+              <button  onClick={handleClick} >
                 Start a post
               </button>
             </div>
@@ -118,40 +126,46 @@ const Mainclg = () => {
               </button>
             </div>
           </ShareBox>
-          {post.length === 0 ? (
+          {post?.length === 0 ? (
         <p>There are no articles</p>
       ) : (
           <Content>
             {/* {props.loading && <img src="./images/spin-loader.svg" alt="Loading" />} */}
-            {post.length > 0 &&
-              post.map((article) => (
-                <Article key={article._id} >
+            {post?.length > 0 &&
+              post?.map((article) => (
+                <Article key={article?._id} >
                   <SharedActors >
-                    <a onClick={()=>navigate(`/user-search/${article.userId}`)}>
-                      <img src={article.photoUrl} alt="Actor" />
+                    <a onClick={()=>navigate(`/user-search/${article?.userId}`)}>
+                      <img src={article?.photoUrl} alt="Actor" />
                       <div>
-                        <span>{article.name}</span>
-                        <span>{article.email}</span>
-                        <span>{article.date}</span>
+                        <span>{article?.name}</span>
+                        <span>{article?.email}</span>
+                        <span>{article?.date}</span>
                       </div>
                     </a>
-                    {user._id===article.userId ?
+                    {user?._id===article?.userId ?
                     <User>
                     <button>...</button>
+                    <Share>
+                      <a onClick={()=>{
+                        setCopy(`http://localhost:3000/post/${article?._id}`)
+                        message.success("Copied")
+                      }}>Copy URL</a>
+                    </Share>
                     
                     <Delete >
-                      <a onClick={()=>handleDeletePost(article.userId,article._id)}>Delete</a>
+                      <a onClick={()=>handleDeletePost(article?.userId,article?._id)}>Delete</a>
                     </Delete>
                     </User> :
                     <button>....</button>} 
                   </SharedActors>
-                  <Descriptions>{article.description}</Descriptions>
+                  <Descriptions>{article?.description}</Descriptions>
                   <SharedImg>
                     <a>
-                      {!article.image && article.video ? (
-                        <ReactPlayer width={'100%'} url={article.video} controls/>
+                      {!article?.image && article?.video ? (
+                        <ReactPlayer width={'100%'} url={article?.video} controls/>
                       ) : (
-                        article.image && <img src={article.image} alt="Shared" />
+                        article?.image && <img src={article?.image} alt="Shared" />
                       )}
                       {/* <img src='/images/shivji.jpg' alt="shared"/> */}
                     </a>
@@ -193,6 +207,7 @@ const ShareBox=styled(CommonCard)`
 
   div{
     
+    
     button{
       outline:none;
       color:rgba(0,0,0,0.6);
@@ -204,6 +219,7 @@ const ShareBox=styled(CommonCard)`
       display:flex;
       align-items: center;
       font-weight:600;
+
 
 
     }
@@ -260,6 +276,7 @@ const SharedActors=styled.div`
   margin-bottom: 8px;
   align-items:center;
   display:flex;
+  cursor: pointer;
   a{
     margin-right: 12px;
     flex-grow:1;
@@ -312,6 +329,8 @@ overflow:hidden;
 color:rgba(0,0,0,0.9);
 font-size:16px;
 text-align:left;
+ white-space: pre-wrap;
+ font-size: 0.8rem;
 
 `;
 
@@ -384,12 +403,13 @@ const Content=styled.div`
 const Delete=styled.div`
 z-index: 9999;
 position:absolute;
-top:10px;
+cursor:pointer;
+top:30px;
 background: white;
 border-radius: 0 0 5px 5px;
 width:70px;
 height:40px;
-font-size: 16px;
+font-size: 0.7rem;
 transition-duration: 167ms;
 text-align: center;
 display: none;
@@ -397,6 +417,26 @@ display: none;
     top:-5px;
 }
 `;
+
+const Share=styled.div`
+  z-index: 9999;
+  background-color: red;
+position:absolute;
+cursor:pointer;
+top:0px;
+background: white;
+border-radius: 0 0 5px 5px;
+width:70px;
+height:40px;
+font-size: 0.7rem;
+transition-duration: 167ms;
+text-align: center;
+display: none;
+@media(max-width:768px){
+    top:-5px;
+}
+`;
+
 
 
 const NavList=styled.li`
@@ -444,28 +484,33 @@ const NavList=styled.li`
 
 const User=styled(NavList)`
 a>svg{
-    width:24px;
-    border-radius:20%
-}
-
-a>img{
-    width:24px;
-    height:24px;
-    border-radius:50%;
-}
-
-span{
-    display: flex;;
-    align-items:center;
-}
-
-&:hover{
-    
-    ${Delete}{
-        align-items:center;
-        display:flex;
-        justify-content: center;
+        width:24px;
+        border-radius:20%
     }
-}
+
+    a>img{
+        width:24px;
+        height:24px;
+        border-radius:50%;
+    }
+
+    span{
+        display: flex;;
+        align-items:center;
+    }
+
+    &:hover{
+        ${Share}{
+            align-items:center;
+            display:flex;
+            justify-content: center;
+        }
+        ${Delete}{
+            align-items:center;
+            display:flex;
+            justify-content: center;
+        }
+    }
 `;
+
 export default Mainclg;

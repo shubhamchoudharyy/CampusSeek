@@ -6,6 +6,7 @@ import { connect, useDispatch, useSelector } from 'react-redux';
 import { Spin, message } from 'antd';
 import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom';
+import { host } from '../../assets/APIRoute';
 // import { postArticleAPI } from '../actions';
 // import {firestore} from '../firebase'
 const PostModel = (props) => {
@@ -37,7 +38,7 @@ const PostModel = (props) => {
               const formData = new FormData();
               formData.append('fieldname', selectedImage);
       
-              const res = await axios.post(`${baseURL}/user/Url`, formData, {
+              const res = await axios.post(`${host}/user/Url`, formData, {
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem('token')}`,
                   'Content-Type': 'multipart/form-data',
@@ -62,7 +63,7 @@ const PostModel = (props) => {
               const formData = new FormData();
               formData.append('fieldname', selectedVideo);
       
-              const res = await axios.post(`${baseURL}/user/videoUrl`, formData, {
+              const res = await axios.post(`${host}/user/videoUrl`, formData, {
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem('token')}`,
                   'Content-Type': 'multipart/form-data',
@@ -91,8 +92,8 @@ const PostModel = (props) => {
         };
     const updatePost=async(photoUrl,e)=>{
         try{
-            const res=await axios.post(`${baseURL}/college/post`,
-            {userId:user._id,image:photoUrl,description:editorText},{
+            const res=await axios.post(`${host}/college/post`,
+            {userId:user?._id,image:photoUrl,description:editorText},{
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -108,8 +109,8 @@ const PostModel = (props) => {
     const uploadVideo=async(e)=>{
         try{
             setVideoLoading(true);
-            const res=await axios.post(`${baseURL}/college/video`,
-            {userId:user._id,description:editorText,video:videoLink},{
+            const res=await axios.post(`${host}/college/video`,
+            {userId:user?._id,description:editorText,video:videoLink},{
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -128,8 +129,8 @@ const PostModel = (props) => {
     const uploadVideoUrl=async(videoUrl,e)=>{
         try{
             setVideoLoading(true);
-            const res=await axios.post(`${baseURL}/college/video`,
-            {userId:user._id,description:editorText,video:videoUrl},{
+            const res=await axios.post(`${host}/college/video`,
+            {userId:user?._id,description:editorText,video:videoUrl},{
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -148,8 +149,8 @@ const PostModel = (props) => {
     const uploadDescription=async(e)=>{
         try{
             
-            const res=await axios.post(`${baseURL}/college/description`,
-            {userId:user._id,description:editorText},{
+            const res=await axios.post(`${host}/college/description`,
+            {userId:user?._id,description:editorText},{
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -164,7 +165,7 @@ const PostModel = (props) => {
             
           }
     }
-    const baseURL = "http://localhost:5000/api/v1";
+   
     const switchAssetArea = (area) => {
         setShareImg('');
         setVideoLink('');
@@ -235,12 +236,12 @@ const PostModel = (props) => {
               
               <SharedContent>
                 <UserInfo>
-                  {user.photoUrl ? (
-                    <img src={user.photoUrl} alt="User" />
+                  {user?.photoUrl ? (
+                    <img src={user?.photoUrl} alt="User" />
                   ) : (
                     <img src="/images/user.svg" alt="" />
                   )}
-                  <span>{user.name}</span>
+                  <span>{user?.name}</span>
                 </UserInfo>
                 <Editor>
                   <textarea
@@ -253,7 +254,7 @@ const PostModel = (props) => {
                     <UploadImg>
                       <input
                         type="file"
-                        accept="/image/gif,image/jpeg, /image/png"
+                        accept="/image/*"
                         name="image"
                         id="file"
                         style={{ display: 'none' }}
@@ -481,6 +482,7 @@ const Editor = styled.div`
         width:100%;
         min-height:100px;
         resize: none;
+        white-space: pre-line; 
 
     }
     input{
@@ -488,12 +490,14 @@ const Editor = styled.div`
         height:35px;
         font-size:16px;
         margin-bottom: 20px;
+        white-space: pre-line; 
 
     }
 `;
 
 const UploadImg = styled.div`
     text-align:center;
+    cursor: pointer;
     img{
         width:100%;
 

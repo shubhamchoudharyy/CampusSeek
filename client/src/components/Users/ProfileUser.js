@@ -7,6 +7,7 @@ import { showLoading, hideLoading } from '../../redux/features/alertSlice';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { host } from '../../assets/APIRoute';
 
 const ProfileUser = () => {
   const { user } = useSelector((state) => state.user);
@@ -20,19 +21,25 @@ const ProfileUser = () => {
   const [newPhotoUrl, setNewPhotoUrl] = useState('');
   const [showUploadAndPostButton, setShowUploadAndPostButton] = useState(true);
   const [showCrossButton, setShowCrossButton] = useState(false);
+  const [load,setLoad]=useState(false);
 
   useEffect(() => {
     if (!localStorage.getItem('token')) {
       navigate('/login');
     }
   }, [user, navigate]);
+  useEffect(()=>{
+    if(user?.phone===0){
+      navigate('/complete-login')
+    }
+  },[user,navigate])
 
-  const baseURL = "http://localhost:5000/api/v1";
+ 
 
   const getUserInfo = async () => {
     try {
       const res = await axios.post(
-        `${baseURL}/user/getUserInfo`,
+        `${host}/user/getUserInfo`,
         { userId: params.id },
         {
           headers: {
@@ -67,7 +74,7 @@ const ProfileUser = () => {
         const formData = new FormData();
         formData.append('fieldname', selectedImage);
   
-        const res = await axios.post(`${baseURL}/user/Url`, formData, {
+        const res = await axios.post(`${host}/user/Url`, formData, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
             'Content-Type': 'multipart/form-data',
@@ -102,7 +109,7 @@ const ProfileUser = () => {
   const updateProfilePhoto = async (photoUrl) => {
     try {
       const res = await axios.post(
-        `${baseURL}/user/photo`,
+        `${host}/user/photo`,
         { userId: params.id, photo: photoUrl },
         {
           headers: {
@@ -120,6 +127,21 @@ const ProfileUser = () => {
     }
   };
 
+  const verify=async()=>{
+    try{
+      setLoad(true)
+      const res=await axios.post(`${host}/user/getverified/${user._id}`)
+      if(res.data.success){
+        setLoad(false)
+        message.success('A mail has been sent to your email')
+      }else{
+        message.error('Invalid Email')
+      }
+    }catch (error) {
+      console.log(error);
+      setLoad(false);
+    }
+  }
   useEffect(() => {
     getUserInfo();
   }, []);
@@ -130,7 +152,7 @@ const ProfileUser = () => {
         <UserInfo>
           <CardBackground />
           <a>
-            <Photo>
+            <Photo style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
               <img src={newPhotoUrl || user?.photoUrl} alt='user' />
               {imageSelected && showUploadAndPostButton && (
                 <ButtonsContainer>
@@ -143,16 +165,16 @@ const ProfileUser = () => {
               )}
               {uploading && <Spin style={{ marginTop: '12px' }} />}
             </Photo>
-            <Links>{user ? user.name : 'user'}</Links>
+            <Links style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>{user ? user.name : 'user'}</Links>
           </a>
           <a>
-            <AddPhotoText>
+            <AddPhotoText style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
               <label htmlFor="photoUpload">Edit Photo</label>
               <input
                 type="file"
                 name="photoUrl"
                 id="photoUpload"
-                accept="/image/gif,image/jpeg, /image/png"
+                accept="/image/*"
                 style={{ display: 'none' }}
                 onChange={handleChange}
               />
@@ -199,8 +221,14 @@ const ProfileUser = () => {
           </fieldset>
           <p>
             Register as a College/University ?
-            <a onClick={() => navigate(`/college-signup/${user?._id}`)}>Click here</a>
+            <a style={{cursor:'pointer'}} onClick={() => navigate(`/college-signup/${user?._id}`)}>Click here</a>
           </p>
+          {!user?.verified && <p>
+            Get yourself verified  
+            {load ? <Spin style={{marginLeft:'20px'}}/> :<Button onClick={verify}><span>Verify</span></Button>}
+           
+          </p>}
+          
         </Cred>
       </Layout>
     </Container>
@@ -245,8 +273,9 @@ const Button = styled.button`
   background-color: #007bff;
   /* Button background color */
   color: #fff;
+  margin-left: 20px;
   /* Text color */
-  padding: 10px 20px;
+  padding: 5px 10px;
   /* Padding for the button */
   border: none;
   /* No border */
@@ -257,7 +286,7 @@ const Button = styled.button`
 
   /* Additional CSS styles for hover and focus states */
   &:hover {
-    background-color: #0056b3;
+    background-color: #005880;
     /* Button background color on hover */
   }
 
@@ -265,6 +294,9 @@ const Button = styled.button`
     outline: none;
     /* Remove focus outline */
   }
+  
+  
+
 `;
 const UserInfo = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
@@ -352,6 +384,7 @@ const Cred = styled.div`
   legend {
     font-weight: 600;
   }
+  
 `;
 
 const About = styled.form`

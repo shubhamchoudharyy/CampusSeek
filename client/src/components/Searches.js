@@ -4,6 +4,7 @@ import axios from 'axios';
 import { message } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { host } from '../assets/APIRoute';
 
 const Searches = (props) => {
   const [users, setUsers] = useState([]);
@@ -19,6 +20,11 @@ const Searches = (props) => {
       navigate('/login');
     }
   }, [user, navigate]);
+  useEffect(()=>{
+    if(user?.phone===0){
+      navigate('/complete-login')
+    }
+  },[user,navigate])
 
  
 
@@ -31,11 +37,11 @@ const Searches = (props) => {
   
   
 
-  const baseURL = 'http://localhost:5000/api/v1';
+ 
 
   const getColleges = async () => {
     try {
-      const res = await axios.get(`${baseURL}/user/getAllColleges`, {
+      const res = await axios.get(`${host}/user/getAllColleges`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -88,7 +94,7 @@ const Searches = (props) => {
       };
 
       const res = await axios.post(
-        `${baseURL}/user/followCollege/${params.id}`,
+        `${host}/user/followCollege/${params.id}`,
         collegeInfo,
         {
           headers: {

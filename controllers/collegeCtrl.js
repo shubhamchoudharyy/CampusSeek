@@ -227,7 +227,7 @@ const updateController=async(req,res)=>{
 }
 
 const postController=async(req,res)=>{
-  console.log(req.body);
+
   try{
     const post=await postModel({...req.body});
     const image=req.body.image;
@@ -330,18 +330,11 @@ const getPostController = async (req, res) => {
 const getPostsController = async (req, res) => {
   try {
     const userId = req.params.userId;
-    // console.log(userId);
-    // const user = await userModel.findOne({ _id: userId });
-
-    // // console.log('User Data:', user);
-    // if(!user){
-    //   return res.status(400).json({success:false,message:'User not found'})
-    // }
+    
 
     // Find posts where userId matches user.follow.collegeId or user._id
     const posts = await postModel.find({userId:userId }).sort({ createdAt: -1 });
 
-    // console.log('Posts:', posts);
 
     if (!posts) {
       return res.status(400).json({ success: false, message: 'No posts' });
@@ -353,31 +346,7 @@ const getPostsController = async (req, res) => {
   }
 };
 
-// const getPosteController = async (req, res) => {
-//   try {
-//     const userId = req.params.userId;
-//     console.log(userId);
-//     // const user = await userModel.findOne({ _id: userId });
 
-//     // // console.log('User Data:', user);
-//     // if(!user){
-//     //   return res.status(400).json({success:false,message:'User not found'})
-//     // }
-
-//     // Find posts where userId matches user.follow.collegeId or user._id
-//     const posts = await postModel.find({userId:userId }).sort({ createdAt: -1 });
-
-//     console.log('Posts:', posts);
-
-//     if (!posts) {
-//       return res.status(400).json({ success: false, message: 'No posts' });
-//     }
-//     return res.status(200).json({ success: true, message: 'Posts received', data: posts });
-//   } catch (error) {
-//     console.error('Error:', error);
-//     return res.status(500).json({ success: false, message: 'Internal server error.' });
-//   }
-// };
 
 const rateController=async(req,res)=>{
   try{
@@ -433,6 +402,82 @@ const rateController=async(req,res)=>{
     return res.status(500).json({ success: false, message: 'Internal server error.' });
   }
 }
+const ViewController = async (req, res) => {
+  try {
+    const collegeId = req.params.userId;
+    const userId = req.body.userId;
+
+    if (!userId || !collegeId) {
+      return res.status(400).json({ success: false, message: 'Invalid user or college ID' });
+    }
+
+    // Find the user and college
+    const college = await collegeModel.findOne({ userId: collegeId });
+    const user = await userModel.findById(userId);
+
+    // Check if both user and college exist
+    if (!user || !college) {
+      return res.status(400).json({ success: false, message: 'User or college not found' });
+    }
+
+    // Check if the user has already been fetched
+    const userIndex = college.view.findIndex((user) => user.userId.toString() === userId);
+    if (userIndex !== -1) {
+      return res.status(200).json({ success: true, message: 'Already fetched' });
+    }
+
+    // Prepare user information for the view record
+    const userInfo = {
+      userId: user._id,
+      name: user.name,
+      phone: user.phone,
+      email: user.email,
+      photoUrl: user.photoUrl,
+    };
+
+    // Update the college's view record
+    college.view.push(userInfo);
+    await college.save();
+
+    return res.status(200).json({ success: true, message: 'View record added successfully' });
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
+const getAllViewsController=async(req,res)=>{
+  
+  try{
+    const collegeId=req.params.userId;
+    const college=await collegeModel.findOne({userId:collegeId});
+    if(!college){
+      return res.status(400).json({ success: false, message: 'User or college not found' });
+
+    }
+    let views=[];
+    for (let i = 0; i < college.view.length; i++) {
+      // Check if the index is odd
+      if (i % 2 === 1) {
+        const user = college.view[i];
+        views.push({
+          userId: user.userId,
+          name: user.name,
+          phone: user.phone,
+          email: user.email,
+          photoUrl: user.photoUrl,
+        });
+      }
+    }
+    return res.status(200).json({ success: true, message: 'fetched',data:views });
+
+
+  }catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+}
+
 const getDeletePostController = async (req, res) => {
   console.log(req.body)
   try {
@@ -466,7 +511,22 @@ const getDeletePostController = async (req, res) => {
   }
 };
 
+const getOnePostController=async(req,res)=>{
+  try{
+    const postId=req.params.userId;
+    const post=await postModel.findOne({_id:postId});
+    if(!post){
+      return res.status(400).json({ success: false, message: 'No posts' });
+    }
+    return res.status(200).send({success:true,message:'Post fetched',data:post});
+
+  }catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+}
+
 
 module.exports={getCollegeInfoController,postController,getPendingInfoController,getInfoController
-  ,addCoursesController,getDeletePostController,
+  ,addCoursesController,getDeletePostController,ViewController,getAllViewsController,getOnePostController,
   uploadFile,getPostsController,rateController,videoController,descriptionController,removeCourseController,updateController,getPostController}

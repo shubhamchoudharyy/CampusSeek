@@ -19,6 +19,11 @@ const PendingProfile = () => {
       navigate('/login');
     }
   }, [user, navigate]);
+  useEffect(()=>{
+    if(user?.phone===0){
+      navigate('/complete-login')
+    }
+  },[user,navigate])
   return (
     <Container>
         

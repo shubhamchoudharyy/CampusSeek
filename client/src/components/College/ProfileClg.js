@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import FileBase from 'react-file-base64';
 import { showLoading,hideLoading } from '../../redux/features/alertSlice';
+import { host } from '../../assets/APIRoute';
 
 const ProfileClg = (props) => {
   const { user } = useSelector((state) => state.user);
@@ -34,6 +35,11 @@ const ProfileClg = (props) => {
       navigate('/login');
     }
   }, [user, navigate]);
+  useEffect(()=>{
+    if(user?.phone===0){
+      navigate('/complete-login')
+    }
+  },[user,navigate])
 
   const addCourse = () => {
     // Check if both the course name and file are not empty before adding it
@@ -68,13 +74,12 @@ const ProfileClg = (props) => {
     setCourse(initialCourse);
   };
 
-  const baseURL = "http://localhost:5000/api/v1"; // Example base URL
 
   
   const saveLatestCourseToDatabase = async () => {
     try {
       const response = await axios.post(
-        `${baseURL}/college/addCourses/`,
+        `${host}/college/addCourses/`,
         {
           userId: params.id,
           courses: course, // Send the latest course with the file URL to the server
@@ -113,7 +118,7 @@ const ProfileClg = (props) => {
 
     try {
       const response = await axios.post(
-        `${baseURL}/college/upload`,
+        `${host}/college/upload`,
         formData,
         {
           headers: {
@@ -145,7 +150,7 @@ const ProfileClg = (props) => {
         const formData = new FormData();
         formData.append('fieldname', selectedImage);
 
-        const res = await axios.post(`${baseURL}/user/Url`, formData, {
+        const res = await axios.post(`${host}/user/Url`, formData, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
             'Content-Type': 'multipart/form-data',
@@ -180,7 +185,7 @@ const ProfileClg = (props) => {
   const updateProfilePhoto = async (photoUrl) => {
     try {
       const res = await axios.post(
-        `${baseURL}/user/photo`,
+        `${host}/user/photo`,
         { userId: params.id, photo: photoUrl },
         {
           headers: {
@@ -212,7 +217,7 @@ const ProfileClg = (props) => {
 
   const handleRemoveCourse=async(index)=>{
     try{
-      const res=await axios.post(`${baseURL}/college/remove`,
+      const res=await axios.post(`${host}/college/remove`,
       {index:index,userId:params.id},{
         headers:{
           Authorization:`Bearer ${localStorage.getItem('token')}`
@@ -234,7 +239,7 @@ const ProfileClg = (props) => {
     const getCollegeInfo = async () => {
       try {
         const res = await axios.post(
-          `${baseURL}/college/getCollegeInfo/`,
+          `${host}/college/getCollegeInfo/`,
           { userId: params.id },
           {
             headers: {
@@ -263,7 +268,7 @@ const ProfileClg = (props) => {
      
       if (user) {
         const res = await axios.post(
-          `${baseURL}/college/update`,
+          `${host}/college/update`,
           {
             ...values,
             userId: user._id,
@@ -307,7 +312,7 @@ const ProfileClg = (props) => {
           <UserInfo>
             <CardBackground />
             <a>
-              <Photo>
+              <Photo style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
                 <img src={newPhotoUrl || user?.photoUrl} alt='user' />
                 {imageSelected && showUploadAndPostButton && (
                   <ButtonsContainer>
@@ -319,16 +324,16 @@ const ProfileClg = (props) => {
                 )}
                 {uploading && <Spin style={{ marginTop: '12px' }} />}
               </Photo>
-              <Link>{user?.name}</Link>
+              <Link style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>{user?.name}</Link>
             </a>
             <a>
-              <AddPhotoText>
+              <AddPhotoText style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
                 <label htmlFor="photoUpload">Edit Photo</label>
                 <input
                   type="file"
                   name="photoUrl"
                   id="photoUpload"
-                  accept="/image/gif,image/jpeg, /image/png"
+                  accept="/image/*"
                   style={{ display: 'none' }}
                   onChange={handleChange}
                 />
@@ -383,7 +388,7 @@ const ProfileClg = (props) => {
               </About>
              
             </fieldset>
-            <Button>
+            <Button style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
             <button >
               <span>Update</span>
             </button>
@@ -652,6 +657,7 @@ const About=styled.form`
         border-top:0;
         border-left: 0;
         border-right: 0;
+        white-space: pre-line; 
     }
 
 `;

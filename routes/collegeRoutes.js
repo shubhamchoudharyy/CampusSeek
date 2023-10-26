@@ -6,7 +6,7 @@ const upload = multer({ storage: storage });
 const authMiddleware = require('../middlewares/authMiddleware');
 const { getCollegeInfoController, addCoursesController,  uploadFile, getInfoController, getPendingInfoController,
      removeCourseController, updateController, postController,
-      videoController, getPostController, descriptionController, rateController, getPostsController, getDeletePostController } = require('../controllers/collegeCtrl');
+      videoController, getPostController, descriptionController, rateController, getPostsController, getDeletePostController, ViewController, getAllViewsController, getOnePostController } = require('../controllers/collegeCtrl');
 
 const router=express.Router();
 
@@ -20,6 +20,7 @@ router.post('/deletepost',getDeletePostController)
 
 
 router.post('/addCourses',authMiddleware,addCoursesController)
+router.post('/getViews/:userId',getAllViewsController)
 
 router.post('/remove',authMiddleware,removeCourseController)
 
@@ -38,6 +39,9 @@ router.post('/video',authMiddleware,videoController)
 router.post('/description',authMiddleware,descriptionController)
 
 router.post('/rate/:userId',rateController);
+
+router.post('/views/:userId',ViewController);
+router.post('/onePost/:userId',getOnePostController);
 
 router.post('/upload',upload.single('file'),uploadFile)
 module.exports=router

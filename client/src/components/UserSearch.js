@@ -5,13 +5,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import ReactPlayer from 'react-player';
+import { useCopyToClipboard } from 'usehooks-ts';
+import { host } from '../assets/APIRoute';
 
 
 const UserSearch = (props) => {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const {id} = useParams();
-  const baseURL = "http://localhost:5000/api/v1";
+  const params=useParams();
+
   const [values, setValues] = useState(null);
   const [activeComponent, setActiveComponent] = useState("Posts"); // Initialize with "Posts"
   const [post,setPost]=useState(null);
@@ -23,12 +26,47 @@ const UserSearch = (props) => {
   const [showRatings,setShowRatings]=useState(false);
   const [isFollowing, setIsFollowing] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [copy,setCopy]=useCopyToClipboard();
   const [rate, setRate] = useState(0); // State to track the rate value
   const [stars, setStars] = useState([false, false, false, false, false]); 
-  const userId=user._id;
+  const userId=user?._id;
+
 
 
   const [rating, setRating] = useState(0);
+  useEffect(() => {
+    if (!localStorage.getItem('token')) {
+      // Redirect to the login page if there's no token or user data
+      navigate('/login');
+    }
+  }, [user, navigate]);
+
+  useEffect(()=>{
+    if(user?.phone===0){
+      navigate('/complete-login')
+    }
+  },[user,navigate])
+
+  useEffect(()=>{
+    const addView=async(req,res)=>{
+      try{
+        const res=await axios.post(`${host}/college/views/${params.id}`,{
+          userId:user?._id,
+        });
+
+        if(res.data.success){
+          // message.success("fetched");
+        }
+
+      }catch (error) {
+      // message.error('Something Went Wrong');
+    }
+    }
+
+    if(!user?.isAdmin && user?._id !== params.id){
+      addView();
+    }
+  },[params.id]);
 
   const handleStarClick = (starValue) => {
     // If the clicked star is already checked, uncheck it
@@ -42,7 +80,7 @@ const UserSearch = (props) => {
 
   const getPost=async()=>{
     try{
-      const res=await axios.post(`${baseURL}/college/getposts/${id}`,
+      const res=await axios.post(`${host}/college/getposts/${id}`,
       {userId:id},{
         headers:{
           Authorization:` Bearer ${localStorage.getItem('token')}`
@@ -68,7 +106,7 @@ const UserSearch = (props) => {
       };
 
       const res = await axios.post(
-        `${baseURL}/user/followCollege/${id}`,
+        `${host}/user/followCollege/${id}`,
         collegeInfo,
         {
           headers: {
@@ -107,7 +145,7 @@ const UserSearch = (props) => {
   useEffect(() => {
     const getInfo = async () => {
       try {
-        const res = await axios.post(`${baseURL}/user/getInfo/${id}`);
+        const res = await axios.post(`${host}/user/getInfo/${id}`);
         if (res.data.success) {
           setValues(res.data.data);
         }
@@ -126,7 +164,7 @@ const UserSearch = (props) => {
 
     // Cleanup the interval when the component unmounts
     return () => clearInterval(intervalId);
-  }, [user._id]);
+  }, [user?._id]);
 
   useEffect(() => {
     // Check and update isFollowing whenever users or colleges change
@@ -184,17 +222,17 @@ const UserSearch = (props) => {
   
     try {
       // Check if params.id is already in user.rating.collegeId
-      const isRated = user.rating.some((item) => item.collegeId === id);
+      const isRated = user?.rating.some((item) => item.collegeId === id);
   
       if (isRated) {
         // Display a message because the user has already rated this college
         message.error('You have already rated this college.');
       } else {
         // Send the rating to the backend API
-        const response = await axios.post(`${baseURL}/college/rate/${id}`, {
+        const response = await axios.post(`${host}/college/rate/${id}`, {
           rating: rating,
           review: review,
-          userId: user._id,
+          userId: user?._id,
         });
   
         if (response.data.success) {
@@ -222,17 +260,11 @@ const UserSearch = (props) => {
   };
  
   const handleDeletePost=async(postId,post)=>{
-    console.log('Delete is called')
-    console.log('college',postId);
-    console.log('user',user._id);
-    console.log('post',post);
-
     
-   
     try{
       
         console.log('in try')
-        const res=await axios.post(`${baseURL}/college/deletepost`,{
+        const res=await axios.post(`${host}/college/deletepost`,{
           postId:post,collegeId:postId
         });
         if(res.data.success){
@@ -252,36 +284,29 @@ const UserSearch = (props) => {
   let rated = 0; // Initialize the rated variable
   let reviewed="";
 
-  user.rating.forEach((item) => {
+  user?.rating.forEach((item) => {
     if (item.collegeId === id) {
       rated = item.rate; // Set the rated variable when a match is found
       reviewed=item.review;
     }
   });
  
-  // console.log(user)
-  // console.log(id)
-  // console.log(rated)
-
-
-  // const hasRatedCollege = user.rating.some((item) =>{
-  //   item.collegeId === params.id
-  //  return item.rate});
+  
   return (
     <Container>
       <Layout>
         <UserInfo>
           <CardBackground />
           <a>
-            <Photo>
-              {values.photoUrl ?
+            <Photo style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
+              {values?.photoUrl ?
                 <img src={values?.photoUrl} /> :
                 <img src='/images/photo.svg' />}
             </Photo>
-            <Link>{values?.name}</Link>
+            <Link style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>{values?.name}</Link>
           </a>
           <a>
-            <AddPhotoText>{values?.district.toUpperCase()},{values?.state.toUpperCase()},{values?.country.toUpperCase()}</AddPhotoText>
+            <AddPhotoText style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>{values?.district.toUpperCase()},{values?.state.toUpperCase()},{values?.country.toUpperCase()}</AddPhotoText>
           </a>
         </UserInfo>
         <Description>
@@ -330,45 +355,69 @@ const UserSearch = (props) => {
           </NavListWrap>
         </Nav>
         {showPosts &&
-        <Content>
+        <Content2>
         {post &&
               post.map((article) => (
                 <Article key={article?._id} >
                   <SharedActors >
-                    <a onClick={()=>navigate(`/user-search/${article.userId}`)}>
-                      <img src={article.photoUrl} alt="Actor" />
+                    <a onClick={()=>navigate(`/user-search/${article?.userId}`)}>
+                      <img src={article?.photoUrl} alt="Actor" />
                       <div>
-                        <span>{article.name}</span>
-                        <span>{article.email}</span>
-                        <span>{article.date}</span>
+                        <span>{article?.name}</span>
+                        <span>{article?.email}</span>
+                        <span>{article?.date}</span>
                       </div>
                     </a>
-                    {user._id===article.userId ?
+                    {user?._id===article?.userId ?
                     <User>
                     <button>...</button>
+                    <Share>
+                      <a onClick={()=>{
+                        setCopy(`http://localhost:3000/post/${article?._id}`)
+                        message.success("Copied")
+                      }}>Copy URL</a>
+                    </Share>
+                    
                     
                     <Delete >
-                      <a onClick={()=>handleDeletePost(article.userId,article._id)}>Delete</a>
+                      <a onClick={()=>handleDeletePost(article?.userId,article?._id)}>Delete</a>
                     </Delete>
                     </User> :  
                     user?.isAdmin ?
                     <User>
                     <button>...</button>
+                    <Share>
+                      <a onClick={()=>{
+                        setCopy(`http://localhost:3000/post/${article?._id}`)
+                        message.success("Copied")
+                      }}>Copy URL</a>
+                    </Share>
+                    
                     
                     <Delete >
-                      <a onClick={()=>handleDeletePost(article.userId,article._id)}>Delete</a>
+                      <a onClick={()=>handleDeletePost(article?.userId,article?._id)}>Delete</a>
                     </Delete>
                     </User>:
-                    <button>....</button>} 
+                    <User>
+                    <button>....</button>
+
+                    <Share>
+                      <a onClick={()=>{
+                        setCopy(`http://localhost:3000/post/${article?._id}`)
+                        message.success("Copied")
+                      }}>Copy URL</a>
+                    </Share>
+                    </User>
+                    } 
                     
                   </SharedActors>
-                  <Descriptions>{article.description}</Descriptions>
+                  <Descriptions>{article?.description}</Descriptions>
                   <SharedImg>
                     <a>
-                      {!article.image && article.video ? (
-                        <ReactPlayer width={'100%'} url={article.video} controls/>
+                      {!article?.image && article?.video ? (
+                        <ReactPlayer width={'100%'} url={article?.video} controls/>
                       ) : (
-                        article.image && <img src={article.image} alt="Shared" />
+                        article?.image && <img src={article?.image} alt="Shared" />
                       )}
                       {/* <img src='/images/shivji.jpg' alt="shared"/> */}
                     </a>
@@ -376,7 +425,7 @@ const UserSearch = (props) => {
                  
                 </Article>
               ))} 
-          </Content>
+          </Content2>
 }
 
     {showAbout &&
@@ -410,8 +459,8 @@ const UserSearch = (props) => {
         <Content>
             <Course>
             <Struct>
-              {values.courses &&
-                values.courses.map((course, index) => (
+              {values?.courses &&
+                values?.courses.map((course, index) => (
                     
                     <div className='already' key={index}>
                     {/* <span>{index}</span> */}
@@ -491,12 +540,12 @@ const UserSearch = (props) => {
               )
             )}
           </RatingContainer>
-          {values.ratings &&
-          values.ratings
+          {values?.ratings &&
+          values?.ratings
             .slice() // Create a shallow copy of the array to avoid mutating the original
             .reverse() // Reverse the order of the copied array
             .map((item, index) => (
-              <Reviews key={index}>
+              <Reviews key={index} style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
                 <div className="outer">
                   <div className="inner">
                     <div>Anonymous</div>
@@ -520,7 +569,8 @@ const UserSearch = (props) => {
   );
 };
 const Container=styled.div`
-    padding-top:52px;
+    padding-top:60px;
+    margin:5px;
     max-width:100%;
     height:100%;
 
@@ -540,6 +590,18 @@ const Content=styled.div`
     margin-left:auto;
     margin-right: auto;
     height: fit-content;
+    
+    /* width:100%; */
+    box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+    
+`;
+const Content2=styled.div`
+    max-width: 1128px;
+    margin-left:auto;
+    margin-right: auto;
+    height: fit-content;
+    
+    width:100%;
     box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
     
 `;
@@ -557,6 +619,7 @@ const SharedActors=styled.div`
   margin-bottom: 8px;
   align-items:center;
   display:flex;
+  cursor: pointer;
   a{
     margin-right: 12px;
     flex-grow:1;
@@ -610,6 +673,8 @@ color:rgba(0,0,0,0.9);
 font-size:16px;
 text-align:left;
 align-items: flex-start;
+ white-space: pre-wrap;
+ font-size: 0.8rem;
 
 `;
 
@@ -694,6 +759,7 @@ const Struct=styled.div`
         span{
             color: white;
             font-size: .7rem;
+            cursor: pointer;
         }
     }
     a{
@@ -712,6 +778,7 @@ const Rating=styled(CommonCard)`
 `;
 const Layout=styled.div`
     display: flex;
+    
     
     border-radius: 5px;
     height:400px;
@@ -840,6 +907,9 @@ const Description=styled.div`
     text-align: left;
     padding-left: 10px;
     padding-right: 10px;
+     white-space: pre-wrap;
+     font-size: 0.8rem;
+    
     /* margin: 0 10px ; */
      @media (max-width:768px){
     padding-top: 10px;
@@ -963,6 +1033,7 @@ const NavListWrap=styled.ul`
 const NavList=styled.li`
     display:flex;
     align-items:center;
+    cursor: pointer;
     
 
     a{
@@ -1049,6 +1120,9 @@ const Reviews=styled.div`
   .outer{
     margin: 3px;
     padding: 5px;
+    textarea{
+      font-size: 0.8rem;
+    }
   }
   
 
@@ -1061,15 +1135,17 @@ const Reviews=styled.div`
 
 
 
+
 const Delete=styled.div`
 z-index: 9999;
 position:absolute;
-top:10px;
+cursor:pointer;
+top:30px;
 background: white;
 border-radius: 0 0 5px 5px;
-width:50px;
+width:70px;
 height:40px;
-font-size: 16px;
+font-size: 0.7rem;
 transition-duration: 167ms;
 text-align: center;
 display: none;
@@ -1077,6 +1153,27 @@ display: none;
     top:-5px;
 }
 `;
+
+const Share=styled.div`
+  z-index: 9999;
+  background-color: red;
+position:absolute;
+cursor:pointer;
+top:0px;
+background: white;
+border-radius: 0 0 5px 5px;
+width:70px;
+height:40px;
+font-size: 0.7rem;
+transition-duration: 167ms;
+text-align: center;
+display: none;
+@media(max-width:768px){
+    top:-5px;
+}
+`;
+
+
 
 const User=styled(NavList)`
 a>svg{
@@ -1097,6 +1194,11 @@ span{
 
 &:hover{
     
+    ${Share}{
+        align-items:center;
+        display:flex;
+        justify-content: center;
+    }
     ${Delete}{
         align-items:center;
         display:flex;

@@ -6,17 +6,18 @@ import { hideLoading, showLoading } from '../redux/features/alertSlice';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components'
+import { host } from '../assets/APIRoute';
 const NotificationPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
 
-  const baseURL = "http://localhost:5000/api/v1";
+
   const handleMarkAllRead = async () => {
     try {
       dispatch(showLoading()); // Assuming loading state is handled by showLoading action
       const res = await axios.post(
-        `${baseURL}/user/get-all-notification`,
+        `${host}/user/get-all-notification`,
         { userId: user._id },
         {
           headers: {
@@ -42,7 +43,7 @@ const NotificationPage = () => {
     try {
       dispatch(showLoading()); // Assuming loading state is handled by showLoading action
       const res = await axios.post(
-        `${baseURL}/user/delete-all-notification`,
+        `${host}/user/delete-all-notification`,
         { userId: user._id },
         {
           headers: {

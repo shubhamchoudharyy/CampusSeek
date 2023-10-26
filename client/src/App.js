@@ -22,6 +22,13 @@ import Profile from './components/Profile';
 import PublicProfile from './components/PublicProfile';
 import PendingProfile from './components/PendingProfile';
 import UserSearch from './components/UserSearch';
+import CompleteLogin from './components/CompleteLogin';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
+import Verify from './components/Verify';
+import Followers from './components/Followers';
+import View from './components/View';
+import Post from './components/Posts';
 function App() {
   return (
     <div className="App">
@@ -35,7 +42,25 @@ function App() {
           <PublicRoute>
           <Signup/>
           </PublicRoute>}/>
-
+          <Route path='/forgot-password' element={
+          <PublicRoute>
+          <ForgotPassword/>
+          </PublicRoute>}/>
+          <Route path='/reset-password/:userId' element={
+          <PublicRoute>
+          <ResetPassword/>
+          </PublicRoute>
+        }/>
+          <Route path='/verify/:userId' element={
+          <PublicRoute>
+          <Verify/>
+          </PublicRoute>
+        }/>
+          <Route path='/complete-login' element={
+            <ProtectedRoutes>
+              <CompleteLogin/>
+            </ProtectedRoutes>
+          }/>
           <Route path='/college-signup/:id' element={
           <ProtectedRoutes>
             <Header/>
@@ -57,6 +82,14 @@ function App() {
           <Route path='/college-requests' element={
           <ProtectedRoutes>
           <Header/><CollegesReq/>
+          </ProtectedRoutes>}/>
+          <Route path='/followers/:id' element={
+          <ProtectedRoutes>
+          <Header/><Followers/>
+          </ProtectedRoutes>}/>
+          <Route path='/views/:id' element={
+          <ProtectedRoutes>
+          <Header/><View/>
           </ProtectedRoutes>}/>
           <Route path='/colleges/:id' element={
             <ProtectedRoutes>
@@ -106,6 +139,12 @@ function App() {
           <ProtectedRoutes>
           <Header/><Notification/>
           </ProtectedRoutes>
+          }/>
+          <Route path='/post/:id' element={
+            <div>
+              <Header/>
+              <Post/>
+            </div>
           }/>
 
         </Routes>

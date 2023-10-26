@@ -4,16 +4,17 @@ import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux';
 import { hideLoading, showLoading } from '../redux/features/alertSlice';
 import { setUser } from '../redux/features/userSlice';
+import { host } from '../assets/APIRoute';
 
 const ProtectedRoutes = ({children}) => {
     const dispatch=useDispatch();
     const {user}=useSelector((state)=>state.user)
 
-    const baseURL = "http://localhost:5000/api/v1"; // Example base URL
+    
     const getUser=async()=>{
         try{
             dispatch(showLoading())
-            const res=await axios.post(`${baseURL}/user/getUserData`,{
+            const res=await axios.post(`${host}/user/getUserData`,{
                 token : localStorage.getItem('token')
             },
             {

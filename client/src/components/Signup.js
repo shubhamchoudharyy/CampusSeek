@@ -1,50 +1,99 @@
 import React ,{useState}from 'react'
-import { app } from '../firebase';
+import { app, provider } from '../firebase';
 import styled from 'styled-components';
 import { getAuth, createUserWithEmailAndPassword,signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import {Link, useNavigate} from 'react-router-dom'
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { hideLoading, showLoading } from '../redux/features/alertSlice';
-import {Form,message} from 'antd'
+import {Form,Spin,message} from 'antd'
+import { host } from '../assets/APIRoute';
 
 const Signup = () => {
 
     const dispatch=useDispatch()
     const navigate=useNavigate()
-    const baseURL = "http://localhost:5000/api/v1"; // Example base URL
+  
 
-
+    const [load,setLoad]=useState(false);
 
     const onfinishHandler=async(values)=>{
-        console.log(values);
         try{
+            setLoad(true)
             dispatch(showLoading())
-            const res=await axios.post(`${baseURL}/user/register`,values);
+            const res=await axios.post(`${host}/user/register`,values);
             dispatch(hideLoading())
             if(res.data.success){
+                setLoad(false)
                 message.success('Register Successfully')
                 
                 navigate('/login')
             }else{
                 message.error(res.data.message)
+                setLoad(false)
             }
 
         }catch(error){
+            setLoad(false)
             dispatch(hideLoading())
             console.log(error)
             message.error('Something went Wrong')
         }
     }
+
+    
+const auth = getAuth();
+
+const GoogleSignIn=async(values)=>{
+    try{
+        dispatch(showLoading())
+        const res=await axios.post(`${host}/user/google-login`,values)
+        dispatch(hideLoading())
+        if(res.data.success){
+            localStorage.setItem('token',res.data.token)
+            if(res.data.data.phone!==0){
+                message.success('Login Succesfully')
+                navigate('/');
+            } else{
+                navigate('/complete-login')
+            }          
+            
+            
+            
+          }else{
+            message.error(res.data.message)
+          }
+        }catch(error){
+            dispatch(hideLoading())
+            console.log(error)
+            message.error('Something went Wrong')
+          }
+}
+
+const handleGoogle=async(e)=>{
+    e.preventDefault();
+    signInWithPopup(auth,provider)
+    .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const payload = result.user;
+        console.log(payload)
+        GoogleSignIn(payload);
+
+      })
+      .catch((error) => alert(error.message));
+}
+
   return (
     <Container>
     
    
-    <Form layout='vertical' onFinish={onfinishHandler}>
+    <Form layout='vertical' onFinish={onfinishHandler} >
     <Photo><img src='/images/logo.png' alt='img'/></Photo>
-    <h1>Welcome to Campus Seek</h1>
+    <h1 style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>Welcome to Campus Seek</h1>
     <Head>
-        <p >Sign Up to Get Started</p>
+        <p style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}} >Sign Up to Get Started</p>
         
         <p>If applying for College/University account go on My Profile section after Signup</p>
         </Head>
@@ -69,23 +118,23 @@ const Signup = () => {
     <Form.Item label='' name='password'>
     <input type="password" name="password" id="" placeholder='Password' required />
     </Form.Item>
-  
-    <button ><span>Sign Up</span></button>
+    
+    {load? <button className='active' ><Spin/></button>:<button ><span>Sign Up</span></button>}
     <p>Already a user? <Link to='/login'>Login</Link></p>
     </Cred>
 
     
-    {/* <Horizontal>
+    <Horizontal>
     <hr />
     <span>or</span>
     <hr />
     </Horizontal>
     <Button>
-    <button className='btn' >
-        <img src="/images/google.svg"/>
-        <span>Sign Up With Google</span>
+    <button className='btn' onClick={(e)=>handleGoogle(e)}>
+        <img src="/images/google.svg" alt="Google Logo" />
+        <span>Sign In With Google</span>
     </button>
-    </Button> */}
+    </Button>
     </Form>
     
 </Container>
@@ -106,6 +155,10 @@ const Container=styled.div`
 // `;
 
 const Photo = styled.div`
+width:100%;
+display: flex;
+justify-content: center;
+align-items: center;
   img {
     box-shadow: none;
     /* background-image: url("/images/photo.svg"); */
@@ -164,6 +217,13 @@ const Cred=styled.div`
         font-size: 1rem;
         font-weight: 600;
     }
+    .active{
+        background-color: rgba(0,0,0,0.08);
+    }
+    .active:hover{
+        background-color: rgba(0,0,0,0.08);
+
+    }
 `;
 
 const Horizontal=styled.div`
@@ -182,9 +242,11 @@ const Horizontal=styled.div`
         margin:2px ;
     }
 `;
-
 const Button=styled.div`
-    button{
+    margin-right:28%;
+    margin-left: 28%;
+    /* background-color: red; */
+ button{
         width: 300px;
         height: 45px;
         background:transparent;
@@ -194,16 +256,16 @@ const Button=styled.div`
         display: flex;
         border: 1px solid black;
         justify-content: space-around;
-        margin-top: 40px;
-        margin-left: 50px;
+        margin-top: auto;
+        margin-left: auto;
     }
     button:hover{
         background-color: rgba(0,0,0,0.07);
     }
     button span{
         font-size: 1rem;
+        font-weight: 400;
         padding-top:10px;
-
     }
     button img{
         height: 30px;

@@ -2,19 +2,26 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components';
 import LeftSide from './Users/Leftside';
 import RightSide from './Users/Rightside';
-import {connect} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import { useNavigate } from 'react-router';
 import Collegelist from './Collegelist'
 
 
 
 const College = (props) => {
-    // const navigate=useNavigate();
-    // useEffect(()=>{
-    //     if(!props.user){
-    //         return navigate('/');
-    //     }
-    // },[props.user,props.history]);
+    const {user}=useSelector((state)=>state.user);
+    const navigate=useNavigate();
+    useEffect(() => {
+        if (!localStorage.getItem('token')) {
+          // Redirect to the login page if there's no token or user data
+          navigate('/login');
+        }
+      }, [user, navigate]);
+      useEffect(()=>{
+        if(user?.phone===0){
+          navigate('/complete-login')
+        }
+      },[user,navigate])
   return (
     <Container>
         

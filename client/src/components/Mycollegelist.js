@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { message } from 'antd';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { host } from '../assets/APIRoute';
 
 const Mycollegelist = () => {
   const [users, setUsers] = useState([]);
@@ -11,11 +12,11 @@ const Mycollegelist = () => {
   const params = useParams();
   const navigate=useNavigate()
 
-  const baseURL = "http://localhost:5000/api/v1";
+  
 
   const getFollowers = async () => {
     try {
-      const res = await axios.get(`${baseURL}/user/getfollow/${params.id}`, {
+      const res = await axios.get(`${host}/user/getfollow/${params.id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -42,7 +43,7 @@ const handleToggleFollow = async (collegeId) => {
       if (isFollowingCollege) {
         // If following, make a POST request to unfollow the college
         const res = await axios.post(
-          `${baseURL}/user/unfollowCollege/${params.id}`,
+          `${host}/user/unfollowCollege/${params.id}`,
           { collegeId: collegeId },
           {
             headers: {
@@ -68,7 +69,7 @@ const handleToggleFollow = async (collegeId) => {
         };
 
         const res = await axios.post(
-          `${baseURL}/user/followerCollege/${params.id}`,
+          `${host}/user/followerCollege/${params.id}`,
           collegeInfo,
           {
             headers: {
@@ -147,8 +148,8 @@ const Content=styled.div`
 const Card = styled.div`
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
-  width: fit-content;
+  flex-wrap: nowrap;
+  width: 120px;
   padding: 20px;
   border-radius: 5px;
   margin: 5px;

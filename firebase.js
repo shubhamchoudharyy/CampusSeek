@@ -1,5 +1,6 @@
 const express=require('express');
-const firebase=require('firebase/app')
+const firebase=require('firebase/app');
+const GoogleAuthProvider=require('firebase/auth');
 
 const {getStorage,ref, uploadBytes}=require('firebase/storage')
 

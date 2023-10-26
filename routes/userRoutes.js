@@ -14,14 +14,25 @@ const authMiddleware=require('../middlewares/authMiddleware');
 const { loginController, registerController,getUserInfoController
     ,authController,applyCollegeController,getAllNotificationController,deleteAllNotificationController,
      getAllCollegesController, followCollegeController,unfollowCollege,getFollowerController, UserController, getFollowController
-    ,photoController,uploadPhotoUrl,getInfoController, getCollegeInfoController, uploadVideoUrl } = require('../controllers/userCtrl');
+    ,photoController,uploadPhotoUrl,getInfoController, getCollegeInfoController, uploadVideoUrl, loginControllerGoogle, setPhoneController, forgotPasswordController, resetPasswordController, verifyController, getAllFollowersController, getverifiedController } = require('../controllers/userCtrl');
 
 const router=express.Router();
 
 router.post('/login',loginController);
+router.post('/google-login',loginControllerGoogle);
 router.post('/register', registerController);
 
+router.post('/forget-password', forgotPasswordController);
+
+router.post('/reset-password', resetPasswordController);
+
+router.post('/verify', verifyController);
+
+router.post('/getverified/:userId',getverifiedController);
+
 router.post('/getUserInfo/',authMiddleware, getUserInfoController);
+
+router.post('/setPhone',authMiddleware, setPhoneController);
 
 router.post('/info/:userId', getInfoController);
 
@@ -54,5 +65,7 @@ router.get('/getfollow/:userId', authMiddleware,getFollowController);
 router.post('/followerCollege/:userId',authMiddleware,getFollowerController)
 
 router.post('/unfollowCollege/:userId',authMiddleware,unfollowCollege)
+
+router.post('/getAllFollowers/:userId',getAllFollowersController)
 
 module.exports=router;

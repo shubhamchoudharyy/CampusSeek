@@ -5,12 +5,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import axios from 'axios'
 import ReactPlayer from 'react-player'
+import { useCopyToClipboard } from 'usehooks-ts'
+import { host } from '../assets/APIRoute'
 
 const CollegeSearch = (props) => {
     const { user } = useSelector((state) => state.user);
     const dispatch = useDispatch();
     const params = useParams();
-    const baseURL = "http://localhost:5000/api/v1";
+   
     const [values, setValues] = useState(null);
     const [activeComponent, setActiveComponent] = useState("Posts"); // Initialize with "Posts"
     const [post,setPost]=useState(null);
@@ -25,8 +27,22 @@ const CollegeSearch = (props) => {
     const [rate, setRate] = useState(0); // State to track the rate value
     const [stars, setStars] = useState([false, false, false, false, false]); 
     const [rating, setRating] = useState(0);
-    const userId=user._id;
+    const [copy,setCopy]=useCopyToClipboard();
+    const userId=user?._id;
+    
 
+    useEffect(()=>{
+      if(user?.phone===0){
+        navigate('/complete-login')
+      }
+    },[user,navigate])
+
+    useEffect(() => {
+      if (!localStorage.getItem('token')) {
+        // Redirect to the login page if there's no token or user data
+        navigate('/login');
+      }
+    }, [user, navigate]);
     const handleStarClick = (starValue) => {
       // If the clicked star is already checked, uncheck it
       if (starValue === rating) {
@@ -39,7 +55,7 @@ const CollegeSearch = (props) => {
 
     const getPost=async()=>{
         try{
-          const res=await axios.post(`${baseURL}/college/getposts/${params.id}`,
+          const res=await axios.post(`${host}/college/getposts/${params.id}`,
           {userId:params.id},{
             headers:{
               Authorization:` Bearer ${localStorage.getItem('token')}`
@@ -65,7 +81,7 @@ const CollegeSearch = (props) => {
           };
     
           const res = await axios.post(
-            `${baseURL}/user/followCollege/${params.id}`,
+            `${host}/user/followCollege/${params.id}`,
             collegeInfo,
             {
               headers: {
@@ -105,7 +121,7 @@ const CollegeSearch = (props) => {
     useEffect(()=>{
         const getInfo=async()=>{
             try{
-                const res=await axios.post(`${baseURL}/college/info/${params.id}`,
+                const res=await axios.post(`${host}/college/info/${params.id}`,
                     // {
                     //     headers: {
                     //       Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -184,14 +200,14 @@ const CollegeSearch = (props) => {
   
     try {
       // Check if params.id is already in user.rating.collegeId
-      const isRated = user.rating.some((item) => item.collegeId === params.id);
+      const isRated = user?.rating.some((item) => item.collegeId === params.id);
   
       if (isRated) {
         // Display a message because the user has already rated this college
         message.error('You have already rated this college.');
       } else {
         // Send the rating to the backend API
-        const response = await axios.post(`${baseURL}/college/rate/${params.id}`, { rating:rating,userId:user._id,review:review });
+        const response = await axios.post(`${host}/college/rate/${params.id}`, { rating:rating,userId:user?._id,review:review });
   
         if (response.data.success) {
           // Handle success, e.g., show a success message
@@ -212,17 +228,11 @@ const CollegeSearch = (props) => {
   };
 
   const handleDeletePost=async(postId,post)=>{
-    console.log('Delete is called')
-    console.log('college',postId);
-    console.log('user',user._id);
-    console.log('post',post);
-
-    
     
     try{
       
         console.log('in try')
-        const res=await axios.post(`${baseURL}/college/deletepost`,{
+        const res=await axios.post(`${host}/college/deletepost`,{
           postId:post,collegeId:postId
         });
         if(res.data.success){
@@ -241,7 +251,7 @@ const CollegeSearch = (props) => {
       let rated = 0; // Initialize the rated variable
       let reviewed="";
 
-  user.rating.forEach((item) => {
+  user?.rating.forEach((item) => {
     if (item.collegeId === params.id) {
       rated = item.rate; // Set the rated variable when a match is found
       reviewed=item.review;
@@ -256,19 +266,19 @@ const CollegeSearch = (props) => {
             <UserInfo>
               <CardBackground />
               <a>
-                <Photo>
-                  {values.photoUrl ?
+                <Photo style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
+                  {values?.photoUrl ?
                     <img src={values.photoUrl} /> :
                     <img src='/images/photo.svg' />}
                 </Photo>
-                <Link>{values.name}</Link>
+                <Link style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>{values?.name}</Link>
               </a>
               <a>
-                <AddPhotoText>{values.district.toUpperCase()},{values.state.toUpperCase()},{values.country.toUpperCase()}</AddPhotoText>
+                <AddPhotoText style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>{values?.district.toUpperCase()},{values?.state.toUpperCase()},{values?.country.toUpperCase()}</AddPhotoText>
               </a>
             </UserInfo>
             <Description>
-              <span>{values.description}</span>
+              <span>{values?.description}</span>
             </Description>
     
             <Button>
@@ -282,8 +292,8 @@ const CollegeSearch = (props) => {
               </button>
           )}
 
-              {values.website &&
-                <a href={values.website} target="_blank"  rel='noopener'>
+              {values?.website &&
+                <a href={values?.website} target="_blank"  rel='noopener'>
                   <button className='web'><span>Visit Website</span></button>
                 </a>}
     
@@ -316,41 +326,65 @@ const CollegeSearch = (props) => {
             <Content>
             {post &&
                   post.map((article) => (
-                    <Article key={article._id}>
+                    <Article key={article?._id}>
                       <SharedActors>
-                        <a onClick={()=>navigate(`/user-search/${article.userId}`)}>
-                          <img src={article.photoUrl} alt="Actor" />
+                        <a onClick={()=>navigate(`/user-search/${article?.userId}`)}>
+                          <img src={article?.photoUrl} alt="Actor" />
                           <div>
-                            <span>{article.name}</span>
-                            <span>{article.email}</span>
-                            <span>{article.date}</span>
+                            <span>{article?.name}</span>
+                            <span>{article?.email}</span>
+                            <span>{article?.date}</span>
                           </div>
                         </a>
-                        {user._id===article.userId ?
+                        {user?._id===article?.userId ?
                     <User>
                     <button>...</button>
+                    <Share>
+                      <a onClick={()=>{
+                        setCopy(`http://localhost:3000/post/${article?._id}`)
+                        message.success("Copied")
+                      }}>Copy URL</a>
+                    </Share>
+                    
                     
                     <Delete >
-                      <a onClick={()=>handleDeletePost(article.userId,article._id)}>Delete</a>
+                      <a onClick={()=>handleDeletePost(article?.userId,article?._id)}>Delete</a>
                     </Delete>
-                    </User> : 
-                    user?.isAdmin? 
+                    </User> :  
+                    user?.isAdmin ?
                     <User>
                     <button>...</button>
+                    <Share>
+                      <a onClick={()=>{
+                        setCopy(`http://localhost:3000/post/${article?._id}`)
+                        message.success("Copied")
+                      }}>Copy URL</a>
+                    </Share>
+                    
                     
                     <Delete >
-                      <a onClick={()=>handleDeletePost(article.userId,article._id)}>Delete</a>
+                      <a onClick={()=>handleDeletePost(article?.userId,article?._id)}>Delete</a>
                     </Delete>
                     </User>:
-                    <button>....</button>} 
+                    <User>
+                    <button>....</button>
+
+                    <Share>
+                      <a onClick={()=>{
+                        setCopy(`http://localhost:3000/post/${article?._id}`)
+                        message.success("Copied")
+                      }}>Copy URL</a>
+                    </Share>
+                    </User>
+                    } 
                       </SharedActors>
-                      <Descriptions>{article.description}</Descriptions>
+                      <Descriptions>{article?.description}</Descriptions>
                       <SharedImg>
                         <a>
-                          {!article.image && article.video ? (
-                            <ReactPlayer width={'100%'} url={article.video} controls/>
+                          {!article?.image && article?.video ? (
+                            <ReactPlayer width={'100%'} url={article?.video} controls/>
                           ) : (
-                            article.image && <img src={article.image} alt="Shared" />
+                            article?.image && <img src={article?.image} alt="Shared" />
                           )}
                           {/* <img src='/images/shivji.jpg' alt="shared"/> */}
                         </a>
@@ -368,19 +402,19 @@ const CollegeSearch = (props) => {
                         <Info>
                         <div>
                         <span className='grey'>Location</span>
-                        <span>{values.location}</span>
-                        <span>{values.district},{values.state},{values.country}</span>
+                        <span>{values?.location}</span>
+                        <span>{values?.district},{values?.state},{values?.country}</span>
                         </div>
                         <div>
                         <span className='grey'>Email</span>
                         <span>
-                        <a href={`mailto:${values.email}`}>{values.email}</a>
+                        <a href={`mailto:${values?.email}`}>{values?.email}</a>
                         </span>
                         </div>
     
                         <div>
                         <span className='grey'>Contact</span>
-                        <span>{values.phone}</span>
+                        <span>{values?.phone}</span>
                         </div>
                         </Info>
                 </SharedActors>
@@ -392,15 +426,15 @@ const CollegeSearch = (props) => {
             <Content>
                 <Course>
                 <Struct>
-                  {values.courses &&
-                    values.courses.map((course, index) => (
+                  {values?.courses &&
+                    values?.courses.map((course, index) => (
                         
                         <div className='already' key={index}>
                         {/* <span>{index}</span> */}
-                       <span>{course.course}</span>
-                       <span>{course.short}</span>
+                       <span>{course?.course}</span>
+                       <span>{course?.short}</span>
                        
-                       <a href={course.file} target="_blank ">
+                       <a href={course?.file} target="_blank ">
                             <button>
                             <span>View</span>
                             </button>
@@ -419,7 +453,7 @@ const CollegeSearch = (props) => {
         <Content>
           <RatingContainer>
             <RatingLabel>
-             overall Rating: <span>{parseFloat(values.rating.$numberDecimal).toFixed(1)}</span>
+             overall Rating: <span>{parseFloat(values?.rating.$numberDecimal).toFixed(1)}</span>
             </RatingLabel>
             <Stars>
               {[1, 2, 3, 4, 5].map((starValue) => (
@@ -439,7 +473,7 @@ const CollegeSearch = (props) => {
             )}
             
             
-            {user.rating.some((item) => item.collegeId === params.id) ? (
+            {user?.rating.some((item) => item.collegeId === params.id) ? (
               <>
               <div>You have already rated {rated} stars to this college.</div>
               <div>
@@ -472,19 +506,19 @@ const CollegeSearch = (props) => {
               )
             )}
           </RatingContainer>
-          {values.ratings &&
-          values.ratings
+          {values?.ratings &&
+          values?.ratings
             .slice() // Create a shallow copy of the array to avoid mutating the original
             .reverse() // Reverse the order of the copied array
             .map((item, index) => (
-              <Reviews key={index}>
+              <Reviews key={index} style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
                 <div className="outer">
                   <div className="inner">
                     <div>Anonymous</div>
-                    <div> {item.rate}★</div>
+                    <div> {item?.rate}★</div>
                   </div>
                   <div>
-                    <textarea rows="4" cols="50" disabled value={item.review} />
+                    <textarea rows="4" cols="50" disabled value={item?.review} />
                   </div>
                 </div>
               </Reviews>
@@ -535,6 +569,7 @@ const Article=styled(CommonCard)`
 
 const SharedActors=styled.div`
   padding:40px;
+  cursor: pointer;
   flex-wrap:no-wrap;
   padding:12px 16px 0;   
   margin-bottom: 8px;
@@ -593,6 +628,8 @@ color:rgba(0,0,0,0.9);
 font-size:16px;
 text-align:left;
 align-items: flex-start;
+ white-space: pre-wrap;
+ font-size: 0.8rem;
 
 `;
 
@@ -670,14 +707,20 @@ const Struct=styled.div`
     }
     button{
         border-radius:20px ;
-        background-color: #0a6653;
+        background-color: #0a66c2;
         border: 0;
         margin-top: 0;
         cursor: pointer;
         span{
             color: white;
             font-size: .7rem;
+            cursor: pointer;
         }
+    }
+     a{
+      button:hover{
+        background-color: #0a66c8;
+      }
     }
 
 `;
@@ -731,6 +774,7 @@ img{
     border:2px solid white;
     margin:-38px auto 12px;
     border-radius:50%;
+    cursor: pointer;
 }
 `;
 
@@ -806,11 +850,13 @@ padding-top:10px ;
 const Description=styled.div`
     color:black;
     margin:2%;
+     white-space: pre-wrap;
     /* background-color: red; */
     width: 100%;
     text-align: left;
     padding-left: 10px;
     padding-right: 10px;
+    font-size: 0.8rem;;
     /* margin: 0 10px ; */
      @media (max-width:768px){
     padding-top: 10px;
@@ -823,6 +869,7 @@ const Button=styled.div`
     display:flex;
     margin-top:10%;
     margin-left: 10px;
+    cursor: pointer;
     
     button{
         width:120px;
@@ -886,6 +933,7 @@ const NavListWrap=styled.ul`
 const NavList=styled.li`
     display:flex;
     align-items:center;
+    cursor: pointer;
     
 
     a{
@@ -989,12 +1037,13 @@ const Reviews=styled.div`
 const Delete=styled.div`
 z-index: 9999;
 position:absolute;
-top:10px;
+cursor:pointer;
+top:30px;
 background: white;
 border-radius: 0 0 5px 5px;
-width:50px;
+width:70px;
 height:40px;
-font-size: 16px;
+font-size: 0.7rem;
 transition-duration: 167ms;
 text-align: center;
 display: none;
@@ -1002,6 +1051,26 @@ display: none;
     top:-5px;
 }
 `;
+
+const Share=styled.div`
+  z-index: 9999;
+  background-color: red;
+position:absolute;
+cursor:pointer;
+top:0px;
+background: white;
+border-radius: 0 0 5px 5px;
+width:70px;
+height:40px;
+font-size: 0.7rem;
+transition-duration: 167ms;
+text-align: center;
+display: none;
+@media(max-width:768px){
+    top:-5px;
+}
+`;
+
 
 const User=styled(NavList)`
 a>svg{
@@ -1022,6 +1091,11 @@ span{
 
 &:hover{
     
+    ${Share}{
+        align-items:center;
+        display:flex;
+        justify-content: center;
+    }
     ${Delete}{
         align-items:center;
         display:flex;

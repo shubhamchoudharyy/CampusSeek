@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {connect, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import axios from 'axios'
@@ -8,7 +8,7 @@ const Leftside = () => {
     const {user}=useSelector((state)=>state.user);
     const navigate=useNavigate();
     
-    const baseURL = "http://localhost:5000/api/v1";
+  
    
   return (
     <Container>
