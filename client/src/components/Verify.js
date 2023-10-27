@@ -75,17 +75,26 @@ const Verify = () => {
 }
 
 const Container=styled.div`
-    height: 100vh;
+    
+height: 100vh;
     width: 100vw;
     margin: 0;
-    align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+            align-items: center;
 `;
 
 const Content=styled.div`
-    border: 1px solid;
+  
+  border: 1px solid;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+            align-items: center;
     height: 200px;
     width: 70%;
     margin: auto;

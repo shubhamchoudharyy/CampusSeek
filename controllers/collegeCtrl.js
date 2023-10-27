@@ -19,55 +19,41 @@ const getCollegeInfoController=async(req,res)=>{
         const userId=req.body.userId;
         const user=await userModel.findOne({_id:userId});
         if(!user){
-            res.status(400).send({success:false,message:'User not found'})
+          return res.status(400).send({success:false,message:'User not found'})
         }
         const college=await collegeModel.findOne({userId:user._id})
         if(!college){
-            res.status(400).send({success:false,message:'User not found'});
+          return res.status(400).send({success:false,message:'User not found'});
         }
 
-        res.status(200).send({success:true,message:'User data fetch success',data:college})
+        return res.status(200).send({success:true,message:'User data fetch success',data:college})
 
     }catch(error){
         console.error(error);
-        res.status(500).send({success:false,message:'Something went wrong'})
+        return res.status(500).send({success:false,message:'Something went wrong'})
     }
 }
 
-const getInfoController=async(req,res)=>{
-  try{
-    const userId=req.params.userId;
-    const user=await userModel.findById(userId);
-    if(!user){
-        res.status(400).send({success:false,message:'User not found'})
-    }
-    const college=await collegeModel.findOne({userId:userId})
-    if(!college){
-        res.status(400).send({success:false,message:'User not found'});
-    }
 
-    res.status(200).send({success:true,message:'User data fetch success',data:college})
-
-}catch(error){
-    console.error(error);
-    res.status(500).send({success:false,message:'Something went wrong'})
-}
-  
-}
 
 const getPendingInfoController=async(req,res)=>{
   try{
     
     const college=await collegeModel.findOne({_id:req.params.userId})
     if(!college){
-        res.status(400).send({success:false,message:'User not found'});
+        return res.status(400).send({success:false,message:'User not found'});
     }
-
-    res.status(200).send({success:true,message:'User data fetch success',data:college})
+    const user=await userModel.findOne({_id:college.userId});
+    if(!user){
+      return res.status(400).send({success:false,message:'User not found'});
+  }
+  const premium=user.premium;
+  const verified=user.verified;
+    return res.status(200).send({success:true,message:'User data fetch success',data:{college,premium,verified}});
 
 }catch(error){
     console.error(error);
-    res.status(500).send({success:false,message:'Something went wrong'})
+    return res.status(500).send({success:false,message:'Something went wrong'})
 }
   
 }
@@ -112,10 +98,10 @@ const addCoursesController = async (req, res) => {
       // Save the updated college document
       const updatedCollege = await college.save();
   
-      res.status(200).json({ success: true, college: updatedCollege });
+      return res.status(200).json({ success: true, college: updatedCollege });
     } catch (error) {
       console.error('Error:', error);
-      res.status(500).json({ success: false, error: 'Failed to add courses' });
+      return res.status(500).json({ success: false, error: 'Failed to add courses' });
     }
   };
   
@@ -137,7 +123,7 @@ const addCoursesController = async (req, res) => {
       return res.status(200).json({success:true,message:'Course removed'})
     }catch (error) {
       console.error('Error unfollowing college:', error);
-      res.status(500).json({ success: false, message: 'Something went wrong while unfollowing the college' });
+      return res.status(500).json({ success: false, message: 'Something went wrong while unfollowing the college' });
     }
   }
 
@@ -198,7 +184,7 @@ const uploadFile = (req, res) => {
 };
 
 const updateController=async(req,res)=>{
-  console.log(req.body);
+  
   try{
     const userId=req.body.userId;
     const website=req.body.website;
@@ -227,6 +213,7 @@ const updateController=async(req,res)=>{
 }
 
 const postController=async(req,res)=>{
+  
 
   try{
     const post=await postModel({...req.body});
@@ -254,7 +241,7 @@ const postController=async(req,res)=>{
 }
 
 const videoController=async(req,res)=>{
-  console.log(req.body);
+  
   try{
     const post=await postModel({...req.body});
     const userId=req.body.userId;
@@ -276,7 +263,7 @@ const videoController=async(req,res)=>{
 }
 
 const descriptionController=async(req,res)=>{
-  console.log(req.body);
+
   try{
     const post=await postModel({...req.body});
     const userId=req.body.userId;
@@ -527,6 +514,6 @@ const getOnePostController=async(req,res)=>{
 }
 
 
-module.exports={getCollegeInfoController,postController,getPendingInfoController,getInfoController
+module.exports={getCollegeInfoController,postController,getPendingInfoController
   ,addCoursesController,getDeletePostController,ViewController,getAllViewsController,getOnePostController,
   uploadFile,getPostsController,rateController,videoController,descriptionController,removeCourseController,updateController,getPostController}

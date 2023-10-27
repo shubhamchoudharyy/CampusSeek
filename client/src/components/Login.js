@@ -22,7 +22,7 @@ const Login = (props) => {
           console.log(values)
           dispatch(showLoading())
           const res=await axios.post(`${host}/user/login`,values)
-        //   window.location.reload()
+          window.location.reload()
           dispatch(hideLoading())
           if(res.data.success){
             localStorage.setItem('token',res.data.token)
@@ -48,6 +48,7 @@ const GoogleSignIn=async(values)=>{
     try{
         dispatch(showLoading())
         const res=await axios.post(`${host}/user/google-login`,values)
+        window.location.reload()
         dispatch(hideLoading())
         if(res.data.success){
             localStorage.setItem('token',res.data.token)
@@ -125,89 +126,153 @@ const handleGoogle=async(e)=>{
 };
 
 
+
 const Container=styled.div`
-     width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+
+width: 100vw;
+height: 100vh;
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+        flex-direction: column;
+-ms-flex-wrap: wrap;
     flex-wrap: wrap;
+h1,p{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+-webkit-box-align: center;
+    -ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+    -ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
+}
+
 `;
 // const Form=styled.form`
 
 // `;
 
 const Head=styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    p{
-        font-weight: 400;
-        font-size: 1.2rem;
-    }
+
+width: 100%;
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+p{
+font-weight: 400;
+font-size: 1.2rem;
+}
 
 `;
 const Photo = styled.div`
-width:100%;
+
+display: -webkit-box;
+display: -ms-flexbox;
 display: flex;
-justify-content: center;
-align-items: center;
-  img {
-    box-shadow: none;
-    /* background-image: url("/images/photo.svg"); */
-    width: 72px;
-    height: 72px;
-    box-sizing: border-box;
-    background-clip: content-box;
-    background-color: white;
-    background-position: center;
-    background-size: 60%;
-    background-repeat: no-repeat;
-    border: 2px solid white;
-    margin: -38px auto 12px;
-    border-radius: 50%;
-    
-  }
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+        flex-direction: column;
+img {
+-webkit-box-shadow: none;
+        box-shadow: none;
+/* background-image: url("/images/photo.svg"); */
+width: 72px;
+height: 72px;
+-webkit-box-sizing: border-box;
+        box-sizing: border-box;
+background-clip: content-box;
+background-color: white;
+background-position: center;
+background-size: 60%;
+background-repeat: no-repeat;
+border: 2px solid white;
+margin: -38px auto 12px;
+border-radius: 50%;
+}
 `;
 
 const Cred=styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    flex-wrap: wrap;
-    input{
-        width: 300px;
-        height: 52px;
-        margin: 8px;
-    }
 
-    button{
-        width: 300px;
-        height: 45px;
-        background-color: #0A66C2;
-        color: #fff;
-        margin: 8px;
-        border: 0px;
-        border-radius: 3px;
-        cursor: pointer;
-        }
-    button:hover{
-        background-color: #0A55B3;
-    }
-    button span{
-        font-size: 1rem;
-        font-weight: 600;
-    }
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+        flex-direction: column;
+-ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+input{
+width: 300px;
+height: 52px;
+margin: 8px;
+}
+
+button{
+width: 300px;
+height: 45px;
+background-color: #0A66C2;
+color: #fff;
+margin: 8px;
+border: 0px;
+border-radius: 3px;
+cursor: pointer;
+}
+button:hover{
+background-color: #0A55B3;
+}
+button span{
+font-size: 1rem;
+font-weight: 600;
+}
 `;
 
 const Horizontal=styled.div`
+   
+ display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    flex-wrap: wrap;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+            flex-direction: row;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
     width: 100%;
 
     hr{
@@ -222,16 +287,20 @@ const Horizontal=styled.div`
 `;
 
 const Button=styled.div`
-    button{
+   
+ button{
         width: 300px;
         height: 45px;
         background:transparent;
         color: black;
         margin: 8px;
         cursor: pointer;
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
         border: 1px solid black;
-        justify-content: space-around;
+        -ms-flex-pack: distribute;
+            justify-content: space-around;
         margin-top: 40px;
         margin-left: auto;
     }
@@ -248,17 +317,4 @@ const Button=styled.div`
         padding-top:5px ;
     }
 `;
-// const mapStateToProps=(state)=>{
-//     return{
-//         user:state.userState.user,
-//     }
-// }
-
-// const mapDispatchToProps=(dispatch)=>{
-//     return{
-//         signIn:()=> dispatch(signInAPI()),
-//     }
-// }
-
-// export default connect(mapStateToProps,mapDispatchToProps)(Login);
 export default Login;

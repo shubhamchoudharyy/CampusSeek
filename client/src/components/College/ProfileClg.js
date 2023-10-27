@@ -312,7 +312,7 @@ const ProfileClg = (props) => {
           <UserInfo>
             <CardBackground />
             <a>
-              <Photo style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
+              <Photo>
                 <img src={newPhotoUrl || user?.photoUrl} alt='user' />
                 {imageSelected && showUploadAndPostButton && (
                   <ButtonsContainer>
@@ -324,10 +324,10 @@ const ProfileClg = (props) => {
                 )}
                 {uploading && <Spin style={{ marginTop: '12px' }} />}
               </Photo>
-              <Link style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>{user?.name}</Link>
+              <Link >{user?.name}</Link>
             </a>
             <a>
-              <AddPhotoText style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
+              <AddPhotoText >
                 <label htmlFor="photoUpload">Edit Photo</label>
                 <input
                   type="file"
@@ -388,7 +388,7 @@ const ProfileClg = (props) => {
               </About>
              
             </fieldset>
-            <Button style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
+            <Button >
             <button >
               <span>Update</span>
             </button>
@@ -523,18 +523,33 @@ const Container=styled.div`
     grid-area:main;
 `;
 const Layout=styled.div`
-    background-color: #ffff;
+    
+background-color: #ffff;
+    display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
     height:100%;
     border-radius: 5px;
-    flex-direction: column;
-    box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+            box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
 
 `;
 const ButtonsContainer = styled.div`
+  
+display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+          align-items: center;
 `;
 const Buttons = styled.button`
   background-color: #007bff;
@@ -582,12 +597,29 @@ const CardBackground=styled.div`
 `;
 
 const Photo=styled.div`
+
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+        flex-direction: column;
 img{
-    box-shadow:none;
+    -webkit-box-shadow:none;
+            box-shadow:none;
     /* background-image: url("/images/photo.svg"); */
     width:72px;
     height:72px;
-    box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+            box-sizing:border-box;
     background-clip: content-box;
     background-color: white;
     background-position: center;
@@ -600,14 +632,37 @@ img{
 `;
 
 const Link=styled.div`
+
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
+
     font-size:16px;
     line-height: 1.5;
     color:rgba(0,0,0,0,9);
     font-weight:600;
-
 `;
 
 const AddPhotoText=styled.div`
+
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
+
     color:#0a66c2;
     margin-top:4px;
     font-size:12px;
@@ -616,18 +671,28 @@ const AddPhotoText=styled.div`
 `;
 
 const Cred=styled.div`
+   
+ display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
-    align-items: flex-start;
-    flex-direction:column;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+            align-items: flex-start;
+    -webkit-box-orient:vertical;
+    -webkit-box-direction:normal;
+    -ms-flex-direction:column;
+            flex-direction:column;
     padding-left:20px;
     padding-top: 20px;
     padding-bottom:20px;
-    box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+    -webkit-box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+            box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
     
     fieldset{
         border:0;
         border-radius:5px;
-        box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+        -webkit-box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+                box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
         width:90%;
 
     }
@@ -636,7 +701,7 @@ const Cred=styled.div`
     }
     .black-text-input {
     font-weight: 600;
-    color: black; // Set the text color to black
+    color: black; 
   }
   .uppercase-input {
   text-transform: uppercase;
@@ -644,7 +709,6 @@ const Cred=styled.div`
     color: black;
 }
   
-
     
 `;
 
@@ -666,6 +730,8 @@ const About=styled.form`
 const Course=styled(Cred)`
     padding:10px;
     button{
+        width:-webkit-fit-content;
+        width:-moz-fit-content;
         width:fit-content;
         border:0;
         height: 30px;
@@ -696,11 +762,20 @@ const Course=styled(Cred)`
 
 const Struct=styled.div`
 
+   
+ display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
-    align-items:center;
-    justify-content: space-around;
+    -webkit-box-align:center;
+    -ms-flex-align:center;
+            align-items:center;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
     margin-top:20px;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+            flex-direction: column;
     input{
         height:40px;
         margin:10px;
@@ -714,15 +789,19 @@ const Struct=styled.div`
         font-weight:600;
     }
     .already{
+      display: -webkit-box;
+      display: -ms-flexbox;
       display: flex;
     }
-
 `;
 
 const CustomFileInput = styled.label`
-  display: inline-block;
+ 
+ display: inline-block;
   background-color: #0a66c2;
   color: white;
+  width:-webkit-fit-content ;
+  width:-moz-fit-content ;
   width:fit-content ;
   padding:0 5px;
   height:28px;
@@ -751,6 +830,8 @@ const CustomFileInput = styled.label`
   display: inline-block;
   background-color: #0a66c2;
   color: white;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
   width: fit-content;
   padding: 0 5px;
   height: 28px;
@@ -767,11 +848,11 @@ const CustomFileInput = styled.label`
 .custom-file-input:hover {
   background-color: #0a55c1;
 }
-
 `;
 
 const FileWrapper = styled.div`
-  display: inline-block;
+  
+display: inline-block;
   background-color: #0a66c2;
   color: white;
   padding: 10px 10px;
@@ -789,6 +870,18 @@ const CrossIcon = styled.span`
 
 
 const Button=styled.div`
+
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
+
     margin: 20px;
     align-items: center;
     justify-content:center;
@@ -809,32 +902,23 @@ const Button=styled.div`
     }
 `;
 
-const RemoveCourseButton = styled.button`
-  cursor: pointer;
-  background-color: #e74c3c;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  padding: 5px 10px;
-  margin-top: 10px;
-  font-size: 0.8rem;
-  transition: background-color 0.2s;
 
-  &:hover {
-    background-color: #c0392b;
-  }
-`;
 
 const CancelButton = styled.button`
-  cursor: pointer;
+  
+cursor: pointer;
   background-color: transparent;
   border: none;
   border-radius: 5px;
   color: rgba(0,0,0,0.8);
+  width:-webkit-fit-content;
+  width:-moz-fit-content;
   width:fit-content;
   height: 18px;
   margin: 10px;
   font-weight: 600;
+  -webkit-transition: background-color 0.2s;
+  -o-transition: background-color 0.2s;
   transition: background-color 0.2s;
 
   &:hover {

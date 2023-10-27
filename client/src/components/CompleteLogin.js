@@ -68,22 +68,51 @@ const CompleteLogin = () => {
 
 
 const Container=styled.div`
+
 width: 100vw;
 height: 100vh;
+display: -webkit-box;
+display: -ms-flexbox;
 display: flex;
-align-items: center;
-justify-content: center;
-flex-direction: column;
-flex-wrap: wrap;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+        flex-direction: column;
+-ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+h1,p{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+-webkit-box-align: center;
+    -ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+    -ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
+}
+
 `;
 // const Form=styled.form`
 
 // `;
 
 const Head=styled.div`
+
 width: 100%;
+display: -webkit-box;
+display: -ms-flexbox;
 display: flex;
-justify-content: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
 p{
 font-weight: 400;
 font-size: 1.2rem;
@@ -91,12 +120,29 @@ font-size: 1.2rem;
 
 `;
 const Photo = styled.div`
+
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+        flex-direction: column;
 img {
-box-shadow: none;
+-webkit-box-shadow: none;
+        box-shadow: none;
 /* background-image: url("/images/photo.svg"); */
 width: 72px;
 height: 72px;
-box-sizing: border-box;
+-webkit-box-sizing: border-box;
+        box-sizing: border-box;
 background-clip: content-box;
 background-color: white;
 background-position: center;
@@ -109,11 +155,22 @@ border-radius: 50%;
 `;
 
 const Cred=styled.div`
+
+display: -webkit-box;
+display: -ms-flexbox;
 display: flex;
-align-items: center;
-justify-content: center;
-flex-direction: column;
-flex-wrap: wrap;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+        flex-direction: column;
+-ms-flex-wrap: wrap;
+    flex-wrap: wrap;
 input{
 width: 300px;
 height: 52px;
@@ -139,51 +196,5 @@ font-weight: 600;
 }
 `;
 
-const Horizontal=styled.div`
-display: flex;
-align-items: center;
-justify-content: center;
-flex-direction: row;
-flex-wrap: wrap;
-width: 100%;
-
-hr{
-width: 40%;
-display: inline;
-/* border: 1px solid; */
-height: 0;
-}
-span{
-margin:2px ;
-}
-`;
-
-const Button=styled.div`
-button{
-width: 300px;
-height: 45px;
-background:transparent;
-color: black;
-margin: 8px;
-cursor: pointer;
-display: flex;
-border: 1px solid black;
-justify-content: space-around;
-margin-top: 40px;
-margin-left: auto;
-}
-button:hover{
-background-color: rgba(0,0,0,0.07);
-}
-button span{
-font-size: 1rem;
-font-weight: 400;
-padding-top:10px;
-}
-button img{
-height: 30px;
-padding-top:5px ;
-}
-`;
 
 export default CompleteLogin

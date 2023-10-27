@@ -188,31 +188,47 @@ const Container = styled.div`
 `;
 
 const Layout = styled.div`
-  background-color: #ffff;
+ 
+ background-color: #ffff;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   height: 100%;
   border-radius: 5px;
-  box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0, 0 0 0 rgba(0 0 0/15%);
+  -webkit-box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0, 0 0 0 rgba(0 0 0/15%);
+          box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0, 0 0 0 rgba(0 0 0/15%);
 `;
 
 const Content = styled.div`
+  
+display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   margin-top: 10px;
   margin-left: 20px;
 `;
 
 
 const Card = styled.div`
+  
+display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
   width: 120px;
   padding: 10px;
   border-radius: 5px;
   margin: 5px;
   margin-left: 15px;
-  box-shadow: 2px 3px #888888;
+  -webkit-box-shadow: 2px 3px #888888;
+          box-shadow: 2px 3px #888888;
   background-color: #fff8;
   border: 0.5px solid rgba(0, 0, 0, 0.9);
   position: relative; /* Add this line to create a relative positioning context */
@@ -229,16 +245,27 @@ const Card = styled.div`
     margin: 5px;
     font-size: 0.75rem;
   }
+  @media screen {
+   width :80px ;
+   
+   span {
+    margin: 2px;
+    font-size: 0.6rem;
+  }
+  }
 `;
 
 
 const Photo = styled.div`
-  img {
-    box-shadow: none;
+  
+img {
+    -webkit-box-shadow: none;
+            box-shadow: none;
     /* background-image: url("/images/photo.svg"); */
     width: 50px;
     height: 50px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     background-clip: content-box;
     background-color: white;
     background-position: center;
@@ -251,7 +278,8 @@ const Photo = styled.div`
 `;
 
 const AddPhotoText = styled.div`
-  color: #0a66c2;
+  
+color: #0a66c2;
   margin-top: 4px;
   font-size: 12px;
   line-height: 1.33;
@@ -262,11 +290,13 @@ const AddPhotoText = styled.div`
   /* Add this CSS to truncate text and show ellipsis */
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+     text-overflow: ellipsis;
 `;
 
 const Button = styled.div`
   /* Use absolute positioning to always keep the button at the bottom */
+ 
   margin-top:8px;
     margin-bottom: 8px;
 

@@ -7,6 +7,7 @@ import axios from 'axios';
 import ReactPlayer from 'react-player';
 import { useCopyToClipboard } from 'usehooks-ts';
 import { host } from '../assets/APIRoute';
+import Articles from './Articles';
 
 
 const UserSearch = (props) => {
@@ -358,72 +359,8 @@ const UserSearch = (props) => {
         <Content2>
         {post &&
               post.map((article) => (
-                <Article key={article?._id} >
-                  <SharedActors >
-                    <a onClick={()=>navigate(`/user-search/${article?.userId}`)}>
-                      <img src={article?.photoUrl} alt="Actor" />
-                      <div>
-                        <span>{article?.name}</span>
-                        <span>{article?.email}</span>
-                        <span>{article?.date}</span>
-                      </div>
-                    </a>
-                    {user?._id===article?.userId ?
-                    <User>
-                    <button>...</button>
-                    <Share>
-                      <a onClick={()=>{
-                        setCopy(`http://localhost:3000/post/${article?._id}`)
-                        message.success("Copied")
-                      }}>Copy URL</a>
-                    </Share>
-                    
-                    
-                    <Delete >
-                      <a onClick={()=>handleDeletePost(article?.userId,article?._id)}>Delete</a>
-                    </Delete>
-                    </User> :  
-                    user?.isAdmin ?
-                    <User>
-                    <button>...</button>
-                    <Share>
-                      <a onClick={()=>{
-                        setCopy(`http://localhost:3000/post/${article?._id}`)
-                        message.success("Copied")
-                      }}>Copy URL</a>
-                    </Share>
-                    
-                    
-                    <Delete >
-                      <a onClick={()=>handleDeletePost(article?.userId,article?._id)}>Delete</a>
-                    </Delete>
-                    </User>:
-                    <User>
-                    <button>....</button>
-
-                    <Share>
-                      <a onClick={()=>{
-                        setCopy(`http://localhost:3000/post/${article?._id}`)
-                        message.success("Copied")
-                      }}>Copy URL</a>
-                    </Share>
-                    </User>
-                    } 
-                    
-                  </SharedActors>
-                  <Descriptions>{article?.description}</Descriptions>
-                  <SharedImg>
-                    <a>
-                      {!article?.image && article?.video ? (
-                        <ReactPlayer width={'100%'} url={article?.video} controls/>
-                      ) : (
-                        article?.image && <img src={article?.image} alt="Shared" />
-                      )}
-                      {/* <img src='/images/shivji.jpg' alt="shared"/> */}
-                    </a>
-                  </SharedImg>
-                 
-                </Article>
+                
+                <Articles article={article} />
               ))} 
           </Content2>
 }
@@ -509,7 +446,7 @@ const UserSearch = (props) => {
             
             {user?.rating.some((item) => item.collegeId === id) ? (
               <>
-              <div>You have already rated {rated} stars to this college.</div>
+              <span>You have already rated {rated} stars to this college.</span>
               <div>
               <textarea
                 rows="4"
@@ -548,8 +485,8 @@ const UserSearch = (props) => {
               <Reviews key={index} style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
                 <div className="outer">
                   <div className="inner">
-                    <div>Anonymous</div>
-                    <div> {item?.rate}★</div>
+                    <span>{item?.name}</span>
+                    <span> {item?.rate}★</span>
                   </div>
                   <div>
                     <textarea rows="4" cols="50" disabled value={item.review} />
@@ -576,54 +513,79 @@ const Container=styled.div`
 
 `;
 const CommonCard=styled.div`
-    text-align:center;
+   
+ text-align:center;
     overflow:hidden;
     margin-bottom:8px; 
     background-color:#fff;
     border-radius:5px;
     position:relative;
     border:none;
-    box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+    -webkit-box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+            box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
 `;
 const Content=styled.div`
-    max-width: 1128px;
+ 
+ max-width: 1128px;
     margin-left:auto;
     margin-right: auto;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
     height: fit-content;
-    
-    /* width:100%; */
-    box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+    /* background-color: beige; */
+    width:100%;
+    -webkit-box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+            box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+
+    @media (max-width:768px) {
+      padding-bottom: 70px;
+
+    }
     
 `;
 const Content2=styled.div`
-    max-width: 1128px;
+   
+
+ max-width: 1128px;
     margin-left:auto;
     margin-right: auto;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
     height: fit-content;
     
     width:100%;
-    box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+    -webkit-box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+            box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
     
 `;
-const Course=styled(CommonCard)``;
-const Article=styled(CommonCard)`
-  padding:0;
-  margin:0 0  8px;
-  overflow:visible;
+const Course=styled(CommonCard)`
+  width:100%;
 `;
 
+
 const SharedActors=styled.div`
-  padding:40px;
-  flex-wrap:no-wrap;
+
+padding:40px;
+  width: 100%;
+  -ms-flex-wrap:no-wrap;
+      flex-wrap:no-wrap;
   padding:12px 16px 0;   
   margin-bottom: 8px;
-  align-items:center;
+  -webkit-box-align:center;
+  -ms-flex-align:center;
+          align-items:center;
+  display:-webkit-box;
+  display:-ms-flexbox;
   display:flex;
   cursor: pointer;
   a{
     margin-right: 12px;
-    flex-grow:1;
+    -webkit-box-flex:1;
+        -ms-flex-positive:1;
+            flex-grow:1;
     overflow:hidden;
+    display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
     text-decoration: none;
 
@@ -632,10 +594,18 @@ const SharedActors=styled.div`
       height:40px;
     }
     &>div{
+      display:-webkit-box;
+      display:-ms-flexbox;
       display:flex;
-      flex-direction: column;
-      flex-grow:1;
-      flex-basis:0;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+          -ms-flex-direction: column;
+              flex-direction: column;
+      -webkit-box-flex:1;
+          -ms-flex-positive:1;
+              flex-grow:1;
+      -ms-flex-preferred-size:0;
+          flex-basis:0;
       margin-left:8px;
       overflow:hidden;
       span{
@@ -666,88 +636,112 @@ const SharedActors=styled.div`
 
 `;
 
-const Descriptions=styled.div`
-padding:0 16px;
-overflow:hidden;
-color:rgba(0,0,0,0.9);
-font-size:16px;
-text-align:left;
-align-items: flex-start;
- white-space: pre-wrap;
- font-size: 0.8rem;
-
-`;
 
 const About=styled(CommonCard)`
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    width: 100%;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+            flex-direction: column;
     /* background-color: red; */
-    /* height:100px;
-    width: 100%; */
+   
     padding:0;
     margin:0 0  8px;
     overflow:visible;
 `;
 
 const Info=styled.div`
-    width: 600px;
+    
+width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+            align-items: flex-start;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+            justify-content: flex-start;
 
     div{
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: flex-start;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -webkit-box-align: start;
+            -ms-flex-align: start;
+                align-items: flex-start;
+        -webkit-box-pack: start;
+            -ms-flex-pack: start;
+                justify-content: flex-start;
         margin-bottom: 10px;
 
     }
     .grey{
         color: grey;
     }
+    @media (max-width:768px) {
+     width :100% ;
+    }
 `;
-const SharedImg=styled.div`
-  margin-top:8px;
-  width:100%;
-  display:block;
-  position:relative;
-  background-color: #f9fafb;
-  img{
-    object-fit:contain;
-    width:100%;
-    height:100%;
-  }
-`;
+
 const Struct=styled.div`
-    width: 600px;
+    
+ width: 600px;
+    display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
-    align-items:center;
-    justify-content: space-between;
+    -webkit-box-align:center;
+    -ms-flex-align:center;
+            align-items:center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+            justify-content: space-between;
     margin-top:20px;
     /* background-color: red; */
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+            flex-direction: column;
     padding: 0 20px;
     span{
         height:40px;
         margin:10px;
+        width:-webkit-fit-content;
+        width:-moz-fit-content;
         width:fit-content;
         border-top:0;
         border-left: 0;
         border-right: 0;
+        font-size: 0.7rem;
         text-transform: uppercase;
         /* color: white; */
         /* font-size:1px; */
     }
     div span{
-        font-size:0.8rem;
-        font-weight:600;
+        font-size:0.7rem;
+        font-weight:500;
     }
     .already{
+      display: -webkit-box;
+      display: -ms-flexbox;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      -webkit-box-pack: justify;
+          -ms-flex-pack: justify;
+              justify-content: space-between;
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
       width: 100%;
     }
     button{
@@ -767,30 +761,33 @@ const Struct=styled.div`
         background-color: #0a66c8;
       }
     }
-    
+    @media (max-width:768px) {
+      width: 90%;
+    }
 
 `;
 
 
-const Rating=styled(CommonCard)`
-  width:600px;
-  align-items: flex-start;
-`;
+
 const Layout=styled.div`
+   display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    
-    
     border-radius: 5px;
     height:400px;
-    flex-direction: column;
-    
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+            flex-direction: column;
     margin:0 20% 0 25%;
-
     @media (max-width:600px){
     margin:0 8px 0 8px;
     border-radius: 5px;
     height:400px;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     }
 `;
 
@@ -813,12 +810,29 @@ const CardBackground=styled.div`
 `;
 
 const Photo=styled.div`
+
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+width: 100%;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+        flex-direction: column;
 img{
-    box-shadow:none;
+    -webkit-box-shadow:none;
+            box-shadow:none;
     /* background-image: url("/images/photo.svg"); */
     width:72px;
     height:72px;
-    box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+            box-sizing:border-box;
     background-clip: content-box;
     background-color: white;
     background-position: center;
@@ -846,61 +860,9 @@ const AddPhotoText=styled.div`
     font-weight:400;
 `;
 
-const Head=styled.div`
-    background-color: beige;
-    height: 30%;
-    width:100%;
-    display: flex;
-    align-items: flex-start;
-    img{
-        height:40%;
-        margin-left: 5%;
-        margin-top: 10%;
-
-    }
-    
-
-    @media (max-width:768px){
-    height:20%;
-    background-color: beige;
-    width:100%;
-    display: flex;
-    align-items: flex-start;
-    img{
-        height:60%;
-        margin-left: 5%;
-        margin-top:8%;
-    }
-}
-
-`;
-
-const Cont=styled.div`
-padding-top:10px ;
-    display: flex;
-    margin:20px;
-    align-items: flex-start;
-    span{
-
-        color:rgba(0,0,0,0.9);
-        font-weight: 1200;
-        font-size: 1.3rem;
-    }
-    @media (max-width:768px){
-    padding-top:10px ;
-    display: flex;
-    margin:20px;
-    align-items: flex-start;
-    span{
-
-        color:rgba(0,0,0,0.9);
-        font-weight: 1200;
-        font-size: 1.3rem;
-    }
-}
-`;
 const Description=styled.div`
-    color:black;
+ 
+ color:black;
     margin:2%;
     /* background-color: red; */
     width: 100%;
@@ -918,7 +880,10 @@ const Description=styled.div`
 `;
 
 const Button=styled.div`
-    position: relative;
+  
+  position: relative;
+    display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
     margin-top:10%;
     margin-left: 10px;
@@ -934,9 +899,15 @@ const Button=styled.div`
         cursor: pointer;
         
         span{
-            align-items: center;
+            -webkit-box-align: center;
+                -ms-flex-align: center;
+                    align-items: center;
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
-            justify-content: center;
+            -webkit-box-pack: center;
+                -ms-flex-pack: center;
+                    justify-content: center;
             font-weight:600;
             color:white;
         }
@@ -954,9 +925,15 @@ const Button=styled.div`
         cursor: pointer;
 
         span{
-            align-items: center;
+            -webkit-box-align: center;
+                -ms-flex-align: center;
+                    align-items: center;
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
-            justify-content: center;
+            -webkit-box-pack: center;
+                -ms-flex-pack: center;
+                    justify-content: center;
             font-weight:600;
             /* color:white; */
         }
@@ -979,9 +956,15 @@ const Button=styled.div`
         cursor: pointer;
 
         span{
-            align-items: center;
+            -webkit-box-align: center;
+                -ms-flex-align: center;
+                    align-items: center;
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
-            justify-content: center;
+            -webkit-box-pack: center;
+                -ms-flex-pack: center;
+                    justify-content: center;
             font-weight:600;
             /* color:white; */
         
@@ -990,10 +973,22 @@ const Button=styled.div`
       background-color: rgba(0,0,0,0.08);
     }
     }
+
+    @media (max-width:768px) {
+      button, .follow, .unfollow{
+      width: 80px;
+      height: 30px;
+      span{
+        font-size: 0.7rem;
+      }
+      }
+      
+    }
 `;
 
 const Nav=styled.div`
     /* margin-left:auto; */
+ 
     display: block;
     width: 100%;
     
@@ -1009,41 +1004,79 @@ const Nav=styled.div`
 `;
 
 const NavListWrap=styled.ul`
+   
+ display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
-    flex-wrap:nowrap;
+    -ms-flex-wrap:nowrap;
+        flex-wrap:nowrap;
     list-style-type:none;
-    justify-content: space-around;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
 
     .active{
         span:after{
             content:"";
-            transform: scaleX(1);
+            -webkit-transform: scaleX(1);
+                -ms-transform: scaleX(1);
+                    transform: scaleX(1);
             border-bottom: 2px solid var(--white,#fff);
             bottom:0;
             left:0;
             position:absolute;
+            -webkit-transition:-webkit-transform 0.2s ease-in-out;
+            transition:-webkit-transform 0.2s ease-in-out;
+            -o-transition:transform 0.2s ease-in-out;
             transition:transform 0.2s ease-in-out;
+            transition:transform 0.2s ease-in-out, -webkit-transform 0.2s ease-in-out;
             width:100%;
             border-color: rgba(0,0,0,0.9);
 
         }
     }
+    @media (max-width:768px) {
+        width: 90%;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-pack: distribute;
+            justify-content: space-around;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+        -ms-flex-wrap: nowrap;
+            flex-wrap: nowrap;
+    }
 `;
 
 const NavList=styled.li`
+    
+display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
-    align-items:center;
+    -webkit-box-align:center;
+    -ms-flex-align:center;
+            align-items:center;
     cursor: pointer;
     
 
     a{
-        align-items:center;
+        -webkit-box-align:center;
+            -ms-flex-align:center;
+                align-items:center;
         background:transparent;
+        display:-webkit-box;
+        display:-ms-flexbox;
         display:flex;
-        flex-direction: column;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
         font-size:12px;
         font-weight:400;
-        justify-content:center;
+        -webkit-box-pack:center;
+            -ms-flex-pack:center;
+                justify-content:center;
         line-height:1.5;
         min-height:42px;
         min-width:88px;
@@ -1052,15 +1085,17 @@ const NavList=styled.li`
 
         span{
             color: rgba(0,0,0,0.5);
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
-            align-items:center;
-            justify-content:space-around;
+            -webkit-box-align:center;
+                -ms-flex-align:center;
+                    align-items:center;
+            -ms-flex-pack:distribute;
+                justify-content:space-around;
         }
 
-        @media (max-width:768px){
-            min-width:120px;
-            
-        }
+       
         
         }
         &:hover,
@@ -1072,26 +1107,59 @@ const NavList=styled.li`
             }
 
     } 
+    @media (max-width:768px){
+     a{
+        min-width: 20px;
+     }   
+    }
 `;
 
 const RatingContainer = styled(CommonCard)`
+  
+display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-  width: 600px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  width: 100%;
   height: 300px;
+  span{
+    font-size: 0.85rem;
+  }
+  
 `;
 
 const RatingLabel = styled.div`
-  font-size: 16px;
+ 
+ font-size: 16px;
   font-weight: bold;
   margin-bottom: 10px;
+  @media (max-width:768px) {
+  
+    font-size:1rem;
+    span{
+      font-size: 1rem;
+    }
+  
+  }
+  
 `;
 
 const Stars = styled.div`
+  
+display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+          justify-content: center;
 `;
 const SubmitButton = styled.button`
   margin-top: 10px;
@@ -1111,9 +1179,16 @@ const Star = styled.span`
 
 const RatingValue = styled.div`
   font-size: 16px;
+  
   margin-top: 10px;
+  @media (max-width:768px){
+   font-size :0.7rem ;
+  }
 `;
 const Reviews=styled.div`
+
+height: -webkit-fit-content;
+  height: -moz-fit-content;
   height: fit-content;
   width: 100%;
  
@@ -1127,83 +1202,25 @@ const Reviews=styled.div`
   
 
   .inner{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
   }
-`;
 
-
-
-
-const Delete=styled.div`
-z-index: 9999;
-position:absolute;
-cursor:pointer;
-top:30px;
-background: white;
-border-radius: 0 0 5px 5px;
-width:70px;
-height:40px;
-font-size: 0.7rem;
-transition-duration: 167ms;
-text-align: center;
-display: none;
-@media(max-width:768px){
-    top:-5px;
-}
-`;
-
-const Share=styled.div`
-  z-index: 9999;
-  background-color: red;
-position:absolute;
-cursor:pointer;
-top:0px;
-background: white;
-border-radius: 0 0 5px 5px;
-width:70px;
-height:40px;
-font-size: 0.7rem;
-transition-duration: 167ms;
-text-align: center;
-display: none;
-@media(max-width:768px){
-    top:-5px;
-}
-`;
-
-
-
-const User=styled(NavList)`
-a>svg{
-    width:24px;
-    border-radius:20%
-}
-
-a>img{
-    width:24px;
-    height:24px;
-    border-radius:50%;
-}
-
-span{
-    display: flex;;
-    align-items:center;
-}
-
-&:hover{
-    
-    ${Share}{
-        align-items:center;
-        display:flex;
-        justify-content: center;
+  @media (max-width:768px) {
+    span{
+      font-size: 0.7rem;
     }
-    ${Delete}{
-        align-items:center;
-        display:flex;
-        justify-content: center;
-    }
-}
+  }
+  
 `;
+
+
+
+
 export default UserSearch

@@ -75,7 +75,7 @@ const CollegeList = () => {
     )
   : users;
   
-
+  console.log(users)
   useEffect(() => {
     getUsers();
   }, []);
@@ -85,7 +85,7 @@ const CollegeList = () => {
       title: 'Name',
       dataIndex: 'name',
       render: (text, record) => (
-        record.isCollege? <a onClick={()=>navigate(`/search/${record._id}`)}>{record.name}</a>:
+        record.isCollege? <a onClick={()=>navigate(`/user-search/${record._id}`)}>{record.name}</a>:
         <a onClick={()=>navigate(`/profile/${record._id}`)}>{record.name}</a>
         
       ),
@@ -132,8 +132,9 @@ const CollegeList = () => {
       
          
       <Layout>
-        {/* <h2 className="text-center " style={{ color: 'white', width: '170vh' }} >Users List</h2> */}
+        <TableContainer>
         <Table columns={columns} dataSource={filteredUsers} />
+        </TableContainer>
       </Layout>
     </Container>
   );
@@ -160,15 +161,26 @@ const Button = styled.div`
     }
 `;
 
+const TableContainer=styled.div`
+  @media (max-width:768px) {
+   height :400px ;
+   overflow-y: scroll;
+  }
+`;
+
 const Search=styled.div`
-    opacity:1;
-    flex-grow: 1;
+    
+opacity:1;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+            flex-grow: 1;
     position:relative;
     &>div{
         max-width: 200px;
         input{
             border:none;
-            box-shadow:none;
+            -webkit-box-shadow:none;
+                    box-shadow:none;
             background-color:#eef3f8;
             border-radius: 2px;
             color:rgba(0,0,0,0.9);
@@ -183,11 +195,11 @@ const Search=styled.div`
             
         }
     }
-
 `;
 
 const SearchIcon=styled.div`
-    width:40px;
+   
+ width:40px;
     position:absolute;
     z-index:1;
     top:10px;
@@ -195,9 +207,15 @@ const SearchIcon=styled.div`
     border-radius:0 2px 0 2px;
     margin:0;
     pointer-events: none;
+    display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
-    justify-content: center;
-    align-items:center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align:center;
+    -ms-flex-align:center;
+            align-items:center;
     
     `;
 

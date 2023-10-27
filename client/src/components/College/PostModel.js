@@ -29,7 +29,11 @@ const PostModel = (props) => {
     const [videoLoading, setVideoLoading] = useState(false);
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [videoSelected, setVideoSelected] = useState(false);
-    // console.log(user);
+    const [activeStyle, setActiveStyle] = useState(null);
+    const [isBold, setIsBold] = useState(false);
+    const [isItalic, setIsItalic] = useState(false);
+    const [isUnderline, setIsUnderline] = useState(false);
+    const [isCursive, setIsCursive] = useState(false);
 
     const handleFileUpload = async (file) => {
         try {
@@ -93,7 +97,7 @@ const PostModel = (props) => {
     const updatePost=async(photoUrl,e)=>{
         try{
             const res=await axios.post(`${host}/college/post`,
-            {userId:user?._id,image:photoUrl,description:editorText},{
+            {userId:user?._id,image:photoUrl,description:editorText,style:activeStyle},{
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -110,7 +114,7 @@ const PostModel = (props) => {
         try{
             setVideoLoading(true);
             const res=await axios.post(`${host}/college/video`,
-            {userId:user?._id,description:editorText,video:videoLink},{
+            {userId:user?._id,description:editorText,video:videoLink,style:activeStyle},{
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -130,7 +134,7 @@ const PostModel = (props) => {
         try{
             setVideoLoading(true);
             const res=await axios.post(`${host}/college/video`,
-            {userId:user?._id,description:editorText,video:videoUrl},{
+            {userId:user?._id,description:editorText,video:videoUrl,style:activeStyle},{
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -150,7 +154,7 @@ const PostModel = (props) => {
         try{
             
             const res=await axios.post(`${host}/college/description`,
-            {userId:user?._id,description:editorText},{
+            {userId:user?._id,description:editorText,style:activeStyle},{
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -218,6 +222,56 @@ const PostModel = (props) => {
     if(!user){
         return <Spin style={{marginTop:'12px'}}/>
     }
+
+ 
+  
+    const handleBoldClick = () => {
+      setIsBold(true);
+      setIsItalic(false);
+      setIsCursive(false);
+      setIsUnderline(false);
+      setActiveStyle("bold");
+  };
+
+  const handleItalicClick = () => {
+    setIsBold(false);
+    setIsItalic(true);
+    setIsCursive(false);
+    setIsUnderline(false);
+    setActiveStyle("italic");
+  };
+
+  const handleUnderlineClick = () => {
+    setIsBold(false);
+    setIsItalic(false);
+    setIsCursive(false);
+    setIsUnderline(true);
+    setActiveStyle("underline");
+  };
+
+  const handleCursiveClick = () => {
+    setIsBold(false);
+    setIsItalic(false);
+    setIsCursive(true);
+    setIsUnderline(false);
+    setActiveStyle("cursive");
+  };
+  const resetStyles = () => {
+    setIsBold(false);
+    setIsItalic(false);
+    setIsUnderline(false);
+    setIsCursive(false);
+    setActiveStyle(null);
+};
+
+  const textStyle = {
+      fontWeight: isBold ? 'bold' : 'normal',
+      fontStyle: isItalic ? 'italic' : 'normal',
+      textDecoration: isUnderline ? 'underline' : 'none',
+      fontFamily: isCursive ? 'cursive' : 'unset',
+      
+  };
+
     return (
         <>
         {props.showModel === 'open' && (
@@ -243,13 +297,31 @@ const PostModel = (props) => {
                   )}
                   <span>{user?.name}</span>
                 </UserInfo>
-                <Editor>
-                  <textarea
-                    value={editorText}
-                    placeholder="What do you want to talk about?"
-                    autoFocus={true}
-                    onChange={(e) => setEditorText(e.target.value)}
-                  />
+                <Editor >
+            <div className='text-style-buttons'>
+                <button onClick={handleBoldClick} style={{ fontWeight: isBold ? 'bold' : 'normal' }}>
+                    B
+                </button>
+                <button onClick={handleItalicClick} style={{ fontStyle: isItalic ? 'italic' : 'normal' }}>
+                    I
+                </button>
+                <button onClick={handleUnderlineClick} style={{ textDecoration: isUnderline ? 'underline' : 'none' }}>
+                    U
+                </button>
+                <button onClick={handleCursiveClick} style={{ fontFamily: isCursive ? 'cursive' : 'unset' }}>
+                    C
+                </button>
+                <button onClick={resetStyles} style={{ fontStyle:'normal' }} >
+                    N
+                </button>
+            </div>
+            <textarea
+                value={editorText}
+                placeholder="What do you want to talk about?"
+                autoFocus={true}
+                onChange={(e) => setEditorText(e.target.value)}
+                style={textStyle}
+            />
                   {assetArea === 'image' ? (
                     <UploadImg>
                       <input
@@ -310,9 +382,7 @@ const PostModel = (props) => {
                   </AssetButton>
                 </AttachAssets>
                 <ShareComment>
-                  {/* <AssetButton>
-                    <img src="/images/share-comment.svg" alt="Comment" />
-                  </AssetButton> */}
+                 
                 </ShareComment>
                 <PostButton
                   onClick={(e) => {
@@ -340,7 +410,8 @@ const PostModel = (props) => {
 }
       
 const Container = styled.div`
-    position:fixed;
+   
+ position:fixed;
     top:0;
     left:0;
     right:0;
@@ -348,19 +419,26 @@ const Container = styled.div`
     z-index:9999;
     color:black;
     background-color: rgba(0,0,0,0.8);
-    animation: fadeIn 0.3s;
+    -webkit-animation: fadeIn 0.3s;
+            animation: fadeIn 0.3s;
 
 `;
 const Content = styled.div`
-    max-width: 100%;
+   
+ max-width: 100%;
     max-width: 520px;
     background-color: white;
     max-height:90%;
     overflow:initial;
     border-radius:5px;
     position: relative;
+    display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+            flex-direction: column;
     top:32px;
     margin: 0 auto;
 `;
@@ -373,9 +451,15 @@ const Header = styled.div`
     line-height:1.5;
     color:rgba(0,0,0,0.6);
     font-weight:400;
+    display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
-    justify-content: space-between;
-    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+            justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+            align-items: center;
     button{
         height:40px;
         width:40px;
@@ -385,16 +469,26 @@ const Header = styled.div`
             pointer-events: none;
             height: 28px;
             width: 28px;
-            align-items: center;
+            -webkit-box-align: center;
+                -ms-flex-align: center;
+                    align-items: center;
 
         }
     }
 `;
 
 const SharedContent = styled.div`
+   
+ display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+            flex-grow: 1;
     overflow-y:auto;
     vertical-align: baseline;
     background: transparent;
@@ -402,8 +496,13 @@ const SharedContent = styled.div`
 `;
 
 const UserInfo = styled.div`
+   
+ display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
-    align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+            align-items: center;
     padding:12px 24px;
     svg,img{
         width:48px;
@@ -418,18 +517,27 @@ const UserInfo = styled.div`
         line-height: 1.5;
         margin-left:5px;
     }
-
 `;
 
 const SharedCreation = styled.div`
+   
+ display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
-    justify-content: space-between;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+            justify-content: space-between;
     padding:12px 24px 12px 16px;
 `;
 
 const AssetButton = styled.div`
+   
+ display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
-    align-items:center;
+    -webkit-box-align:center;
+    -ms-flex-align:center;
+            align-items:center;
     height:40px;
     min-width:auto;
     color:rgba(0,0,0,0.5);
@@ -443,10 +551,14 @@ const AssetButton = styled.div`
 
 const AttachAssets = styled.div`
 
+    
+-webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
+    display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
     padding-right: 8px;
-
     ${AssetButton}{
         width:40px;
     }
@@ -503,18 +615,5 @@ const UploadImg = styled.div`
 
     }
 `;
-// const mapStateToProps = (state) => {
-//     return {
-//         user: state.userState.user,
-//     }
-// }
 
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         postArticle: (payload) => dispatch(postArticleAPI(payload))
-//     }
-// }
-
-
-// export default connect(mapStateToProps, mapDispatchToProps)(PostModel)
 export default PostModel;

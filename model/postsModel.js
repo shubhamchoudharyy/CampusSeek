@@ -19,7 +19,10 @@ const PostSchema=new mongoose.Schema({
         type:Date,
         default:Date.now()
     },
-    
+    style:{
+        type:String,
+        default:null,
+    },
     video:{
         type:String,
     },

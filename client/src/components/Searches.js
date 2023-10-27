@@ -37,7 +37,9 @@ const Searches = (props) => {
   
   
 
- 
+ const handleReset=()=>{
+  props.setSearch("");
+ }
 
   const getColleges = async () => {
     try {
@@ -126,6 +128,7 @@ const Searches = (props) => {
     // Check and update isFollowing whenever users or colleges change
     checkIsFollowing();
   }, [user, colleges, props.search]);
+  
 
   return (
     props.search !== '' && (
@@ -135,10 +138,16 @@ const Searches = (props) => {
           {filterCollegesByName().map((college) => (
             
             <Content key={college._id}>
-              <Photo onClick={()=>{navigate(`/user-search/${college.userId}`)}}>
+              <Photo onClick={()=>{
+                navigate(`/user-search/${college.userId}`)
+                handleReset()
+            }}>
                 <img src={college.photoUrl} alt='User' />
               </Photo>
-              <div className='already' onClick={()=>navigate(`/user-search/${college.userId}`)}>
+              <div className='already' onClick={()=>{
+                navigate(`/user-search/${college.userId}`)
+                handleReset()}
+            }>
                 <span>{college.name}</span>
                 <span>
                   {college.district}, {college.state}, {college.country}
@@ -171,7 +180,8 @@ const Searches = (props) => {
 
 
 const Container = styled.div`
-    position:fixed;
+   
+ position:fixed;
     top:0;
     left:0;
     right:0;
@@ -183,12 +193,19 @@ const Container = styled.div`
     
     background-color: rgba(0,0,0,0.8);
     /* background-color: #fff; */
-    animation: fadeIn 0.3s;
+    -webkit-animation: fadeIn 0.3s;
+            animation: fadeIn 0.3s;
+    @media (max-width:768px) {
+     margin-top :12% ;
+    }
   
 `;
 
 const Layout = styled.div`
-  background-color: #ffff;
+  
+background-color: #ffff;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   height: 100%;
   border-radius: 5px;
@@ -196,15 +213,28 @@ const Layout = styled.div`
   width: 50%;
   margin-left: auto;
     margin-right: auto;
-  box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0, 0 0 0 rgba(0 0 0/15%);
+  -webkit-box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0, 0 0 0 rgba(0 0 0/15%);
+          box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0, 0 0 0 rgba(0 0 0/15%);
+  @media (max-width:768px) {
+   width :100% ;
+  }
 `;
 
 const College=styled.div`
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  width: 95%;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+          flex-direction: column;
+  width: 80%;
+
 `;
 const Content = styled.div`
+
+display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   /* flex-wrap: wrap; */
   width: 100%;
@@ -212,57 +242,39 @@ const Content = styled.div`
   margin-top: 10px;
   margin-left: 20px;
   margin: 15px;
-  box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0, 0 0 0 rgba(0 0 0/15%);
-  align-items: center;
-  justify-content: space-around;
+  -webkit-box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0, 0 0 0 rgba(0 0 0/15%);
+          box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0, 0 0 0 rgba(0 0 0/15%);
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
   
   .already{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    
   }
+  span{
+      font-size: 0.7rem;
+    }
 `;
 const Photo=styled.div`
      img{
       width:40px;
       height:40px;
     }
-`
-
-const Card = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  width: 100px;
-  border-radius: 5px;
-  margin: 5px;
-  margin-left: 15px;
-  box-shadow: 2px 3px #888888;
-  height: 150px;
-  background-color: #fff8;
-  border: 0.5px solid rgba(0, 0, 0, 0.9);
-
-  img {
-    height: 40px;
-    margin-top: 10px;
-    border-radius: 50%;
-  }
-
-  span {
-    margin: 5px;
-    font-size: 0.75rem;
-  }
 `;
 
-const AddPhotoText = styled.div`
-  color: #0a66c2;
-  margin-top: 4px;
-  font-size: 12px;
-  line-height: 1.33;
-  font-weight: 400;
-`;
 
 const Button = styled.div`
-  margin-top: 8px;
+ 
+ margin-top: 8px;
   margin-bottom: 8px;
 
   .follow {

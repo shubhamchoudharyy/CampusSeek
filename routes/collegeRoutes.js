@@ -4,7 +4,7 @@ const storage = multer.memoryStorage(); // Use memory storage for file upload
 const upload = multer({ storage: storage });
 
 const authMiddleware = require('../middlewares/authMiddleware');
-const { getCollegeInfoController, addCoursesController,  uploadFile, getInfoController, getPendingInfoController,
+const { getCollegeInfoController, addCoursesController,  uploadFile,  getPendingInfoController,
      removeCourseController, updateController, postController,
       videoController, getPostController, descriptionController, rateController, getPostsController, getDeletePostController, ViewController, getAllViewsController, getOnePostController } = require('../controllers/collegeCtrl');
 
@@ -12,7 +12,7 @@ const router=express.Router();
 
 router.post('/getCollegeInfo',authMiddleware,getCollegeInfoController)
 
-router.post('/info/:userId',getInfoController)
+
 
 router.post('/pendinginfo/:userId',getPendingInfoController)
 

@@ -97,21 +97,12 @@ const CollegeSignup2 = () => {
     
   
     <button ><span>Submit</span></button>
-    {/* <p>Already a user? <Link to='/login'>Login</Link></p> */}
+   
     </Cred>
 
     
-    {/* <Horizontal>
-    <hr />
-    <span>or</span>
-    <hr />
-    </Horizontal>
-    <Button>
-    <button className='btn' >
-        <img src="/images/google.svg"/>
-        <span>Sign Up With Google</span>
-    </button>
-    </Button> */}
+  
+   
     </Form>
     
 </Container>
@@ -119,103 +110,69 @@ const CollegeSignup2 = () => {
 }
 
 const Container=styled.div`
-     width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    flex-wrap: wrap;
-`;
-// const Form=styled.form`
-
-// `;
-
-const Head=styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    p{
-        font-weight: 400;
-        font-size: 1.2rem;
-    }
-
+    grid-area: main;
 `;
 
-const Cred=styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    flex-wrap: wrap;
-    input{
-        width: 300px;
-        height: 52px;
-        margin: 8px;
-    }
 
-    button{
-        width: 300px;
-        height: 45px;
-        background-color: #0A66C2;
-        color: #fff;
-        margin: 8px;
-        border: 0px;
-        border-radius: 3px;
-        cursor: pointer;
-        }
-    button:hover{
-        background-color: #0A55B3;
-    }
-    button span{
-        font-size: 1rem;
-        font-weight: 600;
-    }
+const Head = styled.div`
+ 
+ width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+          justify-content: center;
+  p {
+    font-weight: 400;
+    font-size: 1.2rem;
+  }
 `;
 
-const Horizontal=styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    flex-wrap: wrap;
 
-    hr{
-        width: 40%;
-        display: inline;
-        height: 0;
-    }
-    span{
-        margin:2px ;
-    }
-`;
+const Cred = styled.div`
+ 
+ display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  input {
+    width: 300px;
+    height: 52px;
+    margin: 8px;
+  }
+  .uppercase-input {
+  text-transform: uppercase;
+}
 
-const Button=styled.div`
-    button{
-        width: 300px;
-        height: 45px;
-        background:transparent;
-        color: black;
-        margin: 8px;
-        cursor: pointer;
-        display: flex;
-        border: 1px solid black;
-        justify-content: space-around;
-        margin-top: 40px;
-        margin-left: 50px;
-    }
-    button:hover{
-        background-color: rgba(0,0,0,0.07);
-    }
-    button span{
-        font-size: 1rem;
-        padding-top:10px;
-
-    }
-    button img{
-        height: 30px;
-        padding-top:5px ;
-    }
+  button {
+    width: 300px;
+    height: 45px;
+    background-color: #0a66c2;
+    color: #fff;
+    margin: 8px;
+    border: 0px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #0a55b3;
+  }
+  button span {
+    font-size: 1rem;
+    font-weight: 600;
+  }
 `;
 
 export default CollegeSignup2;

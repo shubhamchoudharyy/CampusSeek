@@ -48,6 +48,7 @@ const GoogleSignIn=async(values)=>{
     try{
         dispatch(showLoading())
         const res=await axios.post(`${host}/user/google-login`,values)
+        window.location.reload()
         dispatch(hideLoading())
         if(res.data.success){
             localStorage.setItem('token',res.data.token)
@@ -91,11 +92,11 @@ const handleGoogle=async(e)=>{
    
     <Form layout='vertical' onFinish={onfinishHandler} >
     <Photo><img src='/images/logo.png' alt='img'/></Photo>
-    <h1 style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>Welcome to Campus Seek</h1>
+    <h1 >Welcome to Campus Seek</h1>
     <Head>
-        <p style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}} >Sign Up to Get Started</p>
+        <p  >Sign Up to Get Started</p>
         
-        <p>If applying for College/University account go on My Profile section after Signup</p>
+        
         </Head>
     
     <Cred>
@@ -111,14 +112,12 @@ const handleGoogle=async(e)=>{
     <input type="number" name="phone" id="" placeholder='Phone No'  required />
     </Form.Item>
     
-    {/* <Form.Item label='' name='location'>
-    <input type="password" name="location" id="" placeholder='Location' required />
-    </Form.Item> */}
+   
 
     <Form.Item label='' name='password'>
     <input type="password" name="password" id="" placeholder='Password' required />
     </Form.Item>
-    
+    <span>If applying for College/University account go on My Profile section after Signup</span>
     {load? <button className='active' ><Spin/></button>:<button ><span>Sign Up</span></button>}
     <p>Already a user? <Link to='/login'>Login</Link></p>
     </Cred>
@@ -142,110 +141,166 @@ const handleGoogle=async(e)=>{
 }
 
 const Container=styled.div`
-     width: 100vw;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+
+width: 100vw;
+height: 100vh;
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+        flex-direction: column;
+-ms-flex-wrap: wrap;
     flex-wrap: wrap;
+h1,p{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+-webkit-box-align: center;
+    -ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+    -ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
+}
+
 `;
 // const Form=styled.form`
 
 // `;
 
-const Photo = styled.div`
-width:100%;
-display: flex;
-justify-content: center;
-align-items: center;
-  img {
-    box-shadow: none;
-    /* background-image: url("/images/photo.svg"); */
-    width: 72px;
-    height: 72px;
-    box-sizing: border-box;
-    background-clip: content-box;
-    background-color: white;
-    background-position: center;
-    background-size: 60%;
-    background-repeat: no-repeat;
-    border: 2px solid white;
-    margin: -30px auto 12px;
-    border-radius: 50%;
-  }
-`;
-
 const Head=styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    p{
-        font-weight: 400;
-        font-size: 1.2rem;
-    }
 
+width: 100%;
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+p{
+font-weight: 400;
+font-size: 1.2rem;
+}
+
+`;
+const Photo = styled.div`
+
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+        flex-direction: column;
+img {
+-webkit-box-shadow: none;
+        box-shadow: none;
+/* background-image: url("/images/photo.svg"); */
+width: 72px;
+height: 72px;
+-webkit-box-sizing: border-box;
+        box-sizing: border-box;
+background-clip: content-box;
+background-color: white;
+background-position: center;
+background-size: 60%;
+background-repeat: no-repeat;
+border: 2px solid white;
+margin: -38px auto 12px;
+border-radius: 50%;
+}
 `;
 
 const Cred=styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+        flex-direction: column;
+-ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    input{
-        width: 300px;
-        height: 52px;
-        margin: 8px;
-    }
+input{
+width: 300px;
+height: 52px;
+margin: 8px;
+}
 
-    button{
-        width: 300px;
-        height: 45px;
-        background-color: #0A66C2;
-        color: #fff;
-        margin: 8px;
-        border: 0px;
-        border-radius: 3px;
-        cursor: pointer;
-        }
-    button:hover{
-        background-color: #0A55B3;
-    }
-    button span{
-        font-size: 1rem;
-        font-weight: 600;
-    }
-    .active{
-        background-color: rgba(0,0,0,0.08);
-    }
-    .active:hover{
-        background-color: rgba(0,0,0,0.08);
-
-    }
+button{
+width: 300px;
+height: 45px;
+background-color: #0A66C2;
+color: #fff;
+margin: 8px;
+border: 0px;
+border-radius: 3px;
+cursor: pointer;
+}
+button:hover{
+background-color: #0A55B3;
+}
+button span{
+font-size: 1rem;
+font-weight: 600;
+}
 `;
 
 const Horizontal=styled.div`
+   
+ display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    flex-wrap: wrap;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+            flex-direction: row;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    width: 100%;
 
     hr{
         width: 40%;
         display: inline;
+        /* border: 1px solid; */
         height: 0;
     }
     span{
         margin:2px ;
     }
 `;
+
 const Button=styled.div`
-    margin-right:28%;
-    margin-left: 28%;
-    /* background-color: red; */
+   
  button{
         width: 300px;
         height: 45px;
@@ -253,10 +308,13 @@ const Button=styled.div`
         color: black;
         margin: 8px;
         cursor: pointer;
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
         border: 1px solid black;
-        justify-content: space-around;
-        margin-top: auto;
+        -ms-flex-pack: distribute;
+            justify-content: space-around;
+        margin-top: 40px;
         margin-left: auto;
     }
     button:hover{
@@ -272,5 +330,4 @@ const Button=styled.div`
         padding-top:5px ;
     }
 `;
-
 export default Signup

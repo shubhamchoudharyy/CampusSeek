@@ -4,7 +4,7 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import Header from './components/Header';
 import Home from './components/Home';
-import CollegeSearch from './components/CollegeSearch';
+
 import MyColleges from './components/MyColleges';
 import Colleges from './components/Colleges';
 import CollegeProfile from './components/College/CollegeProfile';
@@ -95,10 +95,7 @@ function App() {
             <ProtectedRoutes>
             <Header/><Colleges/>
             </ProtectedRoutes>}/>
-          <Route path='/search/:id' element={
-          <ProtectedRoutes>
-            <Header/><CollegeSearch/>
-            </ProtectedRoutes>}/>
+         
 
           <Route path='/user-search/:id' element={
           <ProtectedRoutes>

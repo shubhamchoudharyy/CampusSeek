@@ -69,7 +69,7 @@ const PendingPro = () => {
   
   const handleVerify = async () => {
     try {
-      const res = await axios.post(`${host}/admin/verify/${values.userId}`);
+      const res = await axios.post(`${host}/admin/verify/${values?.college?.userId}`);
       if (res.data.success) {
         message.success("Changed");
         // Update the local state with the new values returned from the API
@@ -84,7 +84,7 @@ const PendingPro = () => {
   
   const handlePremium = async () => {
     try {
-      const res = await axios.post(`${host}/admin/premium/${values.userId}`);
+      const res = await axios.post(`${host}/admin/premium/${values?.college?.userId}`);
       if (res.data.success) {
         message.success("Changed");
         // Update the local state with the new values returned from the API
@@ -104,12 +104,12 @@ const PendingPro = () => {
         <UserInfo>
           <CardBackground />
           <a>
-            <Photo style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
+            <Photo>
               {values.photoUrl?
-              <img src={values.photoUrl}/> :
+              <img src={values?.college?.photoUrl}/> :
               <img src='/images/photo.svg'/>}
             </Photo>
-            <Links style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>{values.name}</Links>
+            <Links >{values?.college?.name}</Links>
           </a>
           <a>
             <AddPhotoText>
@@ -121,7 +121,7 @@ const PendingPro = () => {
           <fieldset>
             <legend>About</legend>
             
-                <Form layout="vertical" initialValues={{ ...values }}>
+                <Form layout="vertical" initialValues={{ ...values?.college }}>
                 <About>
                     <Form.Item
                     label={<span className="form-label">Name</span>}
@@ -129,7 +129,7 @@ const PendingPro = () => {
                     required
                     rules={{ required: true }}
                     >
-                    <Input type="text" name="name" disabled placeholder={values.name} id="" />
+                    <Input type="text" name="name" disabled placeholder={values?.college?.name} id="" />
                     <br />
                     </Form.Item>
 
@@ -139,7 +139,7 @@ const PendingPro = () => {
                     required
                     rules={{ required: true }}
                     >
-                    <Input type="email" name="email" placeholder={values.email} disabled id="" />
+                    <Input type="email" name="email" placeholder={values?.college?.email} disabled id="" />
                     <br />
                     </Form.Item>
 
@@ -149,7 +149,7 @@ const PendingPro = () => {
                     required
                     rules={{ required: true }}
                     >
-                    <Input type="text" name="location" placeholder={values.location} disabled id="" />
+                    <Input type="text" name="location" placeholder={values?.college?.location} disabled id="" />
                     <br />
                     </Form.Item>
                     <Form.Item
@@ -158,7 +158,7 @@ const PendingPro = () => {
                     required
                     rules={{ required: true }}
                     >
-                    <Input type="text" name="district" placeholder={values.district} disabled id="" />
+                    <Input type="text" name="district" placeholder={values?.college?.district} disabled id="" />
                     <br />
                     </Form.Item>
                     <Form.Item
@@ -167,7 +167,7 @@ const PendingPro = () => {
                     required
                     rules={{ required: true }}
                     >
-                    <Input type="text" name="state" placeholder={values.state} disabled id="" />
+                    <Input type="text" name="state" placeholder={values?.college?.state} disabled id="" />
                     <br />
                     </Form.Item>
                     <Form.Item
@@ -176,7 +176,7 @@ const PendingPro = () => {
                     required
                     rules={{ required: true }}
                     >
-                    <Input type="text" name="country" placeholder={values.country} disabled id="" />
+                    <Input type="text" name="country" placeholder={values?.college?.country} disabled id="" />
                     <br />
                     </Form.Item>
 
@@ -185,7 +185,7 @@ const PendingPro = () => {
                         type="number"
                         name="phone"
                         disabled
-                        placeholder={values.phone}
+                        placeholder={values?.college?.phone}
                         id=""
                     />
                     <br />
@@ -199,12 +199,12 @@ const PendingPro = () => {
         <Verify>
           <div>
             <p>Verified</p>
-            <p>{values.verified ? <span>True</span> : <span>False</span>}</p>
+            <p>{values?.verified ? <span>True</span> : <span>False</span>}</p>
             {values.verified? <button onClick={handleVerify}><span>False</span></button> : <button onClick={handleVerify}><span>True</span></button>}
           </div>
           <div>
             <p>Premium</p>
-            <p>{values.premium? <span>True</span>:<span>False</span>}</p>
+            <p>{values?.premium? <span>True</span>:<span>False</span>}</p>
             {values.premium? <button onClick={handlePremium}><span>False</span></button> : <button onClick={handlePremium}><span>True</span></button>}
           </div>
 
@@ -213,176 +213,209 @@ const PendingPro = () => {
     </Container>
   );
 };
-const CrossButton = styled.button`
-  background-color: transparent;
-  color: #fff;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 
-  /* &:hover {
-    background-color: #cc0000;
-  } */
 
-  &:focus {
-    outline: none;
-  }
+
+const Container=styled.div`
+    grid-area:main;
+`;
+const Layout=styled.div`
+   
+ background-color: #ffff;
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display:flex;
+    height:100%;
+    border-radius: 5px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+            box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+
 `;
 
-const Container = styled.div`
-  grid-area: main;
-`;
-const Layout = styled.div`
-  background-color: #ffff;
-  display: flex;
-  height: 100%;
-  border-radius: 5px;
-  flex-direction: column;
-  box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0 ,0 0 0 rgba(0 0 0/15%);
-`;
+const Links=styled.div`
 
-const ButtonsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
 
-const Button = styled.button`
-  background-color: #007bff;
-  /* Button background color */
-  color: #fff;
-  /* Text color */
-  padding: 10px 20px;
-  /* Padding for the button */
-  border: none;
-  /* No border */
-  border-radius: 5px;
-  /* Rounded corners */
-  cursor: pointer;
-  /* Cursor style on hover */
-
-  /* Additional CSS styles for hover and focus states */
-  &:hover {
-    background-color: #0056b3;
-    /* Button background color on hover */
-  }
-
-  &:focus {
-    outline: none;
-    /* Remove focus outline */
-  }
-`;
-const UserInfo = styled.div`
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-  padding: 12px 12px 16px;
-  word-wrap: break-word;
-  word-break: break-word;
-  width: 100%;
+    font-size:16px;
+    line-height: 1.5;
+    color:rgba(0,0,0,0,9);
+    font-weight:600;
 `;
 
-const CardBackground = styled.div`
-  background: url("/images/card-bg.svg");
-  background-position: center;
-  background-size: 462px;
-  height: 54px;
-  max-width: 100%;
-  margin: -12px -12px 0;
+
+
+const UserInfo=styled.div`
+    border-bottom:1px solid rgba(0,0,0,0.15);
+    padding:12px 12px 16px;
+    word-wrap: break-word;
+    word-break:break-word;
+    width:100%;
+
 `;
 
-const Photo = styled.div`
-  img {
-    box-shadow: none;
+const CardBackground=styled.div`
+    background:url("/images/card-bg.svg");
+    background-position: center;
+    background-size:462px;
+    height:54px;
+    max-width:100%;
+    margin:-12px -12px 0;
+`;
+
+const Photo=styled.div`
+
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+        flex-direction: column;
+img{
+    -webkit-box-shadow:none;
+            box-shadow:none;
     /* background-image: url("/images/photo.svg"); */
-    width: 72px;
-    height: 72px;
-    box-sizing: border-box;
+    width:72px;
+    height:72px;
+    -webkit-box-sizing:border-box;
+            box-sizing:border-box;
     background-clip: content-box;
     background-color: white;
     background-position: center;
     background-size: 60%;
     background-repeat: no-repeat;
-    border: 2px solid white;
-    margin: -38px auto 12px;
-    border-radius: 50%;
-  }
+    border:2px solid white;
+    margin:-38px auto 12px;
+    border-radius:50%;
+}
 `;
 
-const EditButton = styled.button`
-  background-color: #0a66c2; /* Button background color */
-  color: #fff; /* Text color */
-  padding: 8px 16px; /* Padding for the button */
-  border: none; /* No border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Cursor style on hover */
 
-  /* Additional CSS styles for hover and focus states */
-  &:hover {
-    background-color: #004080; /* Button background color on hover */
-  }
 
-  &:focus {
-    outline: none; /* Remove focus outline */
-  }
+const AddPhotoText=styled.div`
+
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
+
+    color:#0a66c2;
+    margin-top:4px;
+    font-size:12px;
+    line-height:1.33;
+    font-weight:400;
 `;
 
-const Links = styled.div`
-  font-size: 16px;
-  line-height: 1.5;
-  color: rgba(0, 0, 0, 0, 9);
-  font-weight: 600;
+const Cred=styled.div`
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display:flex;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+            align-items: flex-start;
+    -webkit-box-orient:vertical;
+    -webkit-box-direction:normal;
+    -ms-flex-direction:column;
+            flex-direction:column;
+    padding-left:20px;
+    padding-top: 20px;
+    padding-bottom:20px;
+    -webkit-box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+            box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+    
+    fieldset{
+        border:0;
+        border-radius:5px;
+        -webkit-box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+                box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+        width:90%;
+
+    }
+    legend{
+        font-weight:600;
+    }
+
 `;
 
-const AddPhotoText = styled.div`
-  color: #0a66c2;
-  margin-top: 4px;
-  font-size: 12px;
-  line-height: 1.33;
-  font-weight: 400;
+const About=styled.form`
+    
+   
+ textarea,input{
+        height:40px;
+        margin:10px;
+        width:80%;
+        border-top:0;
+        border-left: 0;
+        border-right: 0;
+    }
+    input::-webkit-input-placeholder{
+        color:black;
+        font-size: 1rem;
+    }
+    input::-moz-placeholder{
+        color:black;
+        font-size: 1rem;
+    }
+    input:-ms-input-placeholder{
+        color:black;
+        font-size: 1rem;
+    }
+    input::-ms-input-placeholder{
+        color:black;
+        font-size: 1rem;
+    }
+    input::placeholder{
+        color:black;
+        font-size: 1rem;
+    }
+
 `;
 
-const Cred = styled.div`
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  padding-left: 20px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0 ,0 0 0 rgba(0 0 0/15%);
-  
-  fieldset {
-    border: 0;
-    border-radius: 5px;
-    box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0 ,0 0 0 rgba(0 0 0/15%);
-    width: 90%;
-  }
-  legend {
-    font-weight: 600;
-  }
-`;
-
-const About = styled.form`
-  textarea,input{
-    height:40px;
-    margin:10px;
-    width:80%;
-    border-top:0;
-    border-left: 0;
-    border-right: 0;
-  }
-  input::placeholder{
-    color:black;
-    font-size: 1rem;
-  }
-`;
 
 const Verify=styled.div`
+ 
+ display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+          flex-direction: column;
   div{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
     button{
     cursor:pointer;
         width:80px;
@@ -399,7 +432,6 @@ const Verify=styled.div`
         background-color: #0a55c3;
     }
   }
-
 `;
 
 export default PendingPro;

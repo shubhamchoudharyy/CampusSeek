@@ -103,17 +103,15 @@ const Profile = () => {
         <UserInfo>
           <CardBackground />
           <a>
-            <Photo style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
+            <Photo >
               {values.photoUrl?
               <img src={values.photoUrl}/> :
               <img src='/images/photo.svg'/>}
             </Photo>
-            <Links style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>{values.name}</Links>
+            <Links >{values.name}</Links>
           </a>
           <a>
-            <AddPhotoText>
-              
-            </AddPhotoText>
+           
           </a>
         </UserInfo>
         <Cred>
@@ -175,176 +173,206 @@ const Profile = () => {
     </Container>
   );
 };
-const CrossButton = styled.button`
-  background-color: transparent;
-  color: #fff;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+const Container=styled.div`
+    grid-area:main;
+`;
+const Layout=styled.div`
+   
+ background-color: #ffff;
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display:flex;
+    height:100%;
+    border-radius: 5px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+            box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
 
-  /* &:hover {
-    background-color: #cc0000;
-  } */
-
-  &:focus {
-    outline: none;
-  }
 `;
 
-const Container = styled.div`
-  grid-area: main;
-`;
-const Layout = styled.div`
-  background-color: #ffff;
-  display: flex;
-  height: 100%;
-  border-radius: 5px;
-  flex-direction: column;
-  box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0 ,0 0 0 rgba(0 0 0/15%);
-`;
+const Links=styled.div`
 
-const ButtonsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
 
-const Button = styled.button`
-  background-color: #007bff;
-  /* Button background color */
-  color: #fff;
-  /* Text color */
-  padding: 10px 20px;
-  /* Padding for the button */
-  border: none;
-  /* No border */
-  border-radius: 5px;
-  /* Rounded corners */
-  cursor: pointer;
-  /* Cursor style on hover */
-
-  /* Additional CSS styles for hover and focus states */
-  &:hover {
-    background-color: #0056b3;
-    /* Button background color on hover */
-  }
-
-  &:focus {
-    outline: none;
-    /* Remove focus outline */
-  }
-`;
-const UserInfo = styled.div`
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-  padding: 12px 12px 16px;
-  word-wrap: break-word;
-  word-break: break-word;
-  width: 100%;
+    font-size:16px;
+    line-height: 1.5;
+    color:rgba(0,0,0,0,9);
+    font-weight:600;
 `;
 
-const CardBackground = styled.div`
-  background: url("/images/card-bg.svg");
-  background-position: center;
-  background-size: 462px;
-  height: 54px;
-  max-width: 100%;
-  margin: -12px -12px 0;
+
+
+const UserInfo=styled.div`
+    border-bottom:1px solid rgba(0,0,0,0.15);
+    padding:12px 12px 16px;
+    word-wrap: break-word;
+    word-break:break-word;
+    width:100%;
+
 `;
 
-const Photo = styled.div`
-  img {
-    box-shadow: none;
+const CardBackground=styled.div`
+    background:url("/images/card-bg.svg");
+    background-position: center;
+    background-size:462px;
+    height:54px;
+    max-width:100%;
+    margin:-12px -12px 0;
+`;
+
+const Photo=styled.div`
+
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+-ms-flex-direction: column;
+        flex-direction: column;
+img{
+    -webkit-box-shadow:none;
+            box-shadow:none;
     /* background-image: url("/images/photo.svg"); */
-    width: 72px;
-    height: 72px;
-    box-sizing: border-box;
+    width:72px;
+    height:72px;
+    -webkit-box-sizing:border-box;
+            box-sizing:border-box;
     background-clip: content-box;
     background-color: white;
     background-position: center;
     background-size: 60%;
     background-repeat: no-repeat;
-    border: 2px solid white;
-    margin: -38px auto 12px;
-    border-radius: 50%;
-  }
+    border:2px solid white;
+    margin:-38px auto 12px;
+    border-radius:50%;
+}
 `;
 
-const EditButton = styled.button`
-  background-color: #0a66c2; /* Button background color */
-  color: #fff; /* Text color */
-  padding: 8px 16px; /* Padding for the button */
-  border: none; /* No border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Cursor style on hover */
 
-  /* Additional CSS styles for hover and focus states */
-  &:hover {
-    background-color: #004080; /* Button background color on hover */
-  }
 
-  &:focus {
-    outline: none; /* Remove focus outline */
-  }
+const AddPhotoText=styled.div`
+
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
+
+    color:#0a66c2;
+    margin-top:4px;
+    font-size:12px;
+    line-height:1.33;
+    font-weight:400;
 `;
 
-const Links = styled.div`
-  font-size: 16px;
-  line-height: 1.5;
-  color: rgba(0, 0, 0, 0, 9);
-  font-weight: 600;
+const Cred=styled.div`
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display:flex;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+            align-items: flex-start;
+    -webkit-box-orient:vertical;
+    -webkit-box-direction:normal;
+    -ms-flex-direction:column;
+            flex-direction:column;
+    padding-left:20px;
+    padding-top: 20px;
+    padding-bottom:20px;
+    -webkit-box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+            box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+    
+    fieldset{
+        border:0;
+        border-radius:5px;
+        -webkit-box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+                box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+        width:90%;
+
+    }
+    legend{
+        font-weight:600;
+    }
+
 `;
 
-const AddPhotoText = styled.div`
-  color: #0a66c2;
-  margin-top: 4px;
-  font-size: 12px;
-  line-height: 1.33;
-  font-weight: 400;
+const About=styled.form`
+    
+   
+ textarea,input{
+        height:40px;
+        margin:10px;
+        width:80%;
+        border-top:0;
+        border-left: 0;
+        border-right: 0;
+    }
+    input::-webkit-input-placeholder{
+        color:black;
+        font-size: 1rem;
+    }
+    input::-moz-placeholder{
+        color:black;
+        font-size: 1rem;
+    }
+    input:-ms-input-placeholder{
+        color:black;
+        font-size: 1rem;
+    }
+    input::-ms-input-placeholder{
+        color:black;
+        font-size: 1rem;
+    }
+    input::placeholder{
+        color:black;
+        font-size: 1rem;
+    }
+
 `;
 
-const Cred = styled.div`
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  padding-left: 20px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0 ,0 0 0 rgba(0 0 0/15%);
-  
-  fieldset {
-    border: 0;
-    border-radius: 5px;
-    box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0 ,0 0 0 rgba(0 0 0/15%);
-    width: 90%;
-  }
-  legend {
-    font-weight: 600;
-  }
-`;
-
-const About = styled.form`
-  textarea,input{
-    height:40px;
-    margin:10px;
-    width:80%;
-    border-top:0;
-    border-left: 0;
-    border-right: 0;
-  }
-  input::placeholder{
-    color:black;
-    font-size: 1rem;
-  }
-`;
 
 const Verify=styled.div`
+ 
+ display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+          flex-direction: column;
   div{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
     button{
     cursor:pointer;
         width:80px;
@@ -361,7 +389,6 @@ const Verify=styled.div`
         background-color: #0a55c3;
     }
   }
-
 `;
 
 export default Profile;

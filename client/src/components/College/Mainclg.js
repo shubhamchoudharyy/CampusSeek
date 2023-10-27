@@ -11,6 +11,7 @@ import axios from 'axios';
 import {useCopyToClipboard} from 'usehooks-ts'
 import { Spin,message } from 'antd';
 import { host } from '../../assets/APIRoute';
+import Articles from '../Articles';
 const Mainclg = () => {
   const [showModel, setShowModel] = useState('close');
   const [post,setPost]=useState(null);
@@ -62,10 +63,6 @@ const Mainclg = () => {
   }, [user._id]);
 
   const handleDeletePost=async(postId,post)=>{
-    console.log('Delete is called')
-    console.log('college',postId);
-    console.log('user',user._id);
-    console.log('post',post);
 
     
     if(postId===user._id){
@@ -130,49 +127,11 @@ const Mainclg = () => {
         <p>There are no articles</p>
       ) : (
           <Content>
-            {/* {props.loading && <img src="./images/spin-loader.svg" alt="Loading" />} */}
+            
             {post?.length > 0 &&
               post?.map((article) => (
-                <Article key={article?._id} >
-                  <SharedActors >
-                    <a onClick={()=>navigate(`/user-search/${article?.userId}`)}>
-                      <img src={article?.photoUrl} alt="Actor" />
-                      <div>
-                        <span>{article?.name}</span>
-                        <span>{article?.email}</span>
-                        <span>{article?.date}</span>
-                      </div>
-                    </a>
-                    {user?._id===article?.userId ?
-                    <User>
-                    <button>...</button>
-                    <Share>
-                      <a onClick={()=>{
-                        setCopy(`http://localhost:3000/post/${article?._id}`)
-                        message.success("Copied")
-                      }}>Copy URL</a>
-                    </Share>
-                    
-                    <Delete >
-                      <a onClick={()=>handleDeletePost(article?.userId,article?._id)}>Delete</a>
-                    </Delete>
-                    </User> :
-                    <button>....</button>} 
-                  </SharedActors>
-                  <Descriptions>{article?.description}</Descriptions>
-                  <SharedImg>
-                    <a>
-                      {!article?.image && article?.video ? (
-                        <ReactPlayer width={'100%'} url={article?.video} controls/>
-                      ) : (
-                        article?.image && <img src={article?.image} alt="Shared" />
-                      )}
-                      {/* <img src='/images/shivji.jpg' alt="shared"/> */}
-                    </a>
-                  </SharedImg>
-                 
-                  
-                </Article>
+                
+                <Articles article={article}/>
               ))} 
           </Content>
           )} 
@@ -189,18 +148,26 @@ const Container=styled.div`
 `;
 
 const CommonCard=styled.div`
-    text-align:center;
+    
+text-align:center;
     overflow:hidden;
     margin-bottom:8px; 
     background-color:#fff;
     border-radius:5px;
     position:relative;
     border:none;
-    box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+    -webkit-box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+            box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
 `;
 const ShareBox=styled(CommonCard)`
+  
+display:-webkit-box;
+  display:-ms-flexbox;
   display:flex;
-  flex-direction:column;
+  -webkit-box-orient:vertical;
+  -webkit-box-direction:normal;
+  -ms-flex-direction:column;
+          flex-direction:column;
   color:#958b7b;
   margin: 0 0 8px;
   background:white;
@@ -216,16 +183,24 @@ const ShareBox=styled(CommonCard)`
       min-height:48px;
       background:transparent;
       border:none;
+      display:-webkit-box;
+      display:-ms-flexbox;
       display:flex;
-      align-items: center;
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
       font-weight:600;
 
 
 
     }
     &:first-child{
+      display:-webkit-box;
+      display:-ms-flexbox;
       display:flex;
-      align-items:center;
+      -webkit-box-align:center;
+          -ms-flex-align:center;
+              align-items:center;
       padding:8px 16px 8px 16px;
       img{
         width:48px;
@@ -235,7 +210,9 @@ const ShareBox=styled(CommonCard)`
       }
       button{
         margin:4px 0;
-        flex-grow: 1;
+        -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+                flex-grow: 1;
         border-radius:35px;
         padding-left:16px;
         border:1px solid rgba(0,0,0,0.15);
@@ -244,9 +221,13 @@ const ShareBox=styled(CommonCard)`
       }
     }
     &:nth-child(2){
+      display:-webkit-box;
+      display:-ms-flexbox;
       display:flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
+      -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
+      -ms-flex-pack: distribute;
+          justify-content: space-around;
       padding-bottom: 4px;
 
 
@@ -263,254 +244,12 @@ const ShareBox=styled(CommonCard)`
   }
 `;
 
-const Article=styled(CommonCard)`
-  padding:0;
-  margin:0 0  8px;
-  overflow:visible;
-`;
-
-const SharedActors=styled.div`
-  padding:40px;
-  flex-wrap:no-wrap;
-  padding:12px 16px 0;   
-  margin-bottom: 8px;
-  align-items:center;
-  display:flex;
-  cursor: pointer;
-  a{
-    margin-right: 12px;
-    flex-grow:1;
-    overflow:hidden;
-    display:flex;
-    text-decoration: none;
-
-    img{
-      width:40px;
-      height:40px;
-    }
-    &>div{
-      display:flex;
-      flex-direction: column;
-      flex-grow:1;
-      flex-basis:0;
-      margin-left:8px;
-      overflow:hidden;
-      span{
-        text-align:left;
-        &:first-child{
-          font-size:14px;
-          font-weight:700;
-          color:rgba(0,0,0,1);
-        }
-
-        &:nth-child(n+1){
-          font-size: 12px;
-          color:rgba(0,0,0,0.6);
-        }
-      }
-    }
-    
-  }
-  button{
-    position:absolute;
-    right:12px;
-    top:0;
-    background:transparent;
-    border:none;
-    outline: none;
-
-  }
-
-`;
-
-const Descriptions=styled.div`
-padding:0 16px;
-overflow:hidden;
-color:rgba(0,0,0,0.9);
-font-size:16px;
-text-align:left;
- white-space: pre-wrap;
- font-size: 0.8rem;
-
-`;
-
-const SharedImg=styled.div`
-  margin-top:8px;
-  width:100%;
-  display:block;
-  position:relative;
-  background-color: #f9fafb;
-  img{
-    object-fit:contain;
-    width:100%;
-    height:100%;
-  }
-`;
-
-const SocialCounts=styled.ul`
-  line-height:1.3;
-  display:flex;
-  align-items:flex-start;
-  overflow:auto;
-  margin:0 16px;
-  padding:8px 0;
-  border-bottom:1px solid #e9e5df;
-  list-style:none;
-  li{
-    margin-right:5px;
-    font-size:12px;
-    button{
-      display:flex;
-      border:none;
-      background-color: white;
-    }
-  }
-`;
-
-const SocialActions=styled.div`
-  align-items: center;
-  display:flex;
-  justify-content: flex-start;
-  margin:0;
-  min-height:40px;
-  padding:4px 8px;
-  button{
-    display:inline-flex;
-    align-items:center;
-    padding:8px;
-    color:#8a66c2;
-    border:none;
-    background-color:white;
-    @media (min-width:768px){
-      span{
-        margin-left:8px;
-      }
-    }
-
-    }
-  
-`;
-
 const Content=styled.div`
   text-align:center;
   &>img{
     width:30px;
 
   }
-`;
-
-
-const Delete=styled.div`
-z-index: 9999;
-position:absolute;
-cursor:pointer;
-top:30px;
-background: white;
-border-radius: 0 0 5px 5px;
-width:70px;
-height:40px;
-font-size: 0.7rem;
-transition-duration: 167ms;
-text-align: center;
-display: none;
-@media(max-width:768px){
-    top:-5px;
-}
-`;
-
-const Share=styled.div`
-  z-index: 9999;
-  background-color: red;
-position:absolute;
-cursor:pointer;
-top:0px;
-background: white;
-border-radius: 0 0 5px 5px;
-width:70px;
-height:40px;
-font-size: 0.7rem;
-transition-duration: 167ms;
-text-align: center;
-display: none;
-@media(max-width:768px){
-    top:-5px;
-}
-`;
-
-
-
-const NavList=styled.li`
-    display:flex;
-    align-items:center;
-    
-
-    a{
-        align-items:center;
-        background:transparent;
-        display:flex;
-        flex-direction: column;
-        font-size:12px;
-        font-weight:400;
-        justify-content:center;
-        line-height:1.5;
-        min-height:42px;
-        min-width:88px;
-        position:relative;
-        text-decoration: none;
-
-        span{
-            color: rgba(0,0,0,0.5);
-            display: flex;
-            align-items:center;
-            justify-content:space-around;
-        }
-
-        @media (max-width:768px){
-            min-width:120px;
-            
-        }
-        
-        }
-        &:hover,
-        &:active{
-            a{
-                span{
-                    color:rgba(0,0,0,0.9)
-                }
-            }
-
-    } 
-`;
-
-const User=styled(NavList)`
-a>svg{
-        width:24px;
-        border-radius:20%
-    }
-
-    a>img{
-        width:24px;
-        height:24px;
-        border-radius:50%;
-    }
-
-    span{
-        display: flex;;
-        align-items:center;
-    }
-
-    &:hover{
-        ${Share}{
-            align-items:center;
-            display:flex;
-            justify-content: center;
-        }
-        ${Delete}{
-            align-items:center;
-            display:flex;
-            justify-content: center;
-        }
-    }
 `;
 
 export default Mainclg;

@@ -47,23 +47,7 @@ const Leftside = () => {
       </Item>
     </ArtCard>
 
-    {/* <CommunityCard>
-      <a>
-          <span>Groups</span>
-      </a>
-      <a>
-          <span>Events
-              <img src="/images/plus-icon.svg" alt="" />
-          </span>
-      </a>
-      <a>
-          <span>Follow Hashtags</span>
-      </a>
-      <a>
-          <span>Discover More</span>
-      </a>
-
-    </CommunityCard> */}
+   
 
   </Container>
 )
@@ -75,14 +59,20 @@ grid-area: leftside;
 `;
 
 const ArtCard=styled.div`
-    text-align:center;
+   
+ text-align:center;
     overflow: hidden;
     margin-bottom: 8px;
     background-color: #fff;
     border-radius: 5px;
+    -webkit-transition:-webkit-box-shadow 83ms;
+    transition:-webkit-box-shadow 83ms;
+    -o-transition:box-shadow 83ms;
     transition:box-shadow 83ms;
+    transition:box-shadow 83ms, -webkit-box-shadow 83ms;
     position: relative;
-    box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+    -webkit-box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+            box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
 
 `;
 
@@ -103,11 +93,14 @@ const CardBackground=styled.div`
 `;
 
 const Photo = styled.div`
-  img {
-    box-shadow: none;
+  
+img {
+    -webkit-box-shadow: none;
+            box-shadow: none;
     width: 72px;
     height: 72px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     background-clip: content-box;
     background-color: white;
     background-position: center;
@@ -120,7 +113,7 @@ const Photo = styled.div`
 `;
 
 const Link=styled.div`
-    font-size:16px;
+    font-size:13px;
     line-height: 1.5;
     color:rgba(0,0,0,0,9);
     font-weight:600;
@@ -136,15 +129,22 @@ const AddPhotoText=styled.div`
 `;
 
 const Widget=styled.div`
-    border-bottom: 1px solid rgba(0,0,0,0.15);
+   
+ border-bottom: 1px solid rgba(0,0,0,0.15);
     padding-top:12px;
     padding-bottom:12px;
 
     &>a {
         text-decoration:none;
+        display:-webkit-box;
+        display:-ms-flexbox;
         display:flex;
-        justify-content: space-between;
-        align-items:center;
+        -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+                justify-content: space-between;
+        -webkit-box-align:center;
+            -ms-flex-align:center;
+                align-items:center;
         padding:4px 12px;
         cursor: pointer;
 
@@ -153,8 +153,13 @@ const Widget=styled.div`
         }
 
         div{
+            display:-webkit-box;
+            display:-ms-flexbox;
             display:flex;
-            flex-direction: column;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+                -ms-flex-direction: column;
+                    flex-direction: column;
             text-align:left;
             span{
                 font-size:12px;
@@ -175,15 +180,19 @@ const Widget=styled.div`
 `;
 
 const Item=styled.a`
-    border-color:rgba(0,0,0,0.8);
+   border-color:rgba(0,0,0,0.8);
     text-align:left;
     padding:12px;
     font-size:12px;
     display: block;
     cursor: pointer;
     span{
+        display:-webkit-box;
+        display:-ms-flexbox;
         display:flex;
-        align-items:center;
+        -webkit-box-align:center;
+            -ms-flex-align:center;
+                align-items:center;
         color:rgba(0,0,0,1);
         svg{
             color:rgba(0,0,0,0.6);
@@ -193,52 +202,10 @@ const Item=styled.a`
     &:hover{
         background-color:rgba(0,0,0,0.8);
     }
-
-`;
-
-const CommunityCard=styled.div`
-    padding:8px 0 0;
-    background-color: #fff;
-    text-align:left;
-    display:flex;
-    border-radius: 5px;
-    flex-direction: column;
-    a{
-        color:black;
-        padding: 4px 12px 4px 12px;
-        font-size:12px;
-
-        &:hover{
-            color:#0a66c2;
-        }
-        span{
-            display:flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        &:last-child{
-            color:rgba(0,0,0,0.6);
-            text-decoration: none;
-
-            border-top:1px solid #d6cec2;
-            padding:12px;
-            &:hover{
-                background-color: rgba(0,0,0,0.08);
-            }
-
-        }
-    }
-
 `;
 
 
-// const mapStateToProps=(state)=>{
-//     return{
-//         user:state.userState.user,
-//     }
-// }
-// export default connect(mapStateToProps)(LeftSide)
+
 
 
 export default Leftside;

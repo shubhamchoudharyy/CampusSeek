@@ -67,18 +67,9 @@ const NotificationPage = () => {
   return (
     <Conatiner>
     <Layout>
-      {/* <h2 className='text-center' style={{ marginTop: '', color: 'white', width: '170vh' }}>Notifications</h2> */}
+
       <Align >
-        {/* <Tabs.TabPane tab={<span >Unread</span>} key={0}> */}
-          {/* <div className='d-flex justify-content-end'>
-            <h4
-              className='p-2 text-primary'
-              style={{ cursor: 'pointer' }}
-              onClick={handleMarkAllRead}
-            >
-              Mark All Read
-            </h4>
-          </div> */}
+        
           {user?.notification.slice().reverse().map((notificationMsg) => (
           <Block
             key={notificationMsg._id}
@@ -88,28 +79,7 @@ const NotificationPage = () => {
           </Block>
         ))}
 
-        {/* </Tabs.TabPane> */}
-        {/* <Tabs.TabPane tab={<span >Read</span>} key={1}>
-          <div className='d-flex justify-content-end'>
-            <h4
-              className='p-2 text-primary'
-              style={{ cursor: 'pointer' }}
-              onClick={handleDeleteAllRead}
-            >
-              Delete All Read
-            </h4>
-          </div>
-          {user?.seennotification.map((notificationMsg) => (
-            <div
-              className='d-flex'
-              key={notificationMsg._id}
-              onClick={() => navigate(notificationMsg.onClickPath)}
-              style={{ cursor: 'pointer', margin: '3%', color: 'white' }}
-            >
-              <Card><span>{notificationMsg.message}</span></Card>
-            </div>
-          ))}
-        </Tabs.TabPane> */}
+       
       </Align>
     </Layout>
     </Conatiner>
@@ -121,38 +91,58 @@ const Conatiner=styled.div`
 `;
 
 const Layout=styled.div`
-    width: 100%;
+   
+ width: 100%;
     height: 100vh;
-    box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+    -webkit-box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+            box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
 `;
 const Card=styled.div`
+    
+width:-webkit-fit-content;
+    width:-moz-fit-content;
     width:fit-content;
     padding: 5px;
     /* box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%); */
     span{
-        font-weight: 700;
+        font-weight: 500;
         margin-top:2px ;
-        align-items: start;
-        justify-content: start;
-        color:rgba(0,0,0,0.6);
+        -webkit-box-align: start;
+            -ms-flex-align: start;
+                align-items: start;
+        -webkit-box-pack: start;
+            -ms-flex-pack: start;
+                justify-content: start;
+        font-size: 0.8rem;
         
     }
 `;
 
 const Block=styled.div`
-    
-    width: 98%;
+   
+   width: 98%;
     height:40px;
-    box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+    -webkit-box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
+            box-shadow:0 0 0 1px rgba(0 0 0/15%), 0 0 0 rgba(0 0 0/20%);
     margin: 5px;
     overflow-x:hidden;
 `;
 
 const Align=styled.div`
+   
+ display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     width: 100%;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+            align-items: flex-start;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+            justify-content: flex-start;
 `;
 export default NotificationPage;
