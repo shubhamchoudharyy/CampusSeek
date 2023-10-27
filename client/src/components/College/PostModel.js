@@ -5,6 +5,7 @@ import ReactPlayer from 'react-player';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { Spin, message } from 'antd';
 import axios from 'axios'
+import ColorPicker from 'react-color';
 import { useNavigate, useParams } from 'react-router-dom';
 import { host } from '../../assets/APIRoute';
 // import { postArticleAPI } from '../actions';
@@ -34,6 +35,8 @@ const PostModel = (props) => {
     const [isItalic, setIsItalic] = useState(false);
     const [isUnderline, setIsUnderline] = useState(false);
     const [isCursive, setIsCursive] = useState(false);
+    const [color, setColor] = useState({hex:'#000'});
+    const [showColor,setShowColor]=useState(false);
 
     const handleFileUpload = async (file) => {
         try {
@@ -97,7 +100,7 @@ const PostModel = (props) => {
     const updatePost=async(photoUrl,e)=>{
         try{
             const res=await axios.post(`${host}/college/post`,
-            {userId:user?._id,image:photoUrl,description:editorText,style:activeStyle},{
+            {userId:user?._id,image:photoUrl,description:editorText,style:activeStyle,color:color.hex},{
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -114,7 +117,7 @@ const PostModel = (props) => {
         try{
             setVideoLoading(true);
             const res=await axios.post(`${host}/college/video`,
-            {userId:user?._id,description:editorText,video:videoLink,style:activeStyle},{
+            {userId:user?._id,description:editorText,video:videoLink,style:activeStyle,color:color.hex},{
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -134,7 +137,7 @@ const PostModel = (props) => {
         try{
             setVideoLoading(true);
             const res=await axios.post(`${host}/college/video`,
-            {userId:user?._id,description:editorText,video:videoUrl,style:activeStyle},{
+            {userId:user?._id,description:editorText,video:videoUrl,style:activeStyle,color:color.hex},{
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -154,7 +157,7 @@ const PostModel = (props) => {
         try{
             
             const res=await axios.post(`${host}/college/description`,
-            {userId:user?._id,description:editorText,style:activeStyle},{
+            {userId:user?._id,description:editorText,style:activeStyle,color:color.hex},{
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -269,9 +272,11 @@ const PostModel = (props) => {
       fontStyle: isItalic ? 'italic' : 'normal',
       textDecoration: isUnderline ? 'underline' : 'none',
       fontFamily: isCursive ? 'cursive' : 'unset',
+       
       
   };
 
+console.log(color.hex)
     return (
         <>
         {props.showModel === 'open' && (
@@ -297,7 +302,7 @@ const PostModel = (props) => {
                   )}
                   <span>{user?.name}</span>
                 </UserInfo>
-                <Editor >
+                <Editor textColor={color.hex} >
             <div className='text-style-buttons'>
                 <button onClick={handleBoldClick} style={{ fontWeight: isBold ? 'bold' : 'normal' }}>
                     B
@@ -314,24 +319,41 @@ const PostModel = (props) => {
                 <button onClick={resetStyles} style={{ fontStyle:'normal' }} >
                     N
                 </button>
+                <button onClick={()=>setShowColor(!showColor)} style={{ fontStyle:'normal' }} >
+                    <img src='/images/color-picker.png'/>
+                </button>
+                {showColor &&
+                    <ColorPicker
+                    width={100}
+                    height={50}
+                    color={color}
+                    onChange={setColor}
+                    hideHSV
+                    dark
+                  />
+                    }
             </div>
+            
             <textarea
                 value={editorText}
                 placeholder="What do you want to talk about?"
                 autoFocus={true}
                 onChange={(e) => setEditorText(e.target.value)}
                 style={textStyle}
+               
+                
             />
                   {assetArea === 'image' ? (
                     <UploadImg>
                       <input
-                        type="file"
-                        accept="/image/*"
-                        name="image"
-                        id="file"
-                        style={{ display: 'none' }}
-                        onChange={handleChange}
-                      />
+                      type="file"
+                      accept="image/*" // Updated to accept only image files
+                      name="image"
+                      id="file"
+                      style={{ display: 'none' }}
+                      onChange={handleChange}
+                    />
+
                       <p>
                         <label htmlFor="file">Select a Image</label>
                       </p>
@@ -595,6 +617,7 @@ const Editor = styled.div`
         min-height:100px;
         resize: none;
         white-space: pre-line; 
+         color: ${(props) => props.textColor};
 
     }
     input{
@@ -604,6 +627,15 @@ const Editor = styled.div`
         margin-bottom: 20px;
         white-space: pre-line; 
 
+    }
+    img{
+      height: 10px;
+      width: 10px;
+    }
+    button{
+      background-color: white;
+      border: 0;
+      margin: 1px;
     }
 `;
 

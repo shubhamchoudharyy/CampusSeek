@@ -38,7 +38,7 @@ const Articles = (props) => {
     }
   }
   }
-    console.log(props.article)
+    
 
   return (
     <>
@@ -77,11 +77,11 @@ const Articles = (props) => {
                     </User>} 
                   </SharedActors>
                   <Descriptions>
-                    {props.article.style==="bold"? <span style={{fontWeight:"bold"}}> {props.article?.description}</span>:
-                    props.article.style==="underline" ? <span style={{textDecoration:"underline"}}>{props.article?.description}</span>:
-                    props.article.style==="cursive" ? <span style={{fontFamily:"cursive"}}>{props.article?.description}</span>:
-                    props.article.style==="italic" ? <span style={{fontStyle:"italic"}}>{props.article?.description}</span>:
-                    <span>{props.article.description}</span>
+                    {props.article.style==="bold"? <span style={{fontWeight:"bold",color: props.article?.color}}> {props.article?.description}</span>:
+                    props.article.style==="underline" ? <span style={{textDecoration:"underline",color: props.article?.color}}>{props.article?.description}</span>:
+                    props.article.style==="cursive" ? <span style={{fontFamily:"cursive",color: props.article?.color}}>{props.article?.description}</span>:
+                    props.article.style==="italic" ? <span style={{fontStyle:"italic",color: props.article?.color}}>{props.article?.description}</span>:
+                    <span style={{color: props.article?.color}}>{props.article.description}</span>
                     }</Descriptions>
                   <SharedImg>
                     <a>

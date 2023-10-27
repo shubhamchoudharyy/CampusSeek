@@ -158,7 +158,7 @@ const ProfileAdmin = () => {
               <input
                 type="file"
                 name="photoUrl"
-                accept="/image/*"
+                accept="image/*" 
                 id="photoUpload"
                 style={{ display: 'none' }}
                 onChange={handleChange}

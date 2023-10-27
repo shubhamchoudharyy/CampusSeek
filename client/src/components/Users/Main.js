@@ -67,7 +67,7 @@ const Main = () => {
             {post?.length > 0 &&
               post.map((article, key) => (
                   
-                <Articles article={article}/>
+                <Articles article={article} key={article._id}/>
               ))} 
           </Content>
    

@@ -174,7 +174,7 @@ const ProfileUser = () => {
                 type="file"
                 name="photoUrl"
                 id="photoUpload"
-                accept="/image/*"
+                accept="image/*" 
                 style={{ display: 'none' }}
                 onChange={handleChange}
               />

@@ -97,7 +97,7 @@ const MainAdmin = (props) => {
             {post &&
               post.map((article) => (
                 
-                <Articles article={article} />
+                <Articles article={article} key={article._id} />
               ))} 
           </Content>
      

@@ -19,6 +19,9 @@ const PostSchema=new mongoose.Schema({
         type:Date,
         default:Date.now()
     },
+    color:{
+        type:String,
+    },
     style:{
         type:String,
         default:null,
