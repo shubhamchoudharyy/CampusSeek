@@ -304,9 +304,16 @@ const Horizontal=styled.div`
 
 const Button=styled.div`
 width: 100%;
+
+display: -webkit-box;
+display: -ms-flexbox;
 display: flex;
-align-items: center;
-justify-content: center;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
    
  button{
         width: 300px;

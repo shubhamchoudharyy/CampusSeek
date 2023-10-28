@@ -234,7 +234,7 @@ display: flex;
     flex-wrap: wrap;
 input{
 width: 300px;
-height: 52px;
+height: 40px;
 margin: 8px;
 }
 
