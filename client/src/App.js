@@ -11,14 +11,14 @@ import CollegeProfile from './components/College/CollegeProfile';
 import UserProfile from './components/Users/UserProfile';
 import ProtectedRoutes from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
-import CollegeSignup from './components/CollegeSignup';
+
 import AdminProfile from './components/admin/AdminProfile';
 import CollegeSignup2 from './components/CollegeSignup2';
 import CollegesReq from './components/admin/CollegesReq';
 import CollegeSign from './components/CollegeSign';
 import CollegesLi from './components/admin/CollegeLi';
 import Notification from './components/Notification';
-import Profile from './components/Profile';
+
 import PublicProfile from './components/PublicProfile';
 import PendingProfile from './components/PendingProfile';
 import UserSearch from './components/UserSearch';
@@ -29,6 +29,9 @@ import Verify from './components/Verify';
 import Followers from './components/Followers';
 import View from './components/View';
 import Post from './components/Posts';
+import Success from './components/Success';
+import Cancel from './components/Cancel';
+
 function App() {
   return (
     <div className="App">
@@ -143,6 +146,17 @@ function App() {
               <Post/>
             </div>
           }/>
+          <Route path='/success/:id' element={
+            <ProtectedRoutes>
+           <Success/>
+           </ProtectedRoutes>
+          }/> 
+          
+          <Route path='/cancel' element={
+            <ProtectedRoutes>
+            <Cancel/>
+            </ProtectedRoutes>
+          }/> 
 
         </Routes>
       </BrowserRouter>

@@ -7,6 +7,8 @@ import axios from 'axios';
 import FileBase from 'react-file-base64';
 import { showLoading,hideLoading } from '../../redux/features/alertSlice';
 import { host } from '../../assets/APIRoute';
+import { loadStripe } from '@stripe/stripe-js';
+
 
 const ProfileClg = (props) => {
   const { user } = useSelector((state) => state.user);
@@ -109,8 +111,7 @@ const ProfileClg = (props) => {
   const handleSaveButtonClick = () => {
     saveLatestCourseToDatabase();
   };
-  console.log(latestCourse)
-  console.log(course)
+
   const handleFileUpload = async (file) => {
     setUploadingFile(true);
     const formData = new FormData();
@@ -304,7 +305,37 @@ const ProfileClg = (props) => {
   if (!initialValues) {
     return <div>Loading....</div>;
   }
-  console.log(initialValues)
+  
+  const makePayment=async()=>{
+    const stripe=await loadStripe("pk_test_51O5phpSFLLswxD1rH5SoGpRWFzjkKvHIaEhfh2jsvj9qYqkFwQDqBxanMi0CxhVJx51AMK8HWfAOLleLVbdZPX9600vdPZFLZO")
+
+    const body={
+      products:user
+    }
+    const headers={
+      "Content-type":"application/json"
+    }
+
+    const res=await axios.post(`${host}/college/create-checout-session`,user);
+    console.log(res)
+  const session=res.data.id;
+  const url=res.data.url;
+  window.location=url
+  
+
+
+  const result =stripe.redirectToCheckout({
+    sessionId:session.id
+  })
+
+  if(result.error){
+    console.log(result.error )
+  }
+  }
+
+  const expired=new Date(user?.expired)
+
+  
   return (
     <Container>
       <Layout>
@@ -496,7 +527,16 @@ const ProfileClg = (props) => {
               </Struct>
             </fieldset>
           </Course>
-          
+          <div className='payment'>
+          {user?.premium ? <span>Your Premium is valid till {expired?.getFullYear() }-{expired?.getMonth()+1 }-{expired?.getDate() }</span> :
+          <>
+          <span>Get a premium membership at Rs.1500</span>
+          <Button>
+          <button onClick={makePayment}><span>Pay</span></button>
+          </Button>
+          </>
+        }
+        </div>
       </Layout>
     </Container>
   );
@@ -536,6 +576,14 @@ background-color: #ffff;
             flex-direction: column;
     -webkit-box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
             box-shadow: 0 0 0 1px rgb(0 0 0/15%), 0 0 0 rgba(0 0 0/20%), 0 0 0  ,0 0 0 rgba(0 0 0/15%);
+    
+    .payment{
+      margin: 10px;
+      padding: 10px;
+      span{
+        font-size: 0.8rem;
+      }
+    }
 
 `;
 const ButtonsContainer = styled.div`

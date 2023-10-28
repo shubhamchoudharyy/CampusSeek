@@ -6,7 +6,7 @@ const upload = multer({ storage: storage });
 const authMiddleware = require('../middlewares/authMiddleware');
 const { getCollegeInfoController, addCoursesController,  uploadFile,  getPendingInfoController,
      removeCourseController, updateController, postController,
-      videoController, getPostController, descriptionController, rateController, getPostsController, getDeletePostController, ViewController, getAllViewsController, getOnePostController } = require('../controllers/collegeCtrl');
+      videoController, getPostController, descriptionController, rateController, getPostsController, getDeletePostController, ViewController, getAllViewsController, getOnePostController, getPaymentController, successController, premiumCheckController,  } = require('../controllers/collegeCtrl');
 
 const router=express.Router();
 
@@ -44,4 +44,11 @@ router.post('/views/:userId',ViewController);
 router.post('/onePost/:userId',getOnePostController);
 
 router.post('/upload',upload.single('file'),uploadFile)
+
+router.post('/create-checout-session',getPaymentController)
+
+router.post('/success',successController)
+
+router.post('/premiumcheck',premiumCheckController)
+
 module.exports=router

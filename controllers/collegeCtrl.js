@@ -7,6 +7,8 @@ const fs=require('fs');
 const admin = require('firebase-admin'); // Import Firebase Admin SDK
 const { getDownloadURL, getStorage } = require('firebase/storage');
 const firebase=require('../firebase')
+const stripe=require("stripe")(process.env.STRIPE_SECRET_TEST)
+
 
 // Initialize Firebase Admin SDK with your service account credentials
 
@@ -514,6 +516,100 @@ const getOnePostController=async(req,res)=>{
 }
 
 
-module.exports={getCollegeInfoController,postController,getPendingInfoController
+const getPaymentController=async(req,res)=>{
+  const product=req.body;
+  
+  const lineItems=[{
+    price_data:{
+      currency:"inr",
+      product_data:{
+        name:product.name
+      },
+      unit_amount:1500*100,
+    },
+    quantity:1,
+  }]
+
+  const session=await stripe.checkout.sessions.create({
+    payment_method_types:["card"],
+    line_items:lineItems,
+    mode:"payment",
+    success_url:`http://localhost:3000/success/${product._id}`,
+    cancel_url:"http://localhost:3000/cancel",
+
+  });
+
+   return res.json({url:session.url,id:session.id})
+   
+  
+}
+
+const successController=async(req,res)=>{
+  
+  try{
+    const userId = req.body.userId;
+const user = await userModel.findOne({ _id: userId });
+console.log(user)
+
+if (!user) {
+  return res.status(400).json({ success: false, message: 'No user found' });
+}
+
+const currentTime = new Date();
+const expiration = new Date();
+expiration.setDate(expiration.getDate() + 30);
+
+// Create copies of the dates to avoid modifying the original 'currentTime' and 'expiration' objects.
+const premiumBuy = new Date(currentTime);
+const expired = new Date(expiration);
+
+// Update the user document with the new premium purchase and expiration dates.
+user.premiumBuy = premiumBuy;
+user.expired = expired;
+user.premium=true;
+
+// Push the purchase and expiration dates to the user's history.
+user.history.push({ premiumBuy:premiumBuy,expired: expired });
+
+// Save the updated user document to the database.
+await user.save();
+
+return res.status(200).json({
+  success: true,
+  message: 'Premium subscription updated successfully',
+ 
+});
+
+  }catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+}
+
+
+const premiumCheckController=async(req,res)=>{
+  try{
+    const userId=req.body.userId;
+    const user=await userModel.findOne({_id:userId})
+    if (!user) {
+      return res.status(400).json({ success: false, message: 'No user found' });
+    }
+    const expired=user.expired;
+    const current=new Date();
+    if(expired < current){
+      user.premium=false;
+      return res.status(200).send({success:true,message:"Your premium has expired"});
+    }
+
+    return res.status(200).send({success:false,message:"Premium Member"});
+
+
+  }catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+}
+module.exports={getCollegeInfoController,postController,getPendingInfoController,getPaymentController,successController,premiumCheckController
+
   ,addCoursesController,getDeletePostController,ViewController,getAllViewsController,getOnePostController,
   uploadFile,getPostsController,rateController,videoController,descriptionController,removeCourseController,updateController,getPostController}

@@ -5,6 +5,7 @@ import { Table, message } from 'antd';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { host } from '../assets/APIRoute';
+import { loadStripe } from '@stripe/stripe-js';
 
 const ViewList = () => {
   const { user } = useSelector((state) => state.user);
@@ -89,8 +90,34 @@ const ViewList = () => {
     
    
   ];
-  console.log(users.length)
   
+  
+  const makePayment=async()=>{
+    const stripe=await loadStripe("pk_test_51O5phpSFLLswxD1rH5SoGpRWFzjkKvHIaEhfh2jsvj9qYqkFwQDqBxanMi0CxhVJx51AMK8HWfAOLleLVbdZPX9600vdPZFLZO")
+
+    const body={
+      products:user
+    }
+    const headers={
+      "Content-type":"application/json"
+    }
+
+    const res=await axios.post(`${host}/college/create-checout-session`,user);
+    console.log(res)
+  const session=res.data.id;
+  const url=res.data.url;
+  window.location=url
+  
+
+
+  const result =stripe.redirectToCheckout({
+    sessionId:session.id
+  })
+
+  if(result.error){
+    console.log(result.error )
+  }
+  }
 
 
 
@@ -102,6 +129,10 @@ const ViewList = () => {
         <h1 style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>{users.length}</h1>
         <p style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>People viewed your profile</p>
         <p style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>To see who view your profile become a premium member</p>
+        <p style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>Become a Premium member at Rs.1500 for a month </p>
+        <Button>
+          <button onClick={makePayment}><span>Pay</span></button>
+          </Button>
         </div>
       }
 
@@ -128,6 +159,11 @@ const ViewList = () => {
 
 const Container = styled.div`
   grid-area: main;
+  div{
+    p{
+      font-size: 0.8rem;
+    }
+  }
 `;
 const Layout = styled.div``;
 
@@ -191,5 +227,41 @@ const SearchIcon=styled.div`
             align-items:center;
     
     `;
+
+    
+
+const Button=styled.div`
+
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+-ms-flex-align: center;
+        align-items: center;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+        justify-content: center;
+width: 100%;
+
+    margin: 20px;
+    align-items: center;
+    justify-content:center;
+    button{
+        cursor:pointer;
+        width:90px;
+        height:30px;
+        background-color:#0a66c2;
+        border:0;
+        border-radius: 20px;
+        span{
+            color:white;
+            font-weight:600;
+        }
+    }
+    button:hover{
+        background-color: #0a55c3;
+    }
+`;
+
 
 export default ViewList;

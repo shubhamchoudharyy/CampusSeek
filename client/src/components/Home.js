@@ -7,26 +7,51 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import Mainclg from './College/Mainclg';
 import MainAdmin from './admin/MainAdmin';
+import { host } from '../assets/APIRoute';
+import axios from 'axios'
 
 const Home = () => {
   const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
-  // Create a state variable to serve as the "key" for forcing re-renders
   const [rerenderKey, setRerenderKey] = useState(0);
 
   useEffect(() => {
     if (!localStorage.getItem('token')) {
-      // Redirect to the login page if there's no token or user data
+
       navigate('/login');
     }
   }, [user, navigate]);
 
-  // useEffect(() => {
-  //   if (user?.phone === 0) {
-  //     navigate('/complete-login');
-  //   }
-  // }, [user, navigate]);
+  useEffect(() => {
+    if (user?.phone === 0) {
+      navigate('/complete-login');
+    }
+  }, [user, navigate]);
+
+  if(user?.premium && user?.isCollege){
+
+  }
+  useEffect(()=>{
+    
+  if(user?.premium && user?.isCollege){
+    const checkPremium=async()=>{
+      try{
+        const res=await axios.post(`${host}/college/premiumcheck`,{
+          userId:user?._id
+        });
+        if(res.data.success){
+          window.location.reload();
+        }
+
+      }catch(e){
+        console.log(e);
+      }
+    }
+    checkPremium();
+  }
+   
+  },[])
 
   const isAdmin = user ? user.isAdmin : false;
   const isCollege = user ? user.isCollege : false;

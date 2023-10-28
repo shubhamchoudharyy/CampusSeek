@@ -38,7 +38,20 @@ const userSchema=new mongoose.Schema({
         type:Boolean,
         default:false,
     },
-    
+    premiumBuy:{
+        type:Date,
+    },
+    expired:{
+        type:Date,
+    },
+    history:[{
+        premiumBuy:{
+            type:Date,
+        },
+        expired:{
+            type:Date,
+        }
+    }],
     isAdmin:{
         type:Boolean,
         default:false,
