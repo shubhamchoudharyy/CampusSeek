@@ -14,21 +14,10 @@ const Header = () => {
     const isAdmin=user? user.isAdmin:false;
     const isCollege=user? user.isCollege:false;
     const location=useLocation();
-//   console.log(user.isAdmin);
-// console.log(isAdmin)
+
 const navigate=useNavigate();
 
-useEffect(() => {
-    if (!localStorage.getItem('token') ) {
-      // Redirect to the login page if there's no token or user data
-      navigate('/login');
-    }
-  }, [user, navigate]);
-  useEffect(()=>{
-    if(user?.phone===0){
-      navigate('/complete-login')
-    }
-  },[user,navigate])
+
     const handleClick=async()=>{
         localStorage.clear();
         navigate("/login");

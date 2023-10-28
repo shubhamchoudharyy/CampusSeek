@@ -95,8 +95,6 @@ const handleGoogle=async(e)=>{
     <h1 >Welcome to Campus Seek</h1>
     <Head>
         <p  >Sign Up to Get Started</p>
-        
-        
         </Head>
     
     <Cred>
@@ -170,6 +168,7 @@ h1,p{
     -ms-flex-pack: center;
         justify-content: center;
 width: 100%;
+margin: 1px;
 }
 
 `;
@@ -222,7 +221,7 @@ background-position: center;
 background-size: 60%;
 background-repeat: no-repeat;
 border: 2px solid white;
-margin: -38px auto 12px;
+margin: -8px auto 12px;
 border-radius: 50%;
 }
 `;
@@ -246,8 +245,8 @@ display: flex;
     flex-wrap: wrap;
 input{
 width: 300px;
-height: 52px;
-margin: 8px;
+height: 40px;
+margin: 2px;
 }
 
 button{
@@ -266,6 +265,9 @@ background-color: #0A55B3;
 button span{
 font-size: 1rem;
 font-weight: 600;
+}
+span{
+    font-size: 0.7rem;
 }
 `;
 
@@ -297,16 +299,21 @@ const Horizontal=styled.div`
     span{
         margin:2px ;
     }
+    margin: 0;
 `;
 
 const Button=styled.div`
+width: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
    
  button{
         width: 300px;
         height: 45px;
         background:transparent;
         color: black;
-        margin: 8px;
+        margin: 0px;
         cursor: pointer;
         display: -webkit-box;
         display: -ms-flexbox;
@@ -315,7 +322,7 @@ const Button=styled.div`
         -ms-flex-pack: distribute;
             justify-content: space-around;
         margin-top: 40px;
-        margin-left: auto;
+        
     }
     button:hover{
         background-color: rgba(0,0,0,0.07);

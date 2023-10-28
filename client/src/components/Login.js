@@ -157,6 +157,7 @@ h1,p{
     -ms-flex-pack: center;
         justify-content: center;
 width: 100%;
+
 }
 
 `;

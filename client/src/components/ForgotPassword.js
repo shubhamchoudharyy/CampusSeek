@@ -55,6 +55,7 @@ const ForgotPassword = () => {
                     <Form.Item label='' name='email'>
                     <input type="email" name="email" placeholder='Email Address'  />
                     </Form.Item>
+                    <span>Remebered Password? <Link to='/login'>Login</Link></span>
                    
                     {load? <button className='active' ><Spin/></button>:<button ><span>Submit</span></button>}
                    
