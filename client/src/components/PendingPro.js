@@ -96,7 +96,9 @@ const PendingPro = () => {
       console.log(error);
     }
   };
-  
+  console.log(values)
+  const premiumBuy=new Date(values?.premiumBuy)
+  const expired=new Date(values?.expired)
 
   return (
     <Container>
@@ -129,7 +131,7 @@ const PendingPro = () => {
                     required
                     rules={{ required: true }}
                     >
-                    <Input type="text" name="name" disabled placeholder={values?.college?.name} id="" />
+                    <Input  type="text" name="name" disabled placeholder={values?.college?.name} style={{fontSize:'0.8rem'}} />
                     <br />
                     </Form.Item>
 
@@ -139,7 +141,7 @@ const PendingPro = () => {
                     required
                     rules={{ required: true }}
                     >
-                    <Input type="email" name="email" placeholder={values?.college?.email} disabled id="" />
+                    <Input type="email" name="email" placeholder={values?.college?.email} disabled style={{fontSize:'0.8rem'}}/>
                     <br />
                     </Form.Item>
 
@@ -149,7 +151,7 @@ const PendingPro = () => {
                     required
                     rules={{ required: true }}
                     >
-                    <Input type="text" name="location" placeholder={values?.college?.location} disabled id="" />
+                    <Input type="text" name="location" placeholder={values?.college?.location} disabled style={{fontSize:'0.8rem'}} />
                     <br />
                     </Form.Item>
                     <Form.Item
@@ -158,7 +160,7 @@ const PendingPro = () => {
                     required
                     rules={{ required: true }}
                     >
-                    <Input type="text" name="district" placeholder={values?.college?.district} disabled id="" />
+                    <Input type="text" name="district" placeholder={values?.college?.district} disabled style={{fontSize:'0.8rem'}}/>
                     <br />
                     </Form.Item>
                     <Form.Item
@@ -167,7 +169,7 @@ const PendingPro = () => {
                     required
                     rules={{ required: true }}
                     >
-                    <Input type="text" name="state" placeholder={values?.college?.state} disabled id="" />
+                    <Input type="text" name="state" placeholder={values?.college?.state} disabled style={{fontSize:'0.8rem'}} />
                     <br />
                     </Form.Item>
                     <Form.Item
@@ -176,7 +178,7 @@ const PendingPro = () => {
                     required
                     rules={{ required: true }}
                     >
-                    <Input type="text" name="country" placeholder={values?.college?.country} disabled id="" />
+                    <Input type="text" name="country" placeholder={values?.college?.country} disabled style={{fontSize:'0.8rem'}} />
                     <br />
                     </Form.Item>
 
@@ -186,7 +188,7 @@ const PendingPro = () => {
                         name="phone"
                         disabled
                         placeholder={values?.college?.phone}
-                        id=""
+                        style={{fontSize:'0.8rem'}}
                     />
                     <br />
                     </Form.Item>
@@ -207,8 +209,20 @@ const PendingPro = () => {
             <p>{values?.premium? <span>True</span>:<span>False</span>}</p>
             {values.premium? <button onClick={handlePremium}><span>False</span></button> : <button onClick={handlePremium}><span>True</span></button>}
           </div>
+          <div >
+            <p>Premium Purchased on</p>
+            <p>{premiumBuy.getFullYear()}-{premiumBuy.getMonth()+1}-{premiumBuy.getDate()}</p>
+          </div>
+          <div >
+            <p>Premium Expired on</p>
+            <p>{expired.getFullYear()}-{expired.getMonth()+1}-{expired.getDate()}</p>
+          </div>
 
         </Verify>
+
+        <Transact>
+         
+        </Transact>
       </Layout>
     </Container>
   );
@@ -360,6 +374,7 @@ const Cred=styled.div`
     legend{
         font-weight:600;
     }
+    
 
 `;
 
@@ -431,7 +446,14 @@ const Verify=styled.div`
     button:hover{
         background-color: #0a55c3;
     }
+
+    p{
+      font-size:0.8rem ;
+    }
+   
   }
 `;
+
+const Transact=styled.div``;
 
 export default PendingPro;
