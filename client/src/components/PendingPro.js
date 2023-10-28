@@ -15,13 +15,9 @@ const PendingPro = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
   
-//   const [selectedImage, setSelectedImage] = useState(null);
-//   const [imageSelected, setImageSelected] = useState(false);
-//   const [uploading, setUploading] = useState(false);
-//   const [newPhotoUrl, setNewPhotoUrl] = useState('');
-//   const [showUploadAndPostButton, setShowUploadAndPostButton] = useState(true);
-//   const [showCrossButton, setShowCrossButton] = useState(false);
+
 
   useEffect(() => {
     if (!localStorage.getItem('token')) {
@@ -61,7 +57,7 @@ const PendingPro = () => {
       };
     getUserInfo();
   }, [params.id]);
-  console.log(values);
+  
   if(!values){
     return <Spin style={{marginTop:'12px'}}/>
   }
@@ -96,10 +92,12 @@ const PendingPro = () => {
       console.log(error);
     }
   };
-  console.log(values)
+  
   const premiumBuy=new Date(values?.premiumBuy)
   const expired=new Date(values?.expired)
-
+  
+  const history=values.history;
+ 
   return (
     <Container>
       <Layout>
@@ -214,14 +212,28 @@ const PendingPro = () => {
             <p>{premiumBuy.getFullYear()}-{premiumBuy.getMonth()+1}-{premiumBuy.getDate()}</p>
           </div>
           <div >
-            <p>Premium Expired on</p>
+            <p>Premium Expires on</p>
             <p>{expired.getFullYear()}-{expired.getMonth()+1}-{expired.getDate()}</p>
           </div>
 
         </Verify>
 
         <Transact>
-         
+        <div className="dropdown">
+          <button className="dropbtn" onClick={() => setIsOpen(!isOpen)}>
+            Recent  Transactions
+          </button>
+          {isOpen && (
+            <div className="dropdown-content">
+              {history.slice().reverse().map((transaction,index) => (
+                <div className='partition' key={index}>
+                <a ><span>Premium Purchased :</span> <span>{transaction.premiumBuy}</span></a>
+                <a ><span>Premium Expires :</span> <span>{transaction.expired}</span></a>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         </Transact>
       </Layout>
     </Container>
@@ -454,6 +466,63 @@ const Verify=styled.div`
   }
 `;
 
-const Transact=styled.div``;
+const Transact=styled.div`
+
+  width: 100%;
+
+.dropdown {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+}
+
+.dropbtn {
+  background-color: #3498db;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.dropbtn:hover {
+  background-color: #2980b9;
+}
+
+.dropdown-content{
+  max-height: 600px;
+  overflow-y: scroll;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  span{
+    font-size: 0.7rem;
+  }
+  .partition{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    /* border: 1px ; */
+    -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  }
+  @media (max-width:768px) {
+    max-height: 400px;
+    overflow-y: scroll;
+  }
+}
+`;
 
 export default PendingPro;

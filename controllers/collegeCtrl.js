@@ -53,7 +53,8 @@ const getPendingInfoController=async(req,res)=>{
   const verified=user.verified;
   const premiumBuy=user.premiumBuy;
   const expired=user.expired;
-    return res.status(200).send({success:true,message:'User data fetch success',data:{college,premium,verified,premiumBuy,expired}});
+  const history=user.history;
+    return res.status(200).send({success:true,message:'User data fetch success',data:{college,premium,verified,premiumBuy,expired,history}});
 
 }catch(error){
     console.error(error);
