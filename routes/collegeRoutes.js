@@ -41,6 +41,7 @@ router.post('/description',authMiddleware,descriptionController)
 router.post('/rate/:userId',rateController);
 
 router.post('/views/:userId',ViewController);
+
 router.post('/onePost/:userId',getOnePostController);
 
 router.post('/upload',upload.single('file'),uploadFile)

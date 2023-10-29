@@ -520,7 +520,8 @@ const getOnePostController=async(req,res)=>{
 
 
 const getPaymentController=async(req,res)=>{
-  const product=req.body;
+  try{
+    const product=req.body;
   
   const lineItems=[{
     price_data:{
@@ -542,7 +543,11 @@ const getPaymentController=async(req,res)=>{
 
   });
 
-   return res.json({url:session.url,id:session.id})
+   return res.status(200).json({url:session.url,id:session.id})
+  }catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
    
   
 }
@@ -557,6 +562,7 @@ console.log(user)
 if (!user) {
   return res.status(400).json({ success: false, message: 'No user found' });
 }
+
 
 const currentTime = new Date();
 const expiration = new Date();
@@ -599,8 +605,12 @@ const premiumCheckController=async(req,res)=>{
     }
     const expired=user.expired;
     const current=new Date();
+    console.log(expired)
+    console.log(current)
     if(expired < current){
+      console.log("In if")
       user.premium=false;
+      await user.save();
       return res.status(200).send({success:true,message:"Your premium has expired"});
     }
 
