@@ -66,12 +66,17 @@ const FollowersList = () => {
     {
       title: 'Email',
       dataIndex: 'email',
+      render: (text, record) =>(
+        user?.premium ? record.email : '******'
+      ),
     },
   
     {
       title: 'Phone',
       dataIndex: 'phone',
-      render: (text, record) => <span>{record.phone}</span>,
+      render: (text, record) =>(
+        user?.premium ? record.phone : '******'
+      ),
     },
    
   ];
@@ -88,6 +93,7 @@ const FollowersList = () => {
                     <img src="/images/search-icon.svg" alt="" />
                 </SearchIcon>
             </Search>
+            {!user?.premium && ( <p>To see the details become a Premium Member</p>)}
       
          
       <Layout>
@@ -101,6 +107,9 @@ const FollowersList = () => {
 
 const Container = styled.div`
   grid-area: main;
+  p{
+    font-weight: 600;
+  }
 `;
 const Layout = styled.div``;
 

@@ -222,7 +222,7 @@ display: -webkit-box;
           flex-direction: column;
   -ms-flex-wrap: nowrap;
       flex-wrap: nowrap;
-  width: 120px;
+  width: 130px;
   padding: 10px;
   border-radius: 5px;
   margin: 5px;

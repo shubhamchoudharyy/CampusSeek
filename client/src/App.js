@@ -13,7 +13,7 @@ import ProtectedRoutes from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
 
 import AdminProfile from './components/admin/AdminProfile';
-import CollegeSignup2 from './components/CollegeSignup2';
+
 import CollegesReq from './components/admin/CollegesReq';
 import CollegeSign from './components/CollegeSign';
 import CollegesLi from './components/admin/CollegeLi';
@@ -69,10 +69,7 @@ function App() {
             <Header/>
           <CollegeSign/>
           </ProtectedRoutes>}/>
-          <Route path='/college-signup2' element={
-          <ProtectedRoutes>
-          <CollegeSignup2/>
-          </ProtectedRoutes>}/>
+         
           <Route path='/' element={
           <ProtectedRoutes>
           <Header/><Home/>

@@ -151,6 +151,7 @@ console.log(user);
 
 const Container=styled.div`
     grid-area: main;
+    margin:8px;
 `;
 
 
@@ -198,8 +199,8 @@ const Cred = styled.div`
       flex-wrap: wrap;
   input {
     width: 300px;
-    height: 52px;
-    margin: 8px;
+    height: 40px;
+    margin: 3px;
   }
   .uppercase-input {
   text-transform: uppercase;
