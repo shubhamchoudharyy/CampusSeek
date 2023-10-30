@@ -223,7 +223,7 @@ display: -webkit-box;
   -ms-flex-wrap: nowrap;
       flex-wrap: nowrap;
   width: 130px;
-  padding: 10px;
+  padding: 20px;
   border-radius: 5px;
   margin: 5px;
   margin-left: 15px;

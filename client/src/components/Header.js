@@ -118,7 +118,7 @@ const navigate=useNavigate();
         <span>Views</span>
         </a>
     </NavList>}
-                    <NavList
+    {user?.isCollege ? <NavList
                      className={isNavActive('/notification')} // Check if the current URL is '/colleges'
                      onClick={() => handleNavClick('Notification')}
                     >
@@ -126,7 +126,16 @@ const navigate=useNavigate();
                             <img src="/images/nav-notifications.svg" alt=""  />
                             <span>Notification</span>
                         </a>
-                    </NavList>
+                    </NavList> :user?.isAdmin ? <NavList
+                     className={isNavActive('/notification')} // Check if the current URL is '/colleges'
+                     onClick={() => handleNavClick('Notification')}
+                    >
+                        <a onClick={()=>navigate('/notification')}>
+                            <img src="/images/nav-notifications.svg" alt=""  />
+                            <span>Notification</span>
+                        </a>
+                    </NavList> :null }
+                    
 
                     <User>
                         <a>

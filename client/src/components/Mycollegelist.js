@@ -126,7 +126,6 @@ const handleToggleFollow = async (collegeId) => {
 
 
 
-
 const Container = styled.div`
   grid-area: main;
 `;
@@ -166,8 +165,8 @@ display: -webkit-box;
           flex-direction: column;
   -ms-flex-wrap: nowrap;
       flex-wrap: nowrap;
-  width: 120px;
-  padding: 10px;
+  width: 130px;
+  padding: 20px;
   border-radius: 5px;
   margin: 5px;
   margin-left: 15px;
@@ -237,6 +236,8 @@ color: #0a66c2;
   -o-text-overflow: ellipsis;
      text-overflow: ellipsis;
 `;
+
+
 
 
 const Button=styled.div`
