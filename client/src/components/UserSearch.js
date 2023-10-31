@@ -401,8 +401,12 @@ const UserSearch = (props) => {
                     
                     <div className='already' key={index}>
                     {/* <span>{index}</span> */}
+                    <div>
                    <span>{course?.course}</span>
+                   </div>
+                   <div>
                    <span>{course?.short}</span>
+                   </div>
                    
                    <a href={course?.file} target="_blank">
                         <button>
@@ -696,17 +700,12 @@ width: 100%;
 `;
 
 const Struct=styled.div`
-    
- width: 600px;
-    display:-webkit-box;
-    display:-ms-flexbox;
-    display:flex;
-    -webkit-box-align:center;
-    -ms-flex-align:center;
-            align-items:center;
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
-            justify-content: space-between;
+   
+ width: 90%;
+
+   display: flex;
+   justify-content: space-around;
+   align-items: center;
     margin-top:20px;
     /* background-color: red; */
     -webkit-box-orient: vertical;
@@ -743,6 +742,14 @@ const Struct=styled.div`
           -ms-flex-align: center;
               align-items: center;
       width: 100%;
+      div{
+     
+        width: 200px;
+        margin-top:4px ;
+        margin-bottom: 4px;
+        padding-top: 4px;
+        padding-bottom: 4px;
+      }
     }
     button{
         border-radius:20px ;

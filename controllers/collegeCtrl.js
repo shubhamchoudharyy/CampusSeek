@@ -605,8 +605,7 @@ const premiumCheckController=async(req,res)=>{
     }
     const expired=user.expired;
     const current=new Date();
-    console.log(expired)
-    console.log(current)
+  
     if(expired < current){
       console.log("In if")
       user.premium=false;

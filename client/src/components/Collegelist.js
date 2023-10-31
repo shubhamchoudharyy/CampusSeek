@@ -222,6 +222,7 @@ display: -webkit-box;
           flex-direction: column;
   -ms-flex-wrap: nowrap;
       flex-wrap: nowrap;
+  justify-content: space-around;
   width: 130px;
   padding: 20px;
   border-radius: 5px;
