@@ -127,6 +127,7 @@ const CollegesRequest = () => {
             )
         },
     ]
+    console.log(filteredUsers);
   return (
     <Container>
     <Search>

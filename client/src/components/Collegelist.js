@@ -134,7 +134,7 @@ const Collegelist = () => {
     <Container>
       <Layout>
         <Content>
-        {filteredColleges.map((college) => (
+        { filteredColleges.length>0 ?  filteredColleges.map((college) => (
             // Check if college.userId is equal to user._id and skip the college if they match
             college.userId === user._id ? null : (
               <Card key={college._id}>
@@ -172,7 +172,7 @@ const Collegelist = () => {
                 </Button>
               </Card>
             )
-          ))}
+          )) :  <p>There are no colleges to show</p>}
         </Content>
       </Layout>
     </Container>

@@ -471,7 +471,6 @@ const getAllViewsController=async(req,res)=>{
 }
 
 const getDeletePostController = async (req, res) => {
-  console.log(req.body)
   try {
     const posts = req.body.postId;
     const collegeId=req.body.collegeId;

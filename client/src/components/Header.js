@@ -67,7 +67,7 @@ const navigate=useNavigate();
             onClick={() => handleNavClick('Colleges Requests')}
           >
             <Link to="/college-requests">
-              <img src="/images/nav-network.svg" alt="" />
+              <img src="/images/building.png" alt="" />
               <span>Colleges Requests</span>
             </Link>
           </NavList>
@@ -89,7 +89,7 @@ const navigate=useNavigate();
           onClick={() => handleNavClick('Colleges')}
         >
           <a onClick={()=>navigate(`/college-list/${user._id}`)}>
-            <img src="/images/building.png" alt="" />
+            <img src="/images/nav-network.svg" alt="" />
             <span>Colleges</span>
           </a>
         </NavList>:

@@ -94,11 +94,13 @@ const handleToggleFollow = async (collegeId) => {
     getFollowers();
   }, []);
 
+  console.log(colleges)
+
   return (
     <Container>
       <Layout>
         <Content>
-          {colleges.map((college) => (
+          {colleges.length>0 ?  colleges.map((college) => (
             <Card key={college._id}>
               <Photo onClick={()=>navigate(`/user-search/${college.userId}`)}>
               <img src={college.photoUrl} alt="user" />
@@ -115,7 +117,7 @@ const handleToggleFollow = async (collegeId) => {
                 </button>
               </Button>
             </Card>
-          ))}
+          )) : <p>There are no colleges to show</p>}
         </Content>
       </Layout>
     </Container>

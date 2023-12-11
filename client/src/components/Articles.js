@@ -18,7 +18,7 @@ const Articles = (props) => {
   const handleDeletePost=async(postId,post)=>{
 
     
-    if(postId===user._id){
+    
     try{
       
         console.log('in try')
@@ -36,7 +36,7 @@ const Articles = (props) => {
       message.error('Error While deleting the post',);
       console.log(e)
     }
-  }
+  
   }
     
 
@@ -66,6 +66,7 @@ const Articles = (props) => {
                       <a onClick={()=>handleDeletePost(props.article?.userId,props.article?._id)}>Delete</a>
                     </Delete>
                     </User> :
+                    user.isAdmin ?
                     <User>
                     <button>....</button>
                     <Share>
@@ -74,7 +75,20 @@ const Articles = (props) => {
                         message.success("Copied")
                       }}>Copy URL</a>
                     </Share>
-                    </User>} 
+                    <Delete >
+                      <a onClick={()=>handleDeletePost(props.article?.userId,props.article?._id)}>Delete</a>
+                    </Delete>
+                    </User>:
+                    <User>
+                    <button>....</button>
+                    <Share>
+                      <a onClick={()=>{
+                        setCopy(`http://localhost:3000/post/${props.article?._id}`)
+                        message.success("Copied")
+                      }}>Copy URL</a>
+                    </Share>
+                   
+                    </User> } 
                   </SharedActors>
                   <Descriptions>
                     {props.article.style==="bold"? <span style={{fontWeight:"bold",color: props.article?.color}}> {props.article?.description}</span>:

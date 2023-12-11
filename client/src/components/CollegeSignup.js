@@ -120,17 +120,17 @@ console.log(user);
             <input type="number" name="phone" id=""  disabled placeholder="Phone No" required />
           </Form.Item>
 
-          <Form.Item label="" name="location">
-            <input type="text" name="location" id="" class="uppercase-input"  placeholder="Address" required />
+          <Form.Item label="" name="location" >
+            <input type="text" name="location" id=""   placeholder="Address" required />
           </Form.Item>
           <Form.Item label="" name="district">
-            <input type="text" name="district" id="" class="uppercase-input"  placeholder="District" required />
+            <input type="text" name="district" id=""   placeholder="District" required />
           </Form.Item>
           <Form.Item label="" name="state">
-            <input type="text" name="state" id="" class="uppercase-input" placeholder="State" required />
+            <input type="text" name="state" id=""  placeholder="State" required />
           </Form.Item>
           <Form.Item label="" name="country">
-            <input type="text" name="country" id="" class="uppercase-input" placeholder="Country" required />
+            <input type="text" name="country" id=""  placeholder="Country" required />
           </Form.Item>
           <Form.Item label="" name="website">
             <input type="text" name="website" id="" placeholder="Website"  />
@@ -199,7 +199,7 @@ const Cred = styled.div`
       flex-wrap: wrap;
   input {
     width: 300px;
-    height: 40px;
+    height: 30px;
     margin: 3px;
   }
   .uppercase-input {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { showLoading,hideLoading } from '../redux/features/alertSlice';
 import { useDispatch,useSelector } from 'react-redux';
@@ -10,13 +10,54 @@ import { host } from '../assets/APIRoute';
 const CompleteLogin = () => {
     const dispatch=useDispatch()
     const navigate=useNavigate();
-    const {user}=useSelector((state)=>state.user)
+    const {user}=useSelector((state)=>state.user);
 
-    const onfinishHandler=async(values)=>{
-        console.log(values);
-        try{
-          console.log(values)
-          dispatch(showLoading())
+    const [load, setLoad] = useState(false);
+    const [passwordCriteriaError, setPasswordCriteriaError] = useState('');
+    const [validPasswordMessage, setValidPasswordMessage] = useState('');
+
+    const isPasswordValid = (password) => {
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumber = /\d/.test(password);
+        const hasSpecialCharacter = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/.test(password);
+        const isLengthValid = password.length >= 8;
+    
+        if (
+          hasUpperCase &&
+          hasLowerCase &&
+          hasNumber &&
+          hasSpecialCharacter &&
+          isLengthValid
+        ) {
+          setValidPasswordMessage('Valid password');
+          setPasswordCriteriaError(''); // Clear any previous error message
+          return true;
+        } else {
+          const errors = [];
+          if (!hasUpperCase) errors.push('uppercase letter');
+          if (!hasLowerCase) errors.push('lowercase letter');
+          if (!hasNumber) errors.push('number');
+          if (!hasSpecialCharacter) errors.push('special character');
+          if (!isLengthValid) errors.push('at least 8 characters');
+    
+          setValidPasswordMessage('');
+          setPasswordCriteriaError(`Password should contain ${errors.join(', ')}.`);
+          return false;
+        }
+      };
+      const onfinishHandler = async (values) => {
+        try {
+          setLoad(true);
+          dispatch(showLoading());
+    
+          // Validate password criteria
+          if (!isPasswordValid(values.password)) {
+            setLoad(false);
+            dispatch(hideLoading());
+            return;
+          }
+    
           const res=await axios.post(`${host}/user/setPhone`,{
             phone:values.phone, password:values.password  ,userId:user._id
           },{
@@ -25,15 +66,11 @@ const CompleteLogin = () => {
               }
           }
           )
-        //   window.location.reload()
+          window.location.reload()
           dispatch(hideLoading())
           if(res.data.success){
-           
-           
             message.success('Login Succesfully')
             navigate('/');
-            
-            
           }else{
             message.error(res.data.message)
           }
@@ -43,6 +80,12 @@ const CompleteLogin = () => {
           message.error('Something went Wrong')
         }
     }
+
+    useEffect(()=>{
+      if(user?.phone!==0){
+              navigate('/');
+      }
+  },[user]);
   return (
     <Container>
     <Form onFinish={onfinishHandler} layout='vertical' >
@@ -55,9 +98,30 @@ const CompleteLogin = () => {
             <Form.Item label='' name='phone'>
             <input type="number" name="phone" placeholder='Phone Number'  />
             </Form.Item>
-            <Form.Item label='' name='password'>
-            <input type="password" name="password" placeholder='Set a Password' />
-            </Form.Item>
+            <Form.Item
+            label=""
+            name="password"
+            rules={[
+              {
+                validator: async (_, value) => {
+                  if (isPasswordValid(value)) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject('Invalid password');
+                },
+              },
+            ]}
+          >
+            <input
+              type="password"
+              name="password"
+              id=""
+              placeholder="Password"
+              required
+            />
+          </Form.Item>
+          {passwordCriteriaError && <p className='error'>{passwordCriteriaError}</p>}
+          {validPasswordMessage && <p className='error'>{validPasswordMessage}</p>}
             <button ><span>Submit</span></button>
             
         </Cred>

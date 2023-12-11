@@ -16,11 +16,51 @@ const Signup = () => {
   
 
     const [load,setLoad]=useState(false);
+    const [passwordCriteriaError, setPasswordCriteriaError] = useState('');
+    const [validPasswordMessage, setValidPasswordMessage] = useState('');
 
-    const onfinishHandler=async(values)=>{
-        try{
-            setLoad(true)
-            dispatch(showLoading())
+    const isPasswordValid = (password) => {
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumber = /\d/.test(password);
+        const hasSpecialCharacter = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/.test(password);
+        const isLengthValid = password.length >= 8;
+    
+        if (
+          hasUpperCase &&
+          hasLowerCase &&
+          hasNumber &&
+          hasSpecialCharacter &&
+          isLengthValid
+        ) {
+          setValidPasswordMessage('Valid password');
+          setPasswordCriteriaError(''); // Clear any previous error message
+          return true;
+        } else {
+          const errors = [];
+          if (!hasUpperCase) errors.push('uppercase letter');
+          if (!hasLowerCase) errors.push('lowercase letter');
+          if (!hasNumber) errors.push('number');
+          if (!hasSpecialCharacter) errors.push('special character');
+          if (!isLengthValid) errors.push('at least 8 characters');
+    
+          setValidPasswordMessage('');
+          setPasswordCriteriaError(`Password should contain ${errors.join(', ')}.`);
+          return false;
+        }
+      };
+
+      const onfinishHandler = async (values) => {
+        try {
+          setLoad(true);
+          dispatch(showLoading());
+    
+          // Validate password criteria
+          if (!isPasswordValid(values.password)) {
+            setLoad(false);
+            dispatch(hideLoading());
+            return;
+          }
             const res=await axios.post(`${host}/user/register`,values);
             dispatch(hideLoading())
             if(res.data.success){
@@ -112,9 +152,30 @@ const handleGoogle=async(e)=>{
     
    
 
-    <Form.Item label='' name='password'>
-    <input type="password" name="password" id="" placeholder='Password' required />
-    </Form.Item>
+    <Form.Item
+            label=""
+            name="password"
+            rules={[
+              {
+                validator: async (_, value) => {
+                  if (isPasswordValid(value)) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject('Invalid password');
+                },
+              },
+            ]}
+          >
+            <input
+              type="password"
+              name="password"
+              id=""
+              placeholder="Password"
+              required
+            />
+          </Form.Item>
+          {passwordCriteriaError && <p className='error'>{passwordCriteriaError}</p>}
+          {validPasswordMessage && <p className='error'>{validPasswordMessage}</p>}
     <span>If applying for College/University account go on My Profile section after Signup</span>
     {load? <button className='active' ><Spin/></button>:<button ><span>Sign Up</span></button>}
     <p>Already a user? <Link to='/login'>Login</Link></p>

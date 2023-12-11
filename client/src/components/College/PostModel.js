@@ -282,7 +282,7 @@ console.log(color.hex)
         {props.showModel === 'open' && (
           <Container>
              {uploading? (
-                <Spin style={{ marginTop: '12px' }} />
+                <Spin style={{ marginTop: '12px', width:'100%', display:'flex', alignItems:'center',justifyContent:'center' }} />
               ) : (
             <Content>
               
@@ -644,6 +644,7 @@ const UploadImg = styled.div`
     cursor: pointer;
     img{
         width:100%;
+        height: fit-content;
 
     }
 `;

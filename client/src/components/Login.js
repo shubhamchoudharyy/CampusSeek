@@ -58,9 +58,6 @@ const GoogleSignIn=async(values)=>{
             } else{
                 navigate('/complete-login')
             }          
-            
-            
-            
           }else{
             message.error(res.data.message)
           }
