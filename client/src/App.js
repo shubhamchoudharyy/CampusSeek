@@ -26,11 +26,8 @@ import CompleteLogin from './components/CompleteLogin';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
 import Verify from './components/Verify';
-import Followers from './components/Followers';
-import View from './components/View';
 import Post from './components/Posts';
-import Success from './components/Success';
-import Cancel from './components/Cancel';
+
 
 function App() {
   return (
@@ -83,14 +80,9 @@ function App() {
           <ProtectedRoutes>
           <Header/><CollegesReq/>
           </ProtectedRoutes>}/>
-          <Route path='/followers/:id' element={
-          <ProtectedRoutes>
-          <Header/><Followers/>
-          </ProtectedRoutes>}/>
-          <Route path='/views/:id' element={
-          <ProtectedRoutes>
-          <Header/><View/>
-          </ProtectedRoutes>}/>
+          
+         
+       
           <Route path='/colleges/:id' element={
             <ProtectedRoutes>
             <Header/><Colleges/>
@@ -143,17 +135,7 @@ function App() {
               <Post/>
             </div>
           }/>
-          <Route path='/success/:id' element={
-            <ProtectedRoutes>
-           <Success/>
-           </ProtectedRoutes>
-          }/> 
-          
-          <Route path='/cancel' element={
-            <ProtectedRoutes>
-            <Cancel/>
-            </ProtectedRoutes>
-          }/> 
+        
 
         </Routes>
       </BrowserRouter>
