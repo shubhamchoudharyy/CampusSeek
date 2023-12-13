@@ -196,8 +196,8 @@ const registerController = async (req, res) => {
        var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'shubhamsur09@gmail.com',
-          pass: 'cnpgkkumhduwgqub'
+          user: 'your@email',
+          pass: 'ggkjghgkgyu'
         }
       });
       

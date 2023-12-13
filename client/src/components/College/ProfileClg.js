@@ -306,34 +306,7 @@ const ProfileClg = (props) => {
     return <div>Loading....</div>;
   }
   
-  const makePayment=async()=>{
-    const stripe=await loadStripe("pk_test_51O5phpSFLLswxD1rH5SoGpRWFzjkKvHIaEhfh2jsvj9qYqkFwQDqBxanMi0CxhVJx51AMK8HWfAOLleLVbdZPX9600vdPZFLZO")
 
-    const body={
-      products:user
-    }
-    const headers={
-      "Content-type":"application/json"
-    }
-
-    const res=await axios.post(`${host}/college/create-checout-session`,user);
-    console.log(res)
-  const session=res.data.id;
-  const url=res.data.url;
-  window.location=url
-  
-
-
-  const result =stripe.redirectToCheckout({
-    sessionId:session.id
-  })
-
-  if(result.error){
-    console.log(result.error )
-  }
-  }
-
-  const expired=new Date(user?.expired)
 
   
   return (
@@ -527,16 +500,7 @@ const ProfileClg = (props) => {
               </Struct>
             </fieldset>
           </Course>
-          <div className='payment'>
-          {user?.premium ? <span>Your Premium is valid till {expired?.getFullYear() }-{expired?.getMonth()+1 }-{expired?.getDate() }</span> :
-          <>
-          <span>Get a premium membership at Rs.1500</span>
-          <Button>
-          <button onClick={makePayment}><span>Pay</span></button>
-          </Button>
-          </>
-        }
-        </div>
+         
       </Layout>
     </Container>
   );

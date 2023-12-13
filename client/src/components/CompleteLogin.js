@@ -71,8 +71,6 @@ const CompleteLogin = () => {
           if(res.data.success){
             message.success('Login Succesfully')
             navigate('/');
-          }else{
-            message.error(res.data.message)
           }
         }catch(error){
           dispatch(hideLoading())
@@ -96,7 +94,7 @@ const CompleteLogin = () => {
         </Head>
         <Cred>
             <Form.Item label='' name='phone'>
-            <input type="number" name="phone" placeholder='Phone Number'  />
+            <input type="number" name="phone" placeholder='Phone Number'  required />
             </Form.Item>
             <Form.Item
             label=""

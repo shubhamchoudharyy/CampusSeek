@@ -303,37 +303,7 @@ console.log(color.hex)
                   <span>{user?.name}</span>
                 </UserInfo>
                 <Editor textColor={color.hex} >
-            <div className='text-style-buttons'>
-                <button onClick={handleBoldClick} style={{ fontWeight: isBold ? 'bold' : 'normal' }}>
-                    B
-                </button>
-                <button onClick={handleItalicClick} style={{ fontStyle: isItalic ? 'italic' : 'normal' }}>
-                    I
-                </button>
-                <button onClick={handleUnderlineClick} style={{ textDecoration: isUnderline ? 'underline' : 'none' }}>
-                    U
-                </button>
-                <button onClick={handleCursiveClick} style={{ fontFamily: isCursive ? 'cursive' : 'unset' }}>
-                    C
-                </button>
-                <button onClick={resetStyles} style={{ fontStyle:'normal' }} >
-                    N
-                </button>
-                <button onClick={()=>setShowColor(!showColor)} style={{ fontStyle:'normal' }} >
-                    <img src='/images/color-picker.png'/>
-                </button>
-                {showColor &&
-                    <ColorPicker
-                    width={100}
-                    height={50}
-                    color={color}
-                    onChange={setColor}
-                    hideHSV
-                    dark
-                  />
-                    }
-            </div>
-            
+           
             <textarea
                 value={editorText}
                 placeholder="What do you want to talk about?"
